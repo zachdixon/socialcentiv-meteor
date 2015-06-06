@@ -7,3 +7,16 @@
 meteor-platform
 autopublish
 insecure
+iron:router
+coffeescript
+http
+jquery
+raix:handlebar-helpers
+meteorhacks:fast-render
+mrt:momentjs
+mrt:underscore-string-latest
+mrt:modernizr-meteor
+jabbslad:basic-auth
+fourseven:scss
+api-socialcentiv
+mrt:cookies

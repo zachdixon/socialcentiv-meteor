@@ -1,0 +1,72 @@
+<template name="keywords">
+  <div id="keywordphrases">
+    <div data-view="KeyphrasesView">
+      <div class="tips">
+        <a class="btn-manage-keywords" href="">Edit</a>
+        <div class="label">
+          KEYWORDS
+        </div>
+      </div>
+      {{> keyphrases}}
+    </div>
+  </div>
+</template>
+
+<template name="negativeKeyphrases">
+  <hr />
+  <div class="tips">
+    <div class="label">
+      EXCLUDE THESE KEYWORDS
+    </div>
+  </div>
+  <div data-showif="keyphrases.length">
+    <div class="keyphrase">
+      <div class="keyword-details less">
+        <span class="phrase" data-source="phrase"></span>
+      </div>
+    </div>
+  </div>
+  <div data-hideif="keyphrases.length">
+    <div class="alert alert-info">
+      <p>Seeing irrelevant tweets?</p>
+      <p>
+        <a class="alert-link">Add negative keywords</a> to exclude them from your campaign.
+      </p>
+    </div>
+  </div>
+</template>
+
+<template name="keyphrases">
+  <div class="keyphrase">
+    <div class="keyword-details">
+      <span class="chevron glyphicon glyphicon-chevron-up"></span>
+      <span class="phrase" title="hungry">hungry</span>
+      <span class="hide-tweets">HIDE TWEETS</span>
+      <span class="btn glyphicon-trash glyphicon" style="display: none !important;"></span>
+    </div>
+    <div class="keyword-performance-indicators" style="display: block;">
+      <ul class="indicators">
+        <li class="conversion_rate">
+          <span class="context">Conversion Rate</span>
+          <span class="perc">%</span>
+          <span class="value">0</span></li>
+        <li class="click_thru_rate" style="display: none !important;">
+          <span class="context">Click-thru Rate</span>
+          <span class="perc">%</span>
+          <span class="value">0</span></li>
+        <li class="replied_to">
+          <span class="context">Replied Tweets</span>
+          <span class="value">0</span></li>
+        <li class="deleted">
+          <span class="context">Deleted Tweets</span>
+          <span class="value">0</span></li>
+        <li class="new_customers">
+          <span class="context">New Customers</span>
+          <span class="value">0</span></li>
+        <li class="tweets_with_keyword">
+          <span class="context">Tweets with this keyword</span>
+          <span class="value">26</span></li>
+      </ul>
+    </div>
+  </div>
+</template>

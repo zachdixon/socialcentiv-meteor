@@ -1,0 +1,49 @@
+<template name="header">
+  <div class="main-nav-wrapper">
+    <div class="container">
+      <div class="row">
+        <a>
+          <div class="logo col-md-2 col-sm-2 col-xs-2">
+            <img alt="socialcentiv logo" class="logo-img" src="images/new-logo.png"/>
+          </div>
+        </a>
+        <nav>
+          <a class="main-nav-menu" href="#"><span class="glyphicon glyphicon-th"></span></a>
+          <ul id="main-nav">
+            <a class="close-mobile-menu" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+            <li class="main-nav-item">
+              <a class="main-nav-link" href=""><img class="smallimg main-nav-icon" src="images/Twitter_logo_white.png" /><span class="label">Tweets</span></a>
+            </li>
+            <li class="main-nav-item">
+              <a class="main-nav-link" href=""><span class="ss-bullseye main-nav-icon"></span><span class="label">Campaign</span></a>
+            </li>
+            <li class="main-nav-item" id="reports">
+              <a class="main-nav-link" href=""><span class="icon-pie main-nav-icon"></span><span class="label">Reports</span></a>
+            </li>
+            <li class="main-nav-item pull-right dropdown-nav">
+              <a class="main-nav-link sub-nav-toggle" data-event-click="toggleSubNav" href="" style="padding: 30px 10px;">  <span class="account-logo-wrapper">
+                  <img class="account-logo" data-showif="currentAccount.status | eq 'active'" data-source-src="currentAccount.twitter_avatar_url" src="http://pbs.twimg.com/profile_images/1392372410/derp2_normal.JPG">
+                </span>
+                <span class="label" data-source="currentAccount.name">Nice Restaurant</span>
+              </a>
+              <ul class="sub-nav" style="display: none;">
+                <li class="sub-nav-item">
+                  <a class="sub-nav-link" data-addclass-active="activeView | equals 'accounts'" data-event-click="toggleMobileNav | withArguments '/account'" data-route="routes.account" href="/account">
+                    <span class="glyphicon glyphicon-user main-nav-icon"></span>
+                    <span class="label">My Account</span>
+                  </a>
+                </li>
+                <li class="sub-nav-item">
+                  <a class="sub-nav-link" data-event-click="destroySession" href="">
+                    <span class="glyphicon glyphicon-log-out main-nav-icon"></span>
+                    <span class="label">Log Out</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</template>

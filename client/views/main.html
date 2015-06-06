@@ -1,0 +1,21 @@
+<head>
+  <title>Socialcentiv</title>
+</head>
+
+<body>
+</body>
+
+<template name="mainLayout">
+  <!-- if signed in show header/nav/footer/etc -->
+  {{> header}}
+  <div class="container dashboard" id="main-container">
+    <div class="row">
+      <div class="col-md-12 col-xs-12 page-wrap">
+        <div class="main-content">
+          {{> yield}}
+        </div>
+      </div>
+    </div>
+  </div>
+  {{> footer}}
+</template>

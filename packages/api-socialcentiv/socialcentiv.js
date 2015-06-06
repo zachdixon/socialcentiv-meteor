@@ -1,5 +1,11 @@
-if(Meteor.isServer) {
-  var API = {
+if(Meteor.isClient) {
+  API = {
+    "sessions": {},
+    "businesses": {},
+    "campaigns": {},
+    "conversations": {}
+  };
+  APIConfig = {
     "methods": {},
     "config": {
       "defaults": {
@@ -12,115 +18,103 @@ if(Meteor.isServer) {
           type: "get"
         }
       },
-      "resources": {
-        "businesses": {
+      "resources": [
+        {
+          name: "businesses",
           url: "/businesses",
-          methods: {
-            getSingle: {
+          methods: [
+            {
+              name: "getSingle",
               type: "get",
-              url_param: "user_id",
               required_params: ["user_id"]
             }
-          }
+          ]
         },
-        "conversations": {
+        {
+          name: "campaigns",
+          url: "/campaigns",
+          methods: [
+            {
+              name: "getSingle",
+              type: "get",
+              required_params: ["business_id"]
+            }
+          ]
+        },
+        {
+          name: "conversations",
           url: "/conversations",
-          methods: {
-            getAll: {
+          methods: [
+            {
+              name: "getAll",
               type: "get",
               required_params: ["business_id"]
             },
-            getSingle: {
+            {
+              name: "getSingle",
               type: "get",
-              url_param: "conversation_id",
               required_params: ["business_id", "conversation_id"]
             },
-            update: {
+            {
+              name: "update",
               type: "put",
-              url_param: "conversation_id",
               required_params: ["business_id", "conversation_id"]
             },
-            destroy: {
+            {
+              name: "destroy",
               type: "del",
-              url_param: "conversation_id",
               required_params: ["business_id", "conversation_id"]
             }
-          }
+          ]
         }
-      }
+      ]
     }
   };
 
-  API.methods['sessions.login'] = function(options) {
+  API.sessions.login = function(options, cb) {
     check(options, Object);
-    route_config = API.config.routes.login;
-    options.format = options.format || route_config.format || API.config.defaults.format;
-    url = API.config.defaults.base_url + route_config.url;
+    check(cb, Function);
+    route_config = APIConfig.config.routes.login;
+    options.format = options.format || route_config.format || APIConfig.config.defaults.format;
+    url = APIConfig.config.defaults.base_url + route_config.url;
     var response = Meteor.http.get(
       url,
       {
         headers: {
           "Authorization": "Basic " + options.auth_string
         }
+      },
+      function(err, res) {
+        cb(err, res.data);
       }
     );
-    if(response.statusCode == 200) {
-      return response.data;
-    } else {
-      throw new Meteor.Error(500, "API call failed with error: " + response.status_txt);
-    }
   };
 
-  // Create methods for all API.config.resources
-  var resources = API.config.resources;
-  for(var resource in resources) {
-    methods = resources[resource].methods;
-    for(var method in methods) {
-      config = methods[method];
-      API.methods[resource + "." + method] = function(options) {
+  // Create methods for all APIConfig.config.resources
+  APIConfig.config.resources.forEach(function(resource){
+    resource.methods.forEach(function(method){
+      API[resource.name][method.name] = function(options, cb) {
         check(options, Object);
-        options.format = options.format || config.format || API.config.defaults.format;
-        url = API.config.defaults.base_url + resource.url;
-        if (!!config.url_param) {
-          url += ("/" + options[config.url_param]);
-        }
-        var response = Meteor.http[config.type.toLowerCase()](
+        check(cb, Function);
+        options.format = options.format || method.format || APIConfig.config.defaults.format;
+        url = APIConfig.config.defaults.base_url + resource.url;
+        var response = Meteor.http[method.type.toLowerCase()](
           url,
           {
             headers: {
-              "X-User-Email": "tracie%2Btest108%40socialcentiv.com",
-              "X-User-Token": "-uyU1EGcsSV9rzBsTJrM"
+              "X-User-Email": Cookie.get('currentUserEmail'),
+              "X-User-Token": Cookie.get('currentUserAuth')
             },
             params: options
+          },
+          function(err, res) {
+            cb(err,res.data);
           }
         );
-        if(response.statusCode == 200){
-          return response.data;
-        }else{
-          throw new Meteor.Error(500, "API call failed with error: "+response.status_txt);
-        }
       };
-    }
-  };
-
-  // var getAuthHeaders = function() {
-  //   # Set auth_string for basic auth, used for the sign in form
-  //   auth_string = env.options.data?.auth_string
-  //   if url is "/users/me.json" and auth_string
-  //     headers["Authorization"] = "Basic #{auth_string}"
-  //   else
-  //     # Sets email and token headers; checks env.options.data and currentUser for values
-  //     # Remove email and authentication_token from query string
-  //     email = env.options.data?.email or $.cookie('currentUserEmail')
-  //     auth = env.options.data?.authentication_token or $.cookie('currentUserAuth')
-  //     unless url is "/passwords"
-  //       delete env.options.data?.email
-  //       delete env.options.data?.authentication_token
-  //     headers["X-User-Email"] = email
-  //     headers["X-User-Token"] = auth
-  //     return headers
-  // };
+    });
+  });
   
-  Meteor.methods(API.methods);
+  // Meteor.methods(API.methods);
 }
 

@@ -4,8 +4,9 @@ Package.describe({
 
 Package.onUse(function (api) {
   api.use('livedata', 'server');
-  api.addFiles('socialcentiv.js', 'server');
+  api.addFiles('socialcentiv.js', 'client');
   if(api.export) {
-    api.export('API', 'server');
+    api.export('APIConfig', 'client');
+    api.export('API', 'client');
   }
 });

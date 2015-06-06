@@ -7,7 +7,7 @@ View =
     if email and password
       str = email + ":" + password
       auth_string = btoa(unescape(encodeURIComponent(str)))
-      Meteor.call('sessions.login', {auth_string: auth_string}, (err, res) ->
+      API.sessions.login({auth_string: auth_string}, (err, res) ->
         if err
           # show errors
         else

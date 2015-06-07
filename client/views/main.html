@@ -6,7 +6,10 @@
 </body>
 
 <template name="mainLayout">
-  <!-- if signed in show header/nav/footer/etc -->
+  {{> Main}}
+</template>
+
+<template name="Main">
   {{> header}}
   <div class="container dashboard" id="main-container">
     <div class="row">

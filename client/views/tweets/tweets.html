@@ -1,4 +1,8 @@
-<template name="tweets">
+<template name="tweetsIndex">
+  {{> Tweets}}
+</template>
+
+<template name="Tweets">
   <div class="conversations-index">
     {{> tweetsLeftColumn}}
     {{> tweetsCenterRightColumn}}
@@ -7,9 +11,8 @@
 
 <template name="tweetsLeftColumn">
   <div class="hidden-xs clearfix" id="left-col">
-    {{> accountDetails}}
-    {{> keywords}}
-    {{> negativeKeyphrases}}
+    {{> AccountDetails}}
+    {{> KeywordsWidget}}
   </div>
 </template>
 
@@ -22,17 +25,21 @@
             <li class="nav-item">
               <a class="nav-item-link active" href="#">
                 <span class="text">Tweets</span>
-                <span class="count">26</span>
+                <span class="count">{{totalConversations}}</span>
               </a>
             </li>
           </ul>
         </div>
         <div>
           <div class="header clearfix row">
-            <div class="sort-bar"><span>Sort By:</span>
-              <button class="convo-sort-button newest active">NEWEST</button>
-              <button class="convo-sort-button oldest">OLDEST</button>
-              <div class="per-page"><span>Per Page:</span>
+            <div class="sort-bar">
+              <div class="sort-by">
+                <span>Sort By:</span>
+                <button class="convo-sort-button newest active" value="newest">NEWEST</button>
+                <button class="convo-sort-button oldest" value="oldest">OLDEST</button>
+              </div>
+              <div class="per-page">
+                <span>Per Page:</span>
                 <button class="few-count">5</button>
                 <button class="few-count active">10</button>
                 <button class="more-count">20</button>
@@ -50,7 +57,7 @@
           </div>
           <div class="conversations row">
             {{> galleryModal}}
-            {{> conversationsList}}
+            {{> ConversationsList}}
           </div>
           <div class="row">
             <div class="load-page col-md-12 col-xs-12">DELETE TWEETS &amp; LOAD MORE</div>
@@ -78,8 +85,8 @@
   </div>
 </template>
 
-<template name="accountDetails">
-  {{#with $.Session.get 'business'}}
+<template name="AccountDetails">
+  {{#with business}}
     <div id="accountdetails">
       <div id="account-logo">
         <!-- <img data-hideif="currentAccount.twitter_avatar_url" /> -->

@@ -1,7 +1,7 @@
-<template name="conversationsList">
+<template name="ConversationsList">
   <ul class="convos clearfix">
     {{#each conversations}}
-      {{> conversation}}
+      {{> Conversation}}
     {{/each}}
   </ul>
   <div class="modal suggested-responses-modal fade">
@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<template name="conversation">
+<template name="Conversation">
   <li class="comment nopadding" id="1">
     {{#with lbc_tweet}}
       <div class="tweet-row clearfix">
@@ -52,66 +52,64 @@
         </div>
       </div>
     {{/with}}
-    {{#with reply_tweet}}
-      <div class="reply-section">
-        <div class="suggested-replies showing-suggestions">
-          <div class="try-suggestions clearfix">
-            <p class="suggestions-header">Choose a Category for Suggested Replies</p>
-            <span class="show-suggestions">Hide Suggestions</span>
-          </div>
-          <div class="suggestions clearfix">
-            <ul>
-              <li class="sc-tooltip">Invite <span class="sc-tooltip-content">Come&nbsp;see&nbsp;us!</span></li>
-              <li class="sc-tooltip">Agree<span class="sc-tooltip-content">Absolutely!</span></li>
-              <li class="sc-tooltip">Celebrate<span class="sc-tooltip-content">Happy&nbsp;birthday!</span></li>
-              <li class="sc-tooltip">Support<span class="sc-tooltip-content">We&nbsp;can&nbsp;help!</span></li>
-              <li class="sc-tooltip">Sympathize<span class="sc-tooltip-content">Bummer!</span></li>
-            </ul>
-            <div class="sc-tooltip suggestions-help">
-              <span class="glyphicon glyphicon-info-sign"></span>
-              <span class="sc-tooltip-content">More info</span>
-            </div>
-            <a class="see-next" href="#">See Next Suggestion<span class="glyphicon glyphicon-chevron-right"></span></a>
-          </div>
+    <div class="reply-section">
+      <div class="suggested-replies showing-suggestions">
+        <div class="try-suggestions clearfix">
+          <p class="suggestions-header">Choose a Category for Suggested Replies</p>
+          <span class="show-suggestions">Hide Suggestions</span>
         </div>
-        <div class="reply-subsection nomargin">
-          <div class="reply-avatar">
-            <img class="img img-rounded" width="32" src="http://pbs.twimg.com/profile_images/1392372410/derp2.JPG">
+        <div class="suggestions clearfix">
+          <ul>
+            <li class="sc-tooltip">Invite <span class="sc-tooltip-content">Come&nbsp;see&nbsp;us!</span></li>
+            <li class="sc-tooltip">Agree<span class="sc-tooltip-content">Absolutely!</span></li>
+            <li class="sc-tooltip">Celebrate<span class="sc-tooltip-content">Happy&nbsp;birthday!</span></li>
+            <li class="sc-tooltip">Support<span class="sc-tooltip-content">We&nbsp;can&nbsp;help!</span></li>
+            <li class="sc-tooltip">Sympathize<span class="sc-tooltip-content">Bummer!</span></li>
+          </ul>
+          <div class="sc-tooltip suggestions-help">
+            <span class="glyphicon glyphicon-info-sign"></span>
+            <span class="sc-tooltip-content">More info</span>
           </div>
-          <div class="reply-text-wrapper">
-            <label class="reply-username">@OrderNTheeCourt</label>
-            <textarea class="reply-txt form-control" name="comment-reply-text" placeholder="Reply or Use Suggested Replies"></textarea>
-            <label class="reply-link">http://nice-restaurant.hiplocalhost.com</label>
-          </div>
-          <div class="row">
-            <div class="col-md-12" style="display: none !important;">
-              <div class="images clearfix" data-count="0">
-                <!--batman-iterator-image="selectedImages"-->
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="reply-tools clearfix">
-                <div class="pull-left">
-                  <a class="btn-flat clearfix" data-toggle="modal" href="#gallery-modal">
-                    <span class="glyphicon glyphicon-camera pull-left"></span>
-                    <span class="pull-left">Edit photos</span>
-                  </a>
-                </div>
-                <div class="pull-right">
-                  <span class="count top10 pull-left">100</span>
-                  <button class="btn-send-reply btn btn-large btn-primary border-bottom ladda-button pull-right">
-                    <span class="glyphicon glyphicon-send"></span>
-                    Reply
-                  </button>
-                </div>
-              </div>
-              <!--Anchor tag to trigger wisepops popup when a user opens a conversation-->
-            </div>
-          </div>
-          <!--The wisepops modal should only appear once for each user-->
+          <a class="see-next" href="#">See Next Suggestion<span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
       </div>
-    {{/with}}
+      <div class="reply-subsection nomargin">
+        <div class="reply-avatar">
+          <img class="img img-rounded" width="32" src="http://pbs.twimg.com/profile_images/1392372410/derp2.JPG">
+        </div>
+        <div class="reply-text-wrapper">
+          <label class="reply-username">@OrderNTheeCourt</label>
+          <textarea class="reply-txt form-control" name="comment-reply-text" placeholder="Reply or Use Suggested Replies"></textarea>
+          <label class="reply-link">http://nice-restaurant.hiplocalhost.com</label>
+        </div>
+        <div class="row">
+          <div class="col-md-12" style="display: none !important;">
+            <div class="images clearfix" data-count="0">
+              <!--batman-iterator-image="selectedImages"-->
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="reply-tools clearfix">
+              <div class="pull-left">
+                <a class="btn-flat clearfix" data-toggle="modal" href="#gallery-modal">
+                  <span class="glyphicon glyphicon-camera pull-left"></span>
+                  <span class="pull-left">Edit photos</span>
+                </a>
+              </div>
+              <div class="pull-right">
+                <span class="count top10 pull-left">100</span>
+                <button class="btn-send-reply btn btn-large btn-primary border-bottom ladda-button pull-right">
+                  <span class="glyphicon glyphicon-send"></span>
+                  Reply
+                </button>
+              </div>
+            </div>
+            <!--Anchor tag to trigger wisepops popup when a user opens a conversation-->
+          </div>
+        </div>
+        <!--The wisepops modal should only appear once for each user-->
+      </div>
+    </div>
     <a class="trigger-wisepops stealth" href="#wisepops"></a>
   </li>
 </template>

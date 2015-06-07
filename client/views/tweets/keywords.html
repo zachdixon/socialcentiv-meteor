@@ -1,46 +1,30 @@
-<template name="keywords">
+<template name="KeywordsWidget">
   <div id="keywordphrases">
-    <div data-view="KeyphrasesView">
-      <div class="tips">
-        <a class="btn-manage-keywords" href="">Edit</a>
-        <div class="label">
-          KEYWORDS
-        </div>
-      </div>
-      {{> keyphrases}}
-    </div>
+    {{> PositiveKeyphrases}}
+    <hr />
+    {{> NegativeKeyphrases}}
   </div>
 </template>
 
-<template name="negativeKeyphrases">
-  <hr />
-  <div class="tips">
-    <div class="label">
-      EXCLUDE THESE KEYWORDS
-    </div>
-  </div>
-  <div data-showif="keyphrases.length">
-    <div class="keyphrase">
-      <div class="keyword-details less">
-        <span class="phrase" data-source="phrase"></span>
+<template name="PositiveKeyphrases">
+  <div class="positive-keyphrases">
+    <div class="tips">
+      <a class="btn-manage-keywords" href="">Edit</a>
+      <div class="label">
+        KEYWORDS
       </div>
     </div>
-  </div>
-  <div data-hideif="keyphrases.length">
-    <div class="alert alert-info">
-      <p>Seeing irrelevant tweets?</p>
-      <p>
-        <a class="alert-link">Add negative keywords</a> to exclude them from your campaign.
-      </p>
-    </div>
+    {{#each keyphrases}}
+      {{> Keyphrase}}
+    {{/each}}
   </div>
 </template>
 
-<template name="keyphrases">
+<template name="Keyphrase">
   <div class="keyphrase">
     <div class="keyword-details">
       <span class="chevron glyphicon glyphicon-chevron-up"></span>
-      <span class="phrase" title="hungry">hungry</span>
+      <span class="phrase" title="{{phrase}}">{{phrase}}</span>
       <span class="hide-tweets">HIDE TWEETS</span>
       <span class="btn glyphicon-trash glyphicon" style="display: none !important;"></span>
     </div>
@@ -49,24 +33,56 @@
         <li class="conversion_rate">
           <span class="context">Conversion Rate</span>
           <span class="perc">%</span>
-          <span class="value">0</span></li>
+          <span class="value">{{conversion_rate}}</span>
+        </li>
         <li class="click_thru_rate" style="display: none !important;">
           <span class="context">Click-thru Rate</span>
           <span class="perc">%</span>
-          <span class="value">0</span></li>
+          <span class="value">{{click_thru_rate}}</span>
+        </li>
         <li class="replied_to">
           <span class="context">Replied Tweets</span>
-          <span class="value">0</span></li>
+          <span class="value">{{replied_to_conversations_count}}</span>
+        </li>
         <li class="deleted">
           <span class="context">Deleted Tweets</span>
-          <span class="value">0</span></li>
+          <span class="value">{{deleted_conversations_count}}</span>
+        </li>
         <li class="new_customers">
           <span class="context">New Customers</span>
-          <span class="value">0</span></li>
+          <span class="value">{{conversions}}</span>
+        </li>
         <li class="tweets_with_keyword">
           <span class="context">Tweets with this keyword</span>
-          <span class="value">26</span></li>
+          <span class="value">{{pending_conversations_count}}</span>
+        </li>
       </ul>
     </div>
+  </div>
+</template>
+
+<template name="NegativeKeyphrases">
+  <div class="negative-keyphrases">
+    <div class="tips">
+      <div class="label">
+        EXCLUDE THESE KEYWORDS
+      </div>
+    </div>
+    {{#if keyphrases.length}}
+      {{#each keyphrases}}
+        <div class="keyphrase">
+          <div class="keyword-details less">
+            <span class="phrase">{{phrase}}</span>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="alert alert-info">
+        <p>Seeing irrelevant tweets?</p>
+        <p>
+          <a class="alert-link">Add negative keywords</a> to exclude them from your campaign.
+        </p>
+      </div>
+    {{/if}}
   </div>
 </template>

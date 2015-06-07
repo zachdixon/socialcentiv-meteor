@@ -1,0 +1,1 @@
+@Keyphrases = new Mongo.Collection('keyphrases', connection: null)

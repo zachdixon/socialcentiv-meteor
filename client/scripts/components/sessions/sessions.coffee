@@ -7,12 +7,12 @@ View =
     if email and password
       str = email + ":" + password
       auth_string = btoa(unescape(encodeURIComponent(str)))
-      API.sessions.login({auth_string: auth_string}, (err, res) ->
+      API.sessions.login({auth_type: "basic", auth_string: auth_string}, (err, res) ->
         if err
           # show errors
         else
-          Cookie.set('currentUserEmail', res.email)
-          Cookie.set('currentUserAuth', res.authentication_token)
+          Cookie.set('currentUserEmail', res.email, {path: "/", domain: App.DOMAIN})
+          Cookie.set('currentUserAuth', res.authentication_token, {path: "/", domain: App.DOMAIN})
           Session.set('currentUser', res)
           Router.go('tweets')
       )

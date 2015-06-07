@@ -1,16 +1,18 @@
 if(Meteor.isClient) {
-  API = {
-    "sessions": {},
-    "businesses": {},
-    "campaigns": {},
-    "conversations": {}
-  };
-  APIConfig = {
-    "methods": {},
+  API = {};
+  var DOMAIN = location.hostname.replace(/http:\/\/.+?\./, '').replace(/^[^.]+\./g, "");
+  if (DOMAIN == "hiplocalhost.com" || DOMAIN == "localhost") {
+    url = "http://api.hiplocalhost.com:3000"; // Development
+  } else if (DOMAIN == "socialcentivbeta.net" || DOMAIN == "socialcentiv.net" || DOMAIN == "meteor.com") {
+    url = "http://api.socialcentiv.net"; // Staging
+  } else if (DOMAIN == "socialcentiv.com") {
+    url = "http://api.socialcentiv.com"; // Production
+  }
+  API.URL = url;
+  var APIConfig = {
     "config": {
       "defaults": {
-        base_url: "http://api.hiplocalhost.com:3000",
-        format: "JSON"
+        base_url: url
       },
       "routes": {
         "login": {
@@ -20,6 +22,18 @@ if(Meteor.isClient) {
       },
       "resources": [
         {
+          name: "users",
+          url: "/users",
+          methods: [
+            {
+              name: "update",
+              type: "put",
+              url_param: "id",
+              required_params: ["id"]
+            }
+          ]
+        },
+        {
           name: "businesses",
           url: "/businesses",
           methods: [
@@ -27,6 +41,12 @@ if(Meteor.isClient) {
               name: "getSingle",
               type: "get",
               required_params: ["user_id"]
+            },
+            {
+              name: "update",
+              type: "put",
+              url_param: "id",
+              required_params: ["id"]
             }
           ]
         },
@@ -53,17 +73,40 @@ if(Meteor.isClient) {
             {
               name: "getSingle",
               type: "get",
-              required_params: ["business_id", "conversation_id"]
+              required_params: ["business_id", "id"]
             },
             {
               name: "update",
               type: "put",
-              required_params: ["business_id", "conversation_id"]
+              required_params: ["business_id", "id"]
             },
             {
-              name: "destroy",
+              name: "delete",
               type: "del",
-              required_params: ["business_id", "conversation_id"]
+              url_param: "id",
+              required_params: ["id"]
+            }
+          ]
+        },
+        {
+          name: "keyphrases",
+          url: "/keyphrases",
+          methods: [
+            {
+              name: "getAll",
+              type: "get",
+              required_params: ["campaign_id"]
+            },
+            {
+              name: "create",
+              type: "post",
+              required_params: ["campaign_id", "phrase", "action_type"]
+            },
+            {
+              name: "delete",
+              type: "del",
+              url_param: "id",
+              required_params: ["id"]
             }
           ]
         }
@@ -71,18 +114,26 @@ if(Meteor.isClient) {
     }
   };
 
+  API.sessions = API.sessions || {};
   API.sessions.login = function(options, cb) {
     check(options, Object);
     check(cb, Function);
     route_config = APIConfig.config.routes.login;
-    options.format = options.format || route_config.format || APIConfig.config.defaults.format;
     url = APIConfig.config.defaults.base_url + route_config.url;
+    if(options.auth_type.toLowerCase() == "basic") {
+      headers = {
+        "Authorization": "Basic " + options.auth_string
+      };
+    }else if(options.auth_type.toLowerCase() == "token") {
+      headers = {
+        "X-User-Email": Cookie.get('currentUserEmail'),
+        "X-User-Token": Cookie.get('currentUserAuth')
+      };
+    }
     var response = Meteor.http.get(
       url,
       {
-        headers: {
-          "Authorization": "Basic " + options.auth_string
-        }
+        headers: headers
       },
       function(err, res) {
         cb(err, res.data);
@@ -93,11 +144,14 @@ if(Meteor.isClient) {
   // Create methods for all APIConfig.config.resources
   APIConfig.config.resources.forEach(function(resource){
     resource.methods.forEach(function(method){
+      API[resource.name] = API[resource.name] || {};
       API[resource.name][method.name] = function(options, cb) {
         check(options, Object);
         check(cb, Function);
-        options.format = options.format || method.format || APIConfig.config.defaults.format;
         url = APIConfig.config.defaults.base_url + resource.url;
+        if(!!method.url_param) {
+          url += ("/" + options[method.url_param]);
+        }
         var response = Meteor.http[method.type.toLowerCase()](
           url,
           {

@@ -1,3 +1,19 @@
+if Meteor.isClient
+  Meteor.startup ->
+    email = Cookie.get('currentUserEmail')
+    auth = Cookie.get('currentUserAuth')
+    if email and auth
+      _this = @
+      API.sessions.login({auth_type: "token"}, (err, res) ->
+        if err
+          # show errors
+        else
+          Cookie.set('currentUserEmail', res.email, {path: "/", domain: App.DOMAIN})
+          Cookie.set('currentUserAuth', res.authentication_token, {path: "/", domain: App.DOMAIN})
+          Session.set('currentUser', res)
+          Router.go('tweets')
+      )
+
 Router.configure
   layoutTemplate: "mainLayout"
 
@@ -19,4 +35,5 @@ Router.route '/login',
 Router.route '/',
   fastRender: true
   name: 'tweets'
+  template: "tweetsIndex"
 

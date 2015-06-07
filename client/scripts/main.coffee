@@ -16,10 +16,10 @@ class Main extends BlazeComponent
           unless err
             Session.set('campaign', res[0])
 
-class App.Vars
-  user: ->
-    Session.get('currentUser')
-  business: ->
-    Session.get('business')
-  campaign: ->
-    Session.get('campaign')
+# TODO - change to use collections.find
+Template.registerHelper 'user', ->
+  Session.get('currentUser')
+Template.registerHelper 'business', ->
+  Session.get('business')
+Template.registerHelper 'campaign', ->
+  Session.get('campaign')

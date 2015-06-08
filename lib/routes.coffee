@@ -24,7 +24,7 @@ Router.onBeforeAction ->
     email = Cookie.get('currentUserEmail')
     auth = Cookie.get('currentUserAuth')
     if email and auth
-      API.sessions.login.call(@, {auth_type: "token"}, (err, res) ->
+      API.sessions.login({auth_type: "token"}, (err, res) ->
         if err
           Router.go('login')
           # show errors
@@ -33,7 +33,6 @@ Router.onBeforeAction ->
           Cookie.set('currentUserAuth', res.authentication_token, {path: "/", domain: App.DOMAIN})
           Session.set('currentUser', res)
           Router.go('tweets')
-        @next()
       )
     else
       @next()

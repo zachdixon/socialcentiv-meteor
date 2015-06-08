@@ -79,7 +79,7 @@
         </div>
         <div class="reply-text-wrapper">
           <label class="reply-username">@OrderNTheeCourt</label>
-          <textarea class="reply-txt form-control" name="comment-reply-text" placeholder="Reply or Use Suggested Replies"></textarea>
+          <textarea class="reply-txt form-control {{replyStatusClass}}" name="comment-reply-text" placeholder="Reply or Use Suggested Replies">{{reply_message}}</textarea>
           <label class="reply-link">http://nice-restaurant.hiplocalhost.com</label>
         </div>
         <div class="row">
@@ -97,8 +97,8 @@
                 </a>
               </div>
               <div class="pull-right">
-                <span class="count top10 pull-left">100</span>
-                <button class="btn-send-reply btn btn-large btn-primary border-bottom ladda-button pull-right">
+                <span class="count top10 pull-left {{replyStatusClass}}">{{remainingChars}}</span>
+                <button class="btn-send-reply btn btn-large btn-primary border-bottom ladda-button pull-right" disabled="{{invalidReplyLength}}">
                   <span class="glyphicon glyphicon-send"></span>
                   Reply
                 </button>

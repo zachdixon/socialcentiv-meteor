@@ -21,11 +21,16 @@
               <a class="main-nav-link" href=""><span class="icon-pie main-nav-icon"></span><span class="label">Reports</span></a>
             </li>
             <li class="main-nav-item pull-right dropdown-nav">
-              <a class="main-nav-link sub-nav-toggle" href="" style="padding: 30px 10px;">  <span class="account-logo-wrapper">
-                  <img class="account-logo" data-showif="currentAccount.status | eq 'active'" data-source-src="currentAccount.twitter_avatar_url" src="http://pbs.twimg.com/profile_images/1392372410/derp2_normal.JPG">
-                </span>
-                <span class="label" data-source="currentAccount.name">Nice Restaurant</span>
-              </a>
+              {{#with business}}
+                <a class="main-nav-link sub-nav-toggle" href="" style="padding: 30px 10px;">
+                  {{#if $eq status 'active'}}
+                    <span class="account-logo-wrapper">
+                      <img class="account-logo" src="{{twitter_avatar_url}}">
+                    </span>
+                  {{/if}}
+                  <span class="label" data-source="currentAccount.name">Nice Restaurant</span>
+                </a>
+              {{/with}}
               <ul class="sub-nav" style="display: none;">
                 <li class="sub-nav-item">
                   <a class="sub-nav-link" data-addclass-active="activeView | equals 'accounts'" data-event-click="toggleMobileNav | withArguments '/account'" data-route="routes.account" href="/account">

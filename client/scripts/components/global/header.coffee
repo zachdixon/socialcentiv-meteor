@@ -16,10 +16,15 @@ View =
           $('body').off 'click.hide-sub-nav'
   logout: (e, doc) ->
     e.preventDefault()
-    Cookie.remove('currentUserEmail', {path: '/', domain: "hiplocalhost.com"})
-    Cookie.remove('currentUserAuth', {path: '/', domain: "hiplocalhost.com"})
+    # Clear cookies
+    Cookie.remove('currentUserEmail', {path: '/', domain: App.DOMAIN})
+    Cookie.remove('currentUserAuth', {path: '/', domain: App.DOMAIN})
+    # Clear session variables
     Object.keys(Session.keys).forEach (key) ->
       Session.set key, undefined
+    # Clear local collections
+    for k,collection of App.collections
+      collection.remove({})
 
 Template.header.events
   'click .sub-nav-toggle': View.toggleSubNav

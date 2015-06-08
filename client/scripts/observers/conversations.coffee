@@ -4,17 +4,20 @@ Meteor.startup ->
   # Using autorun to automatically stop observe() when finished
   # Otherwise it will run forever
   Tracker.autorun ->
-    Conversations.find().observe
-      # added: (doc) ->
-      changed: (newDoc, oldDoc) ->
-        API.conversations.update newDoc, (err, res) ->
-          if err
-            Conversations.update(oldDoc._id, {$set: oldDoc})
-      removed: (oldDoc) ->
-        API.conversations.delete({id: oldDoc.id}, (err, res) ->
-          if err
-            # Check error if tweet was already deleted
-            # If not, add convo back to collection and
-            # throw Messenger() error
-            Conversations.insert(oldDoc)
-          )
+    if Session.get('currentUser')
+      Conversations.observer = Conversations.find().observe
+        # added: (doc) ->
+        changed: (newDoc, oldDoc) ->
+          API.conversations.update newDoc, (err, res) ->
+            if err
+              Conversations.update(oldDoc._id, {$set: oldDoc})
+        removed: (oldDoc) ->
+          API.conversations.delete({id: oldDoc.id}, (err, res) ->
+            if err
+              # Check error if tweet was already deleted
+              # If not, add convo back to collection and
+              # throw Messenger() error
+              Conversations.insert(oldDoc)
+            )
+    else
+      Conversations.observer?.stop()

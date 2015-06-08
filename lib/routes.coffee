@@ -35,6 +35,8 @@ Router.onBeforeAction ->
           Router.go('tweets')
         @next()
       )
+    else
+      @next()
 
 # Redirect to login if no current user
 # TODO: Check for cookies and automatically login before redirect

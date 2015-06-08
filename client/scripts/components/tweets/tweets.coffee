@@ -2,7 +2,8 @@ class Tweets extends BlazeComponent
   @register 'Tweets'
 
   events: -> [
-    # 'click .sort-by button': @sortBy
+    'click .sort-by button': @onSortByClick
+    'click .per-page button': @onNumPerPageClick
   ]
 
   onCreated: ->
@@ -17,13 +18,26 @@ class Tweets extends BlazeComponent
           order_by: @order_by.get()
         , (err, res) ->
           unless err
-            # Session.set('conversations', res)
+            # Stop observer, remove all current records, insert new records, start observer
+            Conversations.observer.stop()
+            Conversations.remove({})
             res.forEach (doc) ->
               Conversations.insert doc
+            Conversations.startObserving()
 
-  sortBy: (e) ->
+  onSortByClick: (e) ->
     val = $(e.currentTarget).attr('value')
     @order_by.set val
+
+  onNumPerPageClick: (e) ->
+    val = $(e.currentTarget).attr('value')
+    @num_per_page.set parseInt(val)
+
+  orderBy: ->
+    @order_by.get()
+
+  numPerPage: ->
+    @num_per_page.get()
 
   totalConversations: ->
     count = Session.get('business')?.replyable_conversations

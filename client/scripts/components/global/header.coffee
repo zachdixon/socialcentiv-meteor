@@ -22,8 +22,10 @@ View =
     # Clear session variables
     Object.keys(Session.keys).forEach (key) ->
       Session.set key, undefined
+    # Clearing currentUser should stop observers, but just in case
     # Clear local collections
     for k,collection of App.collections
+      collection.observer?.stop()
       collection.remove({})
 
 Template.header.events

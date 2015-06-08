@@ -35,14 +35,14 @@
             <div class="sort-bar">
               <div class="sort-by">
                 <span>Sort By:</span>
-                <button class="convo-sort-button newest active" value="newest">NEWEST</button>
-                <button class="convo-sort-button oldest" value="oldest">OLDEST</button>
+                <button class="convo-sort-button newest {{#if $eq orderBy 'newest'}}active{{/if}}" value="newest">NEWEST</button>
+                <button class="convo-sort-button oldest {{#if $eq orderBy 'oldest'}}active{{/if}}" value="oldest">OLDEST</button>
               </div>
               <div class="per-page">
                 <span>Per Page:</span>
-                <button class="few-count">5</button>
-                <button class="few-count active">10</button>
-                <button class="more-count">20</button>
+                <button class="few-count {{#if $eq numPerPage 5}}active{{/if}}" value="5">5</button>
+                <button class="few-count {{#if $eq numPerPage 10}}active{{/if}}" value="10">10</button>
+                <button class="more-count {{#if $eq numPerPage 20}}active{{/if}}" value="20">20</button>
               </div>
             </div>
           </div>

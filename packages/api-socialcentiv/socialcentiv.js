@@ -14,7 +14,7 @@ if(Meteor.isClient) {
       "defaults": {
         base_url: url
       },
-      "routes": {
+      "misc": {
         "login": {
           url: "/users/me",
           type: "get"
@@ -118,7 +118,7 @@ if(Meteor.isClient) {
   API.sessions.login = function(options, cb) {
     check(options, Object);
     check(cb, Function);
-    route_config = APIConfig.config.routes.login;
+    route_config = APIConfig.config.misc.login;
     url = APIConfig.config.defaults.base_url + route_config.url;
     if(options.auth_type.toLowerCase() == "basic") {
       headers = {
@@ -135,9 +135,7 @@ if(Meteor.isClient) {
       {
         headers: headers
       },
-      function(err, res) {
-        cb(err, res.data);
-      }
+      cb
     );
   };
 

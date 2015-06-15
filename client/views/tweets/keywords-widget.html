@@ -14,21 +14,23 @@
         KEYWORDS
       </div>
     </div>
-    {{#each keyphrases}}
-      {{> Keyphrase}}
-    {{/each}}
+    {{#if keyphrases}}
+      {{#each keyphrases}}
+        {{> Keyphrase}}
+      {{/each}}
+    {{/if}}
   </div>
 </template>
 
 <template name="Keyphrase">
   <div class="keyphrase">
-    <div class="keyword-details">
-      <span class="chevron glyphicon glyphicon-chevron-up"></span>
+    <div class="keyword-details {{#if isOpen}}open{{/if}}">
+      <span class="chevron glyphicon {{#if isOpen}}glyphicon-chevron-up{{else}}glyphicon-chevron-down{{/if}}"></span>
       <span class="phrase" title="{{phrase}}">{{phrase}}</span>
       <span class="hide-tweets">HIDE TWEETS</span>
       <span class="btn glyphicon-trash glyphicon" style="display: none !important;"></span>
     </div>
-    <div class="keyword-performance-indicators" style="display: block;">
+    <div class="keyword-performance-indicators">
       <ul class="indicators">
         <li class="conversion_rate">
           <span class="context">Conversion Rate</span>

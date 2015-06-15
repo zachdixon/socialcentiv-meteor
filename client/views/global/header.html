@@ -12,13 +12,13 @@
           <ul id="main-nav">
             <a class="close-mobile-menu" href="#"><span class="glyphicon glyphicon-remove"></span></a>
             <li class="main-nav-item">
-              <a class="main-nav-link" href=""><img class="smallimg main-nav-icon" src="images/Twitter_logo_white.png" /><span class="label">Tweets</span></a>
+              <a class="main-nav-link {{isActiveRoute 'tweets'}}" href="{{pathFor 'tweets'}}"><img class="smallimg main-nav-icon" src="images/Twitter_logo_white.png" /><span class="label">Tweets</span></a>
             </li>
             <li class="main-nav-item">
-              <a class="main-nav-link" href=""><span class="ss-bullseye main-nav-icon"></span><span class="label">Campaign</span></a>
+              <a class="main-nav-link {{isActiveRoute 'campaigns'}}" href="{{pathFor 'campaigns'}}"><span class="ss-bullseye main-nav-icon"></span><span class="label">Campaign</span></a>
             </li>
             <li class="main-nav-item" id="reports">
-              <a class="main-nav-link" href=""><span class="icon-pie main-nav-icon"></span><span class="label">Reports</span></a>
+              <a class="main-nav-link {{isActiveRoute 'reports'}}" href="{{pathFor 'reports'}}"><span class="icon-pie main-nav-icon"></span><span class="label">Reports</span></a>
             </li>
             <li class="main-nav-item pull-right dropdown-nav">
               {{#with business}}

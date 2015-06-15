@@ -28,6 +28,10 @@ View =
       collection.observer?.stop()
       collection.remove({})
 
+Template.header.onRendered = ->
+
 Template.header.events
   'click .sub-nav-toggle': View.toggleSubNav
   'click .link-logout': View.logout
+
+Template.header.helpers

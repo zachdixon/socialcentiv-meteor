@@ -11,9 +11,10 @@ View =
         if err
           # show errors
         else
-          Cookie.set('currentUserEmail', res.email, {path: "/", domain: App.DOMAIN})
-          Cookie.set('currentUserAuth', res.authentication_token, {path: "/", domain: App.DOMAIN})
-          Session.set('currentUser', res)
+          user = res.data
+          Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN})
+          Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN})
+          Session.set('currentUser', user)
           Router.go('tweets')
       )
 

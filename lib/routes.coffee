@@ -1,44 +1,38 @@
-# if Meteor.isClient
-#   Meteor.startup ->
-#     email = Cookie.get('currentUserEmail')
-#     auth = Cookie.get('currentUserAuth')
-#     if email and auth
-#       _this = @
-#       API.sessions.login({auth_type: "token"}, (err, res) ->
-#         if err
-#           # show errors
-#         else
-#           Cookie.set('currentUserEmail', res.email, {path: "/", domain: App.DOMAIN})
-#           Cookie.set('currentUserAuth', res.authentication_token, {path: "/", domain: App.DOMAIN})
-#           Session.set('currentUser', res)
-#           Router.go('tweets')
-#       )
-
 Router.configure
   layoutTemplate: "mainLayout"
 
 Router.onBeforeAction ->
+  # If user already exists, continue
   if Session.get('currentUser')
     @next()
+  # Else check for cookies from previous session
   else
     email = Cookie.get('currentUserEmail')
     auth = Cookie.get('currentUserAuth')
+    # If cookies exists, login
     if email and auth
-      API.sessions.login({auth_type: "token"}, (err, res) ->
+      callback = (err, res) ->
         if err
           Router.go('login')
           # show errors
         else
-          Cookie.set('currentUserEmail', res.email, {path: "/", domain: App.DOMAIN})
-          Cookie.set('currentUserAuth', res.authentication_token, {path: "/", domain: App.DOMAIN})
-          Session.set('currentUser', res)
-          Router.go('tweets')
-      )
+          user = res.data
+          Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN})
+          Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN})
+          Session.set('currentUser', user)
+          currentRoute = Router.current().route.getName()
+          if currentRoute is 'login'
+            Router.go('tweets')
+          else
+            # FIXME - figure out 'this' context
+            # @next()
+      API.sessions.login({auth_type: "token"}, callback)
+    # cookies don't exists, continue and let other before action reroute to login
+    # NOTE: Doesn't redirect to login to prevent infinite loop
     else
       @next()
 
 # Redirect to login if no current user
-# TODO: Check for cookies and automatically login before redirect
 # Call @next() in callback of logging in
 Router.onBeforeAction ->
   if Session.get('currentUser')
@@ -53,7 +47,14 @@ Router.route '/login',
   layoutTemplate: 'sessionsLayout'
 
 Router.route '/',
-  fastRender: true
   name: 'tweets'
   template: "tweetsIndex"
+
+Router.route '/campaigns',
+  name: 'campaigns'
+  template: "campaignsIndex"
+
+Router.route '/reports',
+  name: 'reports'
+  template: "reportsShow"
 

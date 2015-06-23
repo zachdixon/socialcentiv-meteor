@@ -16,6 +16,7 @@ class Tweets extends BlazeComponent
           num_per_page: @num_per_page.get()
           status: 'awaiting_reply'
           order_by: @order_by.get()
+          keyphrase_ids: Keyphrases.find()
         , (err, res) ->
           unless err
             # Stop observer, remove all current records, insert new records, start observer

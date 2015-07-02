@@ -1,3 +1,7 @@
+Template.tweetsIndex.helpers
+  Test: ->
+    Test
+
 class Tweets extends BlazeComponent
   @register 'Tweets'
 

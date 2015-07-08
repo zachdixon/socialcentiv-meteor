@@ -16,4 +16,4 @@
 
 
 Template.Testtemplate.rendered = ->
-  React.render <AnotherTest/>, @firstNode
+  React.render <App/>, @firstNode

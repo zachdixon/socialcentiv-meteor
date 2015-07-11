@@ -6,11 +6,13 @@
 </body>
 
 <template name="mainLayout">
-  {{> Main}}
+  {{> main}}
 </template>
 
-<template name="Main">
-  {{> header}}
+<template name="main">
+  <div>
+    {{> React component=header }}
+  </div>
   <div class="container dashboard" id="main-container">
     <div class="row">
       <div class="col-md-12 col-xs-12 page-wrap">

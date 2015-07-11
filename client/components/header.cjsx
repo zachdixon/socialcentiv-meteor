@@ -1,6 +1,3 @@
-Template.header.rendered = ->
-  React.render <Header/>, @firstNode
-
 {string} = React.PropTypes
 
 @Header = React.createClass
@@ -19,10 +16,6 @@ Template.header.rendered = ->
     </div>
 
 @MainNav = React.createClass
-  mixins: [ReactMeteorData]
-
-  getMeteorData: ->
-    business: Session.get('business')
 
   routes: [
     {id: 1, name: "tweets", iconSrc: "images/Twitter_logo_white.png"}
@@ -39,31 +32,7 @@ Template.header.rendered = ->
           for route in @routes
             <MainNavItem key={route.id} name={route.name} iconSrc={route.iconSrc} iconClass={route.iconClass} />
         }
-        <li className="main-nav-item pull-right dropdown-nav">
-          <a className="main-nav-link sub-nav-toggle" href="">
-            {
-              if @data.business?.status is 'active'
-                <span className="account-logo-wrapper">
-                  <img className="account-logo" src={@data.business.twitter_avatar_url}/>
-                </span>
-            }
-            <span className="label">{@data.business?.name}</span>
-          </a>
-          <ul className="sub-nav">
-            <li className="sub-nav-item">
-              <a className="sub-nav-link" href="/account">
-                <span className="glyphicon glyphicon-user main-nav-icon"></span>
-                <span className="label">My Account</span>
-              </a>
-            </li>
-            <li className="sub-nav-item">
-              <a className="sub-nav-link link-logout" href="" onclick={@logout}>
-                <span className="glyphicon glyphicon-log-out main-nav-icon"></span>
-                <span className="label">Log Out</span>
-              </a>
-            </li>
-          </ul>
-        </li>
+        <MainUtilityNav />
       </ul>
     </nav>
 
@@ -89,4 +58,43 @@ Template.header.rendered = ->
         }
         <span className="label">{@props.name.toUpperCase()}</span>
       </a>
+    </li>
+
+@MainUtilityNav = React.createClass
+  mixins: [ReactMeteorData]
+
+  getMeteorData: ->
+    business: Session.get('business')
+
+  getInitialState: ->
+    open: false
+
+  toggle: ->
+    @setState open: !@getState('open')
+
+  render: ->
+    <li className="main-nav-item pull-right dropdown-nav">
+      <a className="main-nav-link sub-nav-toggle" href="" onclick={@toggle}>
+        {
+          if @data.business?.status is 'active'
+            <span className="account-logo-wrapper">
+              <img className="account-logo" src={@data.business.twitter_avatar_url}/>
+            </span>
+        }
+        <span className="label">{@data.business?.name}</span>
+      </a>
+      <ul className="sub-nav" style={{display: if @state.open then 'block' else 'none'}}>
+        <li className="sub-nav-item">
+          <a className="sub-nav-link" href="/account">
+            <span className="glyphicon glyphicon-user main-nav-icon"></span>
+            <span className="label">My Account</span>
+          </a>
+        </li>
+        <li className="sub-nav-item">
+          <a className="sub-nav-link link-logout" href="" onclick={@logout}>
+            <span className="glyphicon glyphicon-log-out main-nav-icon"></span>
+            <span className="label">Log Out</span>
+          </a>
+        </li>
+      </ul>
     </li>

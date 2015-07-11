@@ -122,12 +122,14 @@ if(Meteor.isClient) {
     url = APIConfig.config.defaults.base_url + route_config.url;
     if(options.auth_type.toLowerCase() == "basic") {
       headers = {
-        "Authorization": "Basic " + options.auth_string
+        "Authorization": "Basic " + options.auth_string,
+        "Accept": "application/vnd.socialcentiv.v2"
       };
     }else if(options.auth_type.toLowerCase() == "token") {
       headers = {
         "X-User-Email": Cookie.get('currentUserEmail'),
-        "X-User-Token": Cookie.get('currentUserAuth')
+        "X-User-Token": Cookie.get('currentUserAuth'),
+        "Accept": "application/vnd.socialcentiv.v2"
       };
     }
     var response = Meteor.http.get(
@@ -155,7 +157,8 @@ if(Meteor.isClient) {
           {
             headers: {
               "X-User-Email": Cookie.get('currentUserEmail'),
-              "X-User-Token": Cookie.get('currentUserAuth')
+              "X-User-Token": Cookie.get('currentUserAuth'),
+              "Accept": "application/vnd.socialcentiv.v2"
             },
             params: options
           },

@@ -61,7 +61,7 @@
     </li>
 
 @MainUtilityNav = React.createClass
-  mixins: [ReactMeteorData]
+  mixins: [ReactMeteorData, ReactOnClickOutside]
 
   getMeteorData: ->
     business: Session.get('business')
@@ -70,11 +70,27 @@
     open: false
 
   toggle: ->
-    @setState open: !@getState('open')
+    @setState open: !@state.open
+
+  handleClickOutside: (e) ->
+    if @state.open then @toggle()
+
+  handleLogout: (e) ->
+    # Clear cookies
+    Cookie.remove('currentUserEmail', {path: '/', domain: App.DOMAIN})
+    Cookie.remove('currentUserAuth', {path: '/', domain: App.DOMAIN})
+    # Clear session variables
+    Object.keys(Session.keys).forEach (key) ->
+      Session.set key, undefined
+    # Clearing currentUser should stop observers, but just in case
+    # Clear local collections
+    for k,collection of App.collections
+      collection.observer?.stop()
+      collection.remove({})
 
   render: ->
     <li className="main-nav-item pull-right dropdown-nav">
-      <a className="main-nav-link sub-nav-toggle" href="" onclick={@toggle}>
+      <a className="main-nav-link sub-nav-toggle" href="" onClick={@toggle}>
         {
           if @data.business?.status is 'active'
             <span className="account-logo-wrapper">
@@ -91,7 +107,7 @@
           </a>
         </li>
         <li className="sub-nav-item">
-          <a className="sub-nav-link link-logout" href="" onclick={@logout}>
+          <a className="sub-nav-link link-logout" href="" onClick={@handleLogout}>
             <span className="glyphicon glyphicon-log-out main-nav-icon"></span>
             <span className="label">Log Out</span>
           </a>

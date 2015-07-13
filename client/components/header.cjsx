@@ -1,6 +1,8 @@
+{ReactOnClickOutside, classNames} = NpmDependencies
+
 {string} = React.PropTypes
 
-@Header = React.createClass
+Header = React.createClass
   render: ->
     <div className="main-nav-wrapper">
       <div className="container">
@@ -15,8 +17,7 @@
       </div>
     </div>
 
-@MainNav = React.createClass
-
+MainNav = React.createClass
   routes: [
     {id: 1, name: "tweets", iconSrc: "images/Twitter_logo_white.png"}
     {id: 2, name: "campaigns", iconClass: "ss-bullseye main-nav-icon"}
@@ -37,8 +38,7 @@
     </nav>
 
 
-@MainNavItem = React.createClass
-
+MainNavItem = React.createClass
   propTypes:
     name: string
     iconSrc: string
@@ -60,7 +60,7 @@
       </a>
     </li>
 
-@MainUtilityNav = React.createClass
+MainUtilityNav = React.createClass
   mixins: [ReactMeteorData, ReactOnClickOutside]
 
   getMeteorData: ->
@@ -114,3 +114,5 @@
         </li>
       </ul>
     </li>
+
+_.extend App.Components, {Header, MainNav, MainNavItem, MainUtilityNav}

@@ -15,7 +15,9 @@ Template.main.rendered = ->
 
 Template.main.helpers
   header: ->
-    Header
+    App.Components.Header
+  footer: ->
+    App.Components.Footer
 
 # TODO - change to use collections.find
 Template.registerHelper 'user', ->

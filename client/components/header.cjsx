@@ -43,13 +43,11 @@ MainNavItem = React.createClass
     name: string
     iconSrc: string
     iconClass: string
-
-  className: ->
-    if ActiveRoute.name(@props.name) then 'main-nav-link active' else 'main-nav-link'
   
   render: ->
     <li className="main-nav-item">
-      <a className={@className()} href={Router.path(@props.name)}>
+      {active = ActiveRoute.name(@props.name)}
+      <a className={classNames('main-nav-link', {active: active})} href={Router.path(@props.name)}>
         {
           if @props.iconSrc
             <img className="smallimg main-nav-icon" src={@props.iconSrc} />

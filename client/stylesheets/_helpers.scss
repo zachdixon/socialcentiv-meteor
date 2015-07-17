@@ -24,6 +24,10 @@ $asbestos      : rgba(127, 140, 141,1.0); // #7f8c8d
 
 $theme_colors: green_sea #006353, emerald #92C38D, peter_river #64C5ED, amethyst #827EB9, midnight_blue #004159, sun_flower #E8A900, pumpkin #d35400, alizarin #C34A43, asbestos #363636, salmon #F18F96, violet #1F3564, turquoise #70C2BD;
 
+$primary_blue  : #0191cc;
+$secondary_blue: #01719e;
+$accent_blue   : #02b7ff;
+
 
 // FIXME - color functions are incorrect based only on one color
 @mixin theme_gradient($color) {

@@ -52,13 +52,13 @@ input[type="file"] {
     padding: 8px 12px 4px 12px !important;
 }
 .btn-primary{
-  background: #0191cc;
+  background: $primary_blue;
   border-color:transparent;
   font-size: 12px;
 }
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus{
   opacity: 0.9;
-  background: #0191cc;
+  background: $primary_blue;
   border-color:transparent;
 }
 /*Chrome fix for postion:fixed; elements*/
@@ -117,9 +117,8 @@ html {
   }
 }
 body{
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background:#fafafa;
+  background: $secondary_blue;
+  padding-top: 80px;
   margin-bottom: 85px;
   overflow-x:hidden;
 
@@ -143,7 +142,7 @@ body{
   left: 0;
   text-align: center;
   -webkit-transform: translateZ(0);
-  background: #0191cc;
+  background: $primary_blue;
   color: #fff;
   .loading-container {
     margin: 10% auto 0;
@@ -170,7 +169,7 @@ body{
   left: 0;
   text-align: center;
   -webkit-transform: translateZ(0);
-  background: #0191cc;
+  background: $primary_blue;
   color: #fff;
   .saving-container {
     margin: 10% auto 0;
@@ -192,6 +191,14 @@ ul {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+a {
+  color: $accent_blue;
+
+  &:hover {
+    color: $accent_blue;
+    text-decoration: underline;
+  }
 }
 a:focus {
   outline: none;
@@ -248,7 +255,7 @@ p{
 
 .btn-blue {    
     border-radius: 5px;
-    background: #0191cc;
+    background: $primary_blue;
     font-size: 14px;
     font-weight: bold;
     outline: none;
@@ -286,7 +293,7 @@ p{
     text-align: center;
     top: -15px;
     opacity: 0;
-    background: #0191cc;
+    background: $primary_blue;
     padding: 5px 10px;
     border-radius: 3px;
     color: #fff;
@@ -308,7 +315,7 @@ p{
       width: 0;
       position: absolute;
       pointer-events: none;
-      border-top-color: #0191cc;
+      border-top-color: $primary_blue;
       border-width: 5px;
       margin-left: -5px;
     }
@@ -322,7 +329,7 @@ p{
         top: 50%;
         left: 100%;
         border-top-color: transparent;
-        border-left-color: #0191cc;
+        border-left-color: $primary_blue;
         margin: -5px 0 0 0;
       }
     }
@@ -614,12 +621,14 @@ hr{
 
 #account-logo{
 
-  position:relative;
+  position: relative;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 1px 1px 1px #eee;
-  width: 200px;
+  box-shadow: 0 2px 5px 1px rgba(0,0,0,0.25);
+  width: 60px;
   margin-bottom: 20px;
+  float: left;
+  margin-right: 10px;
 
   img{
     width:100%;
@@ -666,7 +675,7 @@ hr{
     padding:2px 0;
   }
   #account-name{
-    color: #333;
+    color: #fff;
     font-weight: bold;
     font-size: 18px;
     margin-bottom: -10px;
@@ -675,24 +684,25 @@ hr{
   #account-twitter-name{
     font-size:14px;
     float: left;
+    color: rgba(255,255,255,0.75);
   }
 
   #twitter-account-change{
-    color:#0095db;
-    font-size:14px;
-    float: right;
+    color: #0095db;
+    font-size: 14px;
+    float: left;
   }
 
 }
 .keyword-helper-text{
     display: inline-block;
   margin-bottom: 10px;
-  color: #0191cc;
+  color: $primary_blue;
   position: relative;
   top: -3px;
 }
 .keyword-helper-icon{
-  color: #0191cc;
+  color: $primary_blue;
   font-size: 16px;
   margin-right: 5px;
   display:inline-block;
@@ -711,7 +721,7 @@ hr{
   border-bottom: 1px solid #B0B0B0;
   margin-bottom: 10px;
   width: 100%;
-  color:#0191cc;
+  color:$primary_blue;
 }
 .circle-div.keyword-number {
   position: absolute;
@@ -734,14 +744,14 @@ hr{
 .keyphrase{
   display: block;
   margin-bottom:10px;
-  border-radius:5px 5px;
+  border-radius:2px;
   font-size: 14px;
   font-weight:bold;
   position:relative;
-  box-shadow: 0 2px 2px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 
   .phrase{
-    color:#0191cc;
+    color:#fff;
     width:50%;
     text-overflow:ellipsis;
     overflow:hidden;
@@ -764,26 +774,26 @@ hr{
   }
 
   .keyword-details{
-    background:#d0d7e0;
+    background:$primary_blue;
     padding:8px 10px 0 10px;
-    border-radius: 5px 5px 0 0;
+    border-radius: 2px 2px 0 0;
     cursor: pointer;
     .chevron {
       float: left;
       line-height: 26px;
       margin-right: 5px;
-      color: #0191cc;
+      color: #fff;
     }
   }
 
   .keyword-details.less{
-    border-radius: 5px 5px !important;
+    border-radius: 2px !important;
   }
 
   .keyword-performance-indicators{
-    background:#e3e8ee;
+    background:#fff;
     padding-bottom:6px;
-    border-radius: 0 0px 5px 5px;
+    border-radius: 0 0px 2px 2px;
     display: none;
     ul.indicators{
 
@@ -794,11 +804,11 @@ hr{
         }
         span.value{
           float: right;
-          color:#0191cc;
+          color:$primary_blue;
         }
         span.perc {
           float: right;
-          color:#0191cc;
+          color:$primary_blue;
           opacity:0;
         }
       }
@@ -858,8 +868,8 @@ hr{
   }
 
   .hide-tweets{
-    border:1px solid #0191cc !important;
-    color:#0191cc;
+    border:1px solid $primary_blue !important;
+    color:$primary_blue;
     opacity:1;
   }
 
@@ -1049,7 +1059,7 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
   }
   h1 {
     font-family: 'Open Sans', sans-serif;
-    color: #0191cc;
+    color: $primary_blue;
     font-size: 1.5em;
     text-align: center;
     font-weight: 300;
@@ -1099,8 +1109,8 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
 }
 
 #session-wrapper .form-control{
-  background-color: #cad2d7;
-  color: #666;
+  background-color: transparent;
+  color: #fff;
   padding: 10px 20px;
   font-size:1.2em;
   box-shadow: none;
@@ -1114,8 +1124,9 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
   outline: none;
   border: none;
   margin: 0;
-  border-radius:5px;
-  width:90%;
+  border-radius: 0;
+  width: 90%;
+  border-bottom: 2px solid #004966;
 }
 
 #session-wrapper .form-control:hover{
@@ -1128,7 +1139,7 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
   font-size:20px;
   font-weight:300;
   display: block;
-  color:#029ae4 !important;
+  color:#004966 !important;
   opacity:0.7;
   span{
     color:#ccc;
@@ -1200,8 +1211,8 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
     height: 80px;
     padding: 0px;
     margin: 30px auto;
-    border: 3px solid #0191cc;
-    color: #0191cc;
+    border: 3px solid $primary_blue;
+    color: $primary_blue;
     text-align: center;
     -webkit-transition: all 0.2s linear;
     -moz-transition: all 0.2s linear;
@@ -1338,8 +1349,8 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
         button {
           padding: 9px;
           text-transform: uppercase;
-          background-color: #0191cc;
-          border: 1px solid #0191cc;
+          background-color: $primary_blue;
+          border: 1px solid $primary_blue;
           color: #fff;
           border-radius: 3px;
           font-size: 12px;
@@ -1376,7 +1387,7 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
           font-weight: 700;
           font-size: 14px;
           margin: 0;
-          color: #0191cc;
+          color: $primary_blue;
         }
         p {
           margin: 20px 0;
@@ -1666,7 +1677,7 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
   .edit-toggle{
     display: none;
     position:absolute;
-    color: #0191cc;
+    color: $primary_blue;
     cursor:pointer;
     padding:2px;
     right:10px;
@@ -2036,7 +2047,7 @@ div.examples{
 }
 .confirmSaveIcon{
   // display: none;
-  color: #0191cc;
+  color: $primary_blue;
   position: absolute;
   left: 70%;
   font-size: 22px;
@@ -2519,7 +2530,7 @@ in the app.*/
     line-height: 15px;
     margin-top: 40px;
     padding:10px;
-    background: #0191cc;
+    background: $primary_blue;
     padding: 10px;
     border-radius: 4px;
     border-bottom: 3px solid #0080B5;
@@ -2754,7 +2765,7 @@ in the app.*/
     }
   }
   .last-step{
-    background: #0191CC;
+    background: $primary_blue;
     color:white;
   }
   .progress-step:last-child{
@@ -2985,7 +2996,7 @@ form.add-radius-target {
   margin-left:-5px;
 }
 .city-name {
-  color: #0191cc;
+  color: $primary_blue;
 }
 .city-name, .miles{
   line-height: 43px;
@@ -3014,13 +3025,16 @@ button.country {
 /* -------------------------- *\
 |       !MAIN NAVIGATION       |
 \* -------------------------- */
-.main-nav-wrapper {  
-  position: static;
+.main-nav-wrapper {
+  position: fixed;
+  z-index: 999999;
+  top: 0;
   margin-right: -15px;
   margin-left: 0;
-  background-color: #0191cc;
+  background-color: $primary_blue;
   width:100%;
   min-height: 60px;
+  box-shadow: 0 2px 10px 0px rgba(0,0,0,0.3);
   div.container{
     padding: 0 10px;
   }  
@@ -3094,7 +3108,6 @@ button.country {
     color: #fff;
     opacity: 1;
     text-decoration: none;
-    background: #0082B7;
     .main-nav-icon, .label {
       opacity: 1;
     }
@@ -3241,7 +3254,7 @@ button.country {
   }
   .campaign-name {
     font-size: 1.75em;
-    color: #0191cc;
+    color: $primary_blue;
     margin: 0 0 5px 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3270,7 +3283,7 @@ button.country {
 
   .btn-blue {
     border-radius: 3px;
-    background: #0191cc;
+    background: $primary_blue;
     font-size: 14px;
     font-weight: bold;
     margin-right: 5px;
@@ -3332,7 +3345,7 @@ button.country {
     border:none;
   }
   .btn.glyphicon-trash.glyphicon:hover{
-    color:#0191cc;
+    color:$primary_blue;
     z-index:4;
   }
 }
@@ -3357,42 +3370,7 @@ button.country {
 /* --------------------- *\
 |     !TWEET STREAM       |
 \* --------------------- */
-.comments-header {
-  background: #0082B7;
-  border-radius: 5px 5px 0 0;
-  padding: 0 10px;
-  border: 1px solid #0082B7;
-  border-bottom-color: #fff;
-}
 .comments-nav {
-  .nav-item {
-    margin: 0;
-    float: left;
-  }
-  .nav-item-link {
-    cursor: pointer;
-    display: block;
-    padding: 10px;
-    text-align: center;
-    border-bottom: 0px solid #fff;
-    box-sizing: border-box;
-    transition: all 250ms ease-in-out;
-    height: 53px;
-    opacity: 0.7;
-    color: #fff;
-
-
-    &:hover, &:active, &:focus, &.active {
-      text-decoration: none;
-      border-bottom-width: 4px;
-      opacity: 1;
-    }
-  }
-  .text {
-    display: block;
-    text-transform: uppercase;
-    font-size: 12px;
-  }
   .count {
     font-size: 20px;
     line-height: 12px;
@@ -3411,12 +3389,23 @@ button.country {
     display: block;
   }
   .header {
-    background: #fff;
-    padding-left: 10px;
-    padding-right: 10px;
-    border: 1px solid #c3d2e2;
+    background: $primary_blue;
+    padding: 0 10px;
     border-top: none;
-    border-radius: 0;
+    border-radius: 2px;
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 5px 1px rgba(0,0,0,0.3);
+
+    .count {
+      font-size: 40px;
+      margin-right: 5px;
+      color: rgba(0,0,0,0.75);
+    }
+
+    .sort-bar {
+      line-height: 43px;
+    }
   }
 }
 
@@ -3463,23 +3452,22 @@ div.header{
   color: #666;
   border-radius: 5px 5px 0 0 ;
   span{
-    font-size:14px;
-    margin-right:  5px;
-    color:#000;
+    font-size: 14px;
+    margin-right: 5px;
+    color: rgba(0,0,0,0.75);
   }
 
   button.active{
-    border:1px solid #aaa;
+    border-bottom: 4px solid #fff;
   }
 
   button{
-    border-radius: 3px;
     background: none;
-    border:none;
-    font-size:0.9em;
+    border: none;
+    font-size: 0.9em;
     margin-right: 5px;
     outline: none;
-    color:#999;
+    color: rgba(255,255,255,0.7);
     padding: 5px 10px;
   }
   .sort-by {
@@ -3731,11 +3719,11 @@ div.header{
     left: 10px;
     font-weight: normal;
     margin: 0;
-    color: #0191cc;
+    color: $primary_blue;
     background: #fff;
   }
   .reply-link {
-    color: #0191cc;
+    color: $primary_blue;
     font-weight: normal;
     background: #fff;
     text-align: right;
@@ -3755,7 +3743,7 @@ div.header{
   }
 
   .landing-page-link{
-    color:#0191cc;
+    color:$primary_blue;
     padding:10px 0;
     position:absolute;
   }
@@ -3894,11 +3882,13 @@ div.header{
 
 .comment {
   position:relative;
-  background : white;
+  background : #fff;
   padding:0px 15px;
-  border: 1px solid #c3d2e2;
   border-top: none;
   font-size:16px;
+  margin: 10px 0;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 
   ::-webkit-input-placeholder {
     font-style: italic;
@@ -3949,7 +3939,7 @@ div.header{
     }
     span.username {
       font-weight:bold;
-      color:#0191cc;
+      color:$primary_blue;
     }
     span.timeFromNow {
       margin-right: 5px !important;
@@ -4005,7 +3995,7 @@ div.header{
 
       float:left;
       background:none;
-      color:#0191cc !important;
+      color:$primary_blue !important;
       border-bottom: none;
       margin-top:3px;
 
@@ -4024,7 +4014,7 @@ div.header{
     }
 
     button.retweet.active .icon-retweet {
-      color:#0191cc !important;
+      color:$primary_blue !important;
     }
     button.delete .icon {
       font-size: 16px;
@@ -4032,7 +4022,7 @@ div.header{
     button.cancel {
       position:absolute;
       right:0px;
-      background:#0191cc;
+      background:$primary_blue;
       color: white;
       display:none;
     }
@@ -4070,7 +4060,7 @@ div.header{
 
 
 .load-page{
-  background:#0191cc;
+  background:$primary_blue;
   padding:15px 15px;
   font-size:1.2em;
   font-weight:bold;
@@ -4081,6 +4071,7 @@ div.header{
   border-radius: 5px;
   cursor: pointer;
   margin: 15px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .load-page:hover{
@@ -4095,7 +4086,6 @@ div.header{
 }
 .tips{
   margin-top: 10px;
-  color: #444;
   font-weight: 300;
   padding-right:0;
   font-size:14px;
@@ -4103,7 +4093,7 @@ div.header{
     font-weight:700;
     padding:5px 0;
     margin:15px 0;
-    color:#444;
+    color:#fff;
     font-size:12px;
     text-transform: uppercase;
   }
@@ -4116,22 +4106,22 @@ div.header{
     height:40px;
     font-size:13px;
     text-transform: uppercase;
-    color:#444;
+    color: rgba(0,0,0,0.5);
   }
   p{
     font-size:13px;
     margin-bottom:5px;
+    color: rgba(255,255,255,0.75);
   }
   .tip{
     margin:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.4);
     margin-bottom: 30px;
 
     .glyphicon{
       font-size: 35px;
       float:left;
       margin-right:15px;
-      color:#c3d2e2;
+      color: rgba(0,0,0,0.5);
     }
   }
 }
@@ -4259,7 +4249,7 @@ div.header{
     color: #444;
   }
   .select2-results .select2-highlighted{
-    background: #0191cc;
+    background: $primary_blue;
   }
 }
 .conversion-rate {
@@ -5197,7 +5187,7 @@ div.header{
   color: #EC6666 !important;
 }
 .blue-text{
-  color: #0191cc !important;
+  color: $primary_blue !important;
   font-family: 'Open Sans', sans-serif;
   text-align: center;
 }
@@ -5368,7 +5358,7 @@ div.header{
 }
 .footer{
     padding: 15px;
-    background: #0191cc;
+    background: $primary_blue;
     text-align: center;
     font-size: 14px;
     color: #FFF;

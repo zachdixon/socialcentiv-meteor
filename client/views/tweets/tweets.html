@@ -29,19 +29,13 @@
   <div class="center-right-wrapper col-xs-12">
     <div class="comments" id="center-col">
       <div class="col-xs-12">
-        <div class="row comments-header">
-          <ul class="comments-nav">
-            <li class="nav-item">
-              <a class="nav-item-link active" href="#">
-                <span class="text">Tweets</span>
-                <span class="count">{{totalConversations}}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
         <div>
           <div class="header clearfix row">
-            <div class="sort-bar">
+            <div class="tweet-count pull-left">
+              <span class="count">{{totalConversations}}</span>
+              Tweets
+            </div>
+            <div class="sort-bar pull-right">
               <div class="sort-by">
                 <span>Sort By:</span>
                 <button class="convo-sort-button newest {{#if $eq orderBy 'newest'}}active{{/if}}" value="newest">NEWEST</button>
@@ -69,7 +63,7 @@
             {{> ConversationsList}}
           </div>
           <div class="row">
-            <div class="load-page col-md-12 col-xs-12">DELETE TWEETS &amp; LOAD MORE</div>
+            <div class="load-page col-md-12 col-xs-12 waves-effect waves-light">DELETE TWEETS &amp; LOAD MORE</div>
           </div>
         </div>
       </div>
@@ -108,7 +102,6 @@
           <a class="authorize-twitter-link small-link" href="http://api.hiplocalhost.com:3000/start_twitter_process?business_id=2&amp;return_to_url=http://my.hiplocalhost.com:3001/twitter_authorized">Change Twitter Account</a>
         </div>
       </div>
-      <hr />
     </div>
   {{/with}}
 </template>

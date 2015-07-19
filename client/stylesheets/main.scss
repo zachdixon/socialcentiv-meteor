@@ -4039,13 +4039,6 @@ div.header{
 
 .comment.active {
   background: #f8fafc;
-  margin: 10px 0;
-  border-radius: 5px;
-  box-shadow: 0 -1px #c3d2e2;
-
-  & + .comment {
-    box-shadow: 0 -1px #c3d2e2;
-  }
 }
 
 .comment.replying{

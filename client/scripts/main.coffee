@@ -1,3 +1,7 @@
+Meteor.startup ->
+  Waves.init()
+  new WOW().init()
+
 Template.main.rendered = ->
   Tracker.autorun ->
     if Session.get('currentUser')?

@@ -22,6 +22,9 @@ View =
           Router.go('tweets')
       )
 
+Template.login.helpers
+  login: ->
+    App.Components.Login
 
 Template.login.events
   'submit form': View.login

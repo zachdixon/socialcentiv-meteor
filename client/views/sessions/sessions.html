@@ -13,31 +13,7 @@
 </template>
 
 <template name="login">
-  <form class="col-xs-12">
-    <div class="row">
-      <ul class="errors col-xs-12">
-        <li class="error">
-          <p data-foreach-error="session.errors" data-source="error.message"></p>
-        </li>
-      </ul>
-    </div>
-    <div class="row">
-      <div class="form-group col-xs-12">
-        <input autocomplete="off" class="form-control" placeholder="Email" required="" type="email" />
-      </div>
-      <div class="form-group col-xs-12">
-        <input autocomplete="off" class="form-control" placeholder="Password" required="" type="password" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="session-submit col-xs-12">
-        <button class="btn btn-blue pull-right ladda-button" data-style="zoom-in" type="submit"><span class="ladda-label">Log In</span></button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="session-actions col-xs-12">
-        <a class="btn-forgot-password" href="">Forgot your password?</a><a class="btn-create-account" href="http://www.socialcentiv.com/signup">Create an account</a>
-      </div>
-    </div>
-  </form>
+  <div>
+    {{> React component=login }}
+  </div>
 </template>

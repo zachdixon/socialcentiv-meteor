@@ -1046,10 +1046,14 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
 | !SESSION           |
 \* ---------------- */
 #session-wrapper {
+  background: #fff;
   width: 500px;
   position: fixed;
   top: calc(40% - 201px);
   left: calc(50% - 250px);
+  box-shadow: 0 5px 10px 1px rgba(0,0,0,0.3);
+  padding: 15px;
+  border-radius: 3px;
   .session-logo {
     text-align: center;
     margin-bottom: 20px;
@@ -1069,24 +1073,23 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
   }
   .session-actions {
     text-align: center;
-    margin-top: 50px;
     font-size:1.5em;
   }
   ::-webkit-input-placeholder {
-     color: #fff;
+     color: $secondary_blue;
      font-weight:300;
      font-family: 'Open Sans', sans-serif;
   }
   :-moz-placeholder { 
-     color: #fff;  
+     color: $secondary_blue;  
   }
 
   ::-moz-placeholder {  
-     color: #fff;  
+     color: $secondary_blue;  
   }
 
   :-ms-input-placeholder {  
-     color: #fff;  
+     color: $secondary_blue;  
   }
 
   .errors {
@@ -1099,6 +1102,20 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
   .btn-forgot-pass {
      font-size: 16px;
   }
+  button.btn {
+    text-transform: none;
+    font-weight: normal;
+    padding: 10px 50px !important;
+    font-size: 16px;
+    margin: 15px 0;
+    border-radius: 0 !important;
+    transition: all 400ms;
+
+    &:hover {
+      -webkit-box-shadow: 0 2px 5px 1px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 5px 1px rgba(0,0,0,0.3);
+    }
+  }
   
 }
 // firefox
@@ -1110,8 +1127,8 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
 
 #session-wrapper .form-control{
   background-color: transparent;
-  color: #fff;
-  padding: 10px 20px;
+  color: #000;
+  padding: 0;
   font-size:1.2em;
   box-shadow: none;
   -webkit-box-shadow: none;
@@ -1125,8 +1142,8 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
   border: none;
   margin: 0;
   border-radius: 0;
-  width: 90%;
-  border-bottom: 2px solid #004966;
+  width: 100%;
+  border-bottom: 2px solid $primary_blue;
 }
 
 #session-wrapper .form-control:hover{
@@ -3446,7 +3463,6 @@ li.header{
 
 div.header{
   position: relative;
-  z-index:10;
   padding: 10px 0px;
   font-weight: bold;
   color: #666;

@@ -14,7 +14,7 @@ class Tweets extends BlazeComponent
     @num_per_page = new ReactiveVar(10)
     @order_by = new ReactiveVar('newest')
     @autorun =>
-      if Session.get('business')?
+      if Session.get('business')? and Keyphrases.find().count()
         API.conversations.getAll
           business_id: Session.get('business').id
           num_per_page: @num_per_page.get()

@@ -1,14 +1,5 @@
 <template name="tweetsIndex">
-  <!-- <div>
-    {{> React component=Test}}
-  </div>
-  {{> Testtemplate}} -->
-  
   {{> Tweets}}
-</template>
-
-<template name="Testtemplate">
-  <div></div>
 </template>
 
 <template name="Tweets">
@@ -20,7 +11,9 @@
 
 <template name="tweetsLeftColumn">
   <div class="hidden-xs clearfix" id="left-col">
-    {{> AccountDetails}}
+    <div>
+      {{> React component=accountDetails }}
+    </div>
     {{> KeywordsWidget}}
   </div>
 </template>
@@ -66,7 +59,9 @@
           </div>
           <div class="conversations row">
             {{> galleryModal}}
-            {{> ConversationsList}}
+            <div>
+              {{> React component=conversationsList}}
+            </div>
           </div>
           <div class="row">
             <div class="load-page col-md-12 col-xs-12">DELETE TWEETS &amp; LOAD MORE</div>

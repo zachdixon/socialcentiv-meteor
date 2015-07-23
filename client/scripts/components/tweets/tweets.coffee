@@ -1,9 +1,10 @@
-Template.tweetsIndex.helpers
-  Test: ->
-    Test
-
 class Tweets extends BlazeComponent
   @register 'Tweets'
+
+  accountDetails: ->
+    App.Components.AccountDetails
+  conversationsList: ->
+    App.Components.ConversationsList
 
   events: -> [
     'click .sort-by button': @onSortByClick

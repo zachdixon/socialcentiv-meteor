@@ -11,14 +11,17 @@ AccountDetails = React.createClass
   render: ->
     <div id="accountdetails">
       <div id="account-logo">
-        <img src="{{twitter_avatar_large}}">
+        <img src={@data.business?.twitter_avatar_url?.replace("_normal","")} />
       </div>
-      <div class="clearfix" id="account-details">
-        <div id="account-name">{{name}}</div>
-        <div id="account-twitter-name">@{{twitter_screen_name}}</div>
+      <div className="clearfix" id="account-details">
+        <div id="account-name">{@data.business?.name}</div>
+        <div id="account-twitter-name">@{@data.business?.twitter_screen_name}</div>
         <div id="twitter-account-change">
-          <a class="authorize-twitter-link small-link" href="http://api.hiplocalhost.com:3000/start_twitter_process?business_id=2&amp;return_to_url=http://my.hiplocalhost.com:3001/twitter_authorized">Change Twitter Account</a>
+          <a className="authorize-twitter-link small-link" href="http://api.hiplocalhost.com:3000/start_twitter_process?business_id=2&amp;return_to_url=http://my.hiplocalhost.com:3001/twitter_authorized">Change Twitter Account</a>
         </div>
       </div>
       <hr />
     </div>
+
+
+_.extend App.Components, { AccountDetails }

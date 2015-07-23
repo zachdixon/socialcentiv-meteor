@@ -7,11 +7,17 @@ Template.main.rendered = ->
         unless err
           Session.set('business', res[0])
     if Session.get('business')?
-      API.campaigns.getSingle
+      API.campaigns.getAll
         business_id: Session.get('business').id
       , (err, res) ->
         unless err
-          Session.set('campaign', res[0])
+          Campaigns.observer.stop()
+          Campaigns.remove({})
+          res.forEach (doc) ->
+            Campaigns.insert doc
+          Campaigns.startObserving()
+          # Remove once multiple campaigns implemented
+          Session.set 'campaign', res[0]
 
 Template.main.helpers
   header: ->

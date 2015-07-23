@@ -55,9 +55,15 @@ if(Meteor.isClient) {
           url: "/campaigns",
           methods: [
             {
+              name: "getAll",
+              type: "get",
+              requried_params: ["business_id"]
+            },
+            {
               name: "getSingle",
               type: "get",
-              required_params: ["business_id"]
+              url_param: "id",
+              required_params: ["id"]
             }
           ]
         },
@@ -85,6 +91,16 @@ if(Meteor.isClient) {
               type: "del",
               url_param: "id",
               required_params: ["id"]
+            }
+          ]
+        },
+        {
+          name: "suggestedResponses",
+          url: "/suggested_responses",
+          methods: [
+            {
+              name: "getAll",
+              type: "get"
             }
           ]
         },

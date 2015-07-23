@@ -8,13 +8,12 @@ Meteor.startup ->
           if err
             Conversations.update(oldDoc._id, {$set: oldDoc})
       removed: (oldDoc) ->
-        API.conversations.delete({id: oldDoc.id}, (err, res) ->
+        API.conversations.delete {id: oldDoc.id}, (err, res) ->
           if err
             # Check error if tweet was already deleted
             # If not, add convo back to collection and
             # throw Messenger() error
             Conversations.insert(oldDoc)
-          )
 
   Tracker.autorun ->
     if Session.get('currentUser')

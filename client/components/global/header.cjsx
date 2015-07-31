@@ -1,4 +1,6 @@
-{ReactOnClickOutside, classNames} = NpmDependencies
+{ReactOnClickOutside, classNames, ReactRouter} = NpmDependencies
+
+{Link} = ReactRouter
 
 {string} = React.PropTypes
 
@@ -20,8 +22,8 @@ Header = React.createClass
 MainNav = React.createClass
   routes: [
     {id: 1, name: "tweets", iconSrc: "images/Twitter_logo_white.png"}
-    {id: 2, name: "campaigns", iconClass: "ss-bullseye main-nav-icon"}
-    {id: 3, name: "reports", iconClass: "icon-pie main-nav-icon"}
+    # {id: 2, name: "campaigns", iconClass: "ss-bullseye main-nav-icon"}
+    # {id: 3, name: "reports", iconClass: "icon-pie main-nav-icon"}
   ]
 
   render: ->
@@ -46,8 +48,7 @@ MainNavItem = React.createClass
   
   render: ->
     <li className="main-nav-item">
-      {active = ActiveRoute.name(@props.name)}
-      <a className={classNames('main-nav-link', {active: active})} href={Router.path(@props.name)}>
+      <Link className='main-nav-link' to={@props.name}>
         {
           if @props.iconSrc
             <img className="smallimg main-nav-icon" src={@props.iconSrc} />
@@ -55,7 +56,7 @@ MainNavItem = React.createClass
             <span className={@props.iconClass}></span>
         }
         <span className="label">{@props.name.toUpperCase()}</span>
-      </a>
+      </Link>
     </li>
 
 MainUtilityNav = React.createClass
@@ -67,7 +68,8 @@ MainUtilityNav = React.createClass
   getInitialState: ->
     open: false
 
-  toggle: ->
+  toggle: (e) ->
+    e?.preventDefault()
     @setState open: !@state.open
 
   handleClickOutside: (e) ->

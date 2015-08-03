@@ -2,8 +2,6 @@
 
 {string, number, object, array, func, oneOfType} = React.PropTypes
 
-{CampaignsSelector, SuggestedResponses} = App.Components
-
 ConversationsList = React.createClass
   mixins: [ReactMeteorData]
 
@@ -99,6 +97,8 @@ Conversation = React.createClass
 
 
   render: ->
+    {CampaignsSelector, SuggestedResponses} = App.Components
+    
     lbc_tweet = @props.conversation.lbc_tweet
     reply_tweet = @props.conversation.reply_tweet
 

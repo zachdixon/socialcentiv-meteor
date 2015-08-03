@@ -1,11 +1,6 @@
-{ ReactRouter } = NpmDependencies
-
-{ Navigation } = ReactRouter
 
 LoginPage = React.createClass
 
-  mixins: [Navigation]
-  
   login: (e) ->
     e.preventDefault()
     _this = @
@@ -22,7 +17,7 @@ LoginPage = React.createClass
           Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN})
           Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN})
           Session.set('currentUser', user)
-          _this.transitionTo 'tweets'
+          FlowRouter.go 'tweets'
 
   render: ->
     <form className="col-xs-12" onSubmit={@login}>

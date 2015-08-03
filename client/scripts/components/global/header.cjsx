@@ -1,6 +1,4 @@
-{ReactOnClickOutside, classNames, ReactRouter} = NpmDependencies
-
-{Link} = ReactRouter
+{ReactOnClickOutside, classNames} = NpmDependencies
 
 {string} = React.PropTypes
 
@@ -48,7 +46,7 @@ MainNavItem = React.createClass
   
   render: ->
     <li className="main-nav-item">
-      <Link className='main-nav-link' to={@props.name}>
+      <a className='main-nav-link' href={FlowRouter.path(@props.name)}>
         {
           if @props.iconSrc
             <img className="smallimg main-nav-icon" src={@props.iconSrc} />
@@ -56,7 +54,7 @@ MainNavItem = React.createClass
             <span className={@props.iconClass}></span>
         }
         <span className="label">{@props.name.toUpperCase()}</span>
-      </Link>
+      </a>
     </li>
 
 MainUtilityNav = React.createClass

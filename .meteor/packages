@@ -29,3 +29,5 @@ meteorhacks:npm
 cosmos:browserify
 
 npm-container
+kadira:flow-router
+kadira:react-layout

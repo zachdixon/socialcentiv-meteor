@@ -1,7 +1,3 @@
-# NOTE - renamed to fix load order issue. This won't be an issue when either
-# Meteor releases a better way to control load order or
-# Our root components are React and we can call render in Meteor.startup
-# see https://github.com/meteor/react-packages/blob/master/examples/react-todos/client/routes.jsx
 
 {classNames} = NpmDependencies
 

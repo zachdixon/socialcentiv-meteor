@@ -3,13 +3,14 @@ TweetsPage = React.createClass
   render: ->
     { 
       AccountDetails,
-      # KeywordsWidget,
+      KeyphrasesWidget,
       ConversationsList
     } = App.Components
-    
+
     <div className="conversations-index">
       <div id="left-col" className="hidden-xs clearfix">
         <AccountDetails />
+        <KeyphrasesWidget />
       </div>
     </div>
 

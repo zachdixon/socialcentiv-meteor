@@ -2,6 +2,6 @@
 
 System.config({
     map: {
-        'app-deps': 'app-deps/main'
+        'app-deps': System.normalizeSync('app-deps/main')
     }
 });

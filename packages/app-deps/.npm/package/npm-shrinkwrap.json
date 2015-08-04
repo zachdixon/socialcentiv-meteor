@@ -3,25 +3,33 @@
     "classnames": {
       "version": "2.1.2"
     },
-    "exposify": {
-      "version": "0.4.3",
+    "externalify": {
+      "version": "0.1.0",
       "dependencies": {
         "globo": {
-          "version": "1.0.0",
+          "version": "1.0.2",
           "dependencies": {
-            "pff": {
+            "accessory": {
+              "version": "1.0.1",
+              "dependencies": {
+                "dot-parts": {
+                  "version": "1.0.1"
+                }
+              }
+            },
+            "is-defined": {
+              "version": "1.0.0"
+            },
+            "ternary": {
               "version": "1.0.0"
             }
           }
         },
-        "has-require": {
-          "version": "1.1.0"
-        },
         "map-obj": {
           "version": "1.0.1"
         },
-        "replace-requires": {
-          "version": "1.0.3",
+        "replace-require-functions": {
+          "version": "1.0.0",
           "dependencies": {
             "detective": {
               "version": "4.1.1",
@@ -71,7 +79,7 @@
                       "version": "0.1.43",
                       "dependencies": {
                         "amdefine": {
-                          "version": "0.1.1"
+                          "version": "1.0.0"
                         }
                       }
                     }
@@ -150,7 +158,7 @@
       }
     },
     "moment": {
-      "version": "2.10.3"
+      "version": "2.10.6"
     },
     "react-onclickoutside": {
       "version": "0.3.0"

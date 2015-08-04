@@ -14,8 +14,8 @@ Package.describe({
 
 Npm.depends({
     "classnames": "2.1.2",
-    "moment": "2.10.3",
-    "exposify": "0.4.3",
+    "moment": "2.10.6",
+    "externalify": "0.1.0",
     "react-onclickoutside": "0.3.0"
 });
 
@@ -29,7 +29,7 @@ Package.onUse(function(api) {
     ], 'client');
 
     api.use([
-        'universe:modules@0.2.0',
+        'universe:modules@0.4.1',
     ]);
 
     api.addFiles([

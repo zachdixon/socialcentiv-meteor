@@ -1,8 +1,8 @@
 {
     "transforms": {
-        "exposify": {
+        "externalify": {
             "global": true,
-            "expose": {
+            "external": {
                 "react": "React",
                 "react/addons": "React"
             }

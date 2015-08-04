@@ -11,7 +11,8 @@ FlowRouter.wait();
 // });
 
 Meteor.startup(function() {
-  System.import('client/scripts/routes');
-  FlowRouter.initialize();
+  System.import('client/scripts/routes').then(function(m) {
+    FlowRouter.initialize();
+  });
 });
 

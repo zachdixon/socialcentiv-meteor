@@ -7,7 +7,7 @@
 @Images         = new Mongo.Collection('images', connection: null)
 @Reports        = new Mongo.Collection('reports', connection: null)
 
-App.collections =
+App.Collections =
   accounts      : Accounts
   businesses    : Businesses
   conversations : Conversations

@@ -25,9 +25,9 @@ peerlibrary:blaze-components
 react
 react-template-helper
 jhartma:cjsx
-meteorhacks:npm
-cosmos:browserify
-
-npm-container
 kadira:flow-router
 kadira:react-layout
+universe:modules
+
+app-deps
+

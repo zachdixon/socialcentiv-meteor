@@ -1,29 +1,10 @@
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Socialcentiv</title>
 </head>
 
 <body>
   <div id="app-container"></div>
 </body>
-
-<template name="mainLayout">
-  {{> main}}
-</template>
-
-<template name="main">
-  <div>
-    {{> React component=header }}
-  </div>
-  <div class="container dashboard" id="main-container">
-    <div class="row">
-      <div class="col-md-12 col-xs-12 page-wrap">
-        <div class="main-content">
-          {{> yield}}
-        </div>
-      </div>
-    </div>
-  </div>
-  <div>
-    {{> React component=footer }}
-  </div>
-</template>

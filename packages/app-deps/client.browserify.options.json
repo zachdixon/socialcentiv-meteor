@@ -1,11 +1,11 @@
 {
-    "transforms": {
-        "externalify": {
-            "global": true,
-            "external": {
-                "react": "React",
-                "react/addons": "React"
-            }
-        }
+  "transforms": {
+    "externalify": {
+      "global": true,
+      "external": {
+        "react": "React",
+        "react/addons": "React"
+      }
     }
+  }
 }

@@ -1,5 +1,5 @@
 /* global Package, Npm */
-"use strict";
+// "use strict";
 
 Package.describe({
     name: 'app-deps',
@@ -15,16 +15,15 @@ Package.describe({
 Npm.depends({
     "classnames": "2.1.2",
     "moment": "2.10.6",
-    "externalify": "0.1.0",
-    "react-onclickoutside": "0.3.0"
+    "externalify": "0.1.0"
 });
 
 // Note specific package versions embedded below as well.
 
 Package.onUse(function(api) {
-    api.versionsFrom('1.1.0.2');
+    api.versionsFrom('1.1.0.3');
     api.use([
-        'cosmos:browserify@0.4.0',
+        'cosmos:browserify@0.5.0',
         'react@0.1.0',
     ], 'client');
 

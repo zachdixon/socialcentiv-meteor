@@ -11,6 +11,5 @@
 
 Dependencies = {
   moment: require('moment'),
-  classNames: require('classnames'),
-  ReactOnClickOutside: require('react-onclickoutside')
+  classNames: require('classnames')
 };

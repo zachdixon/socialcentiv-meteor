@@ -159,9 +159,6 @@
     },
     "moment": {
       "version": "2.10.6"
-    },
-    "react-onclickoutside": {
-      "version": "0.3.0"
     }
   }
 }

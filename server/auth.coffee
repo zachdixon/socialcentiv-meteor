@@ -1,3 +1,3 @@
 # Meteor.startup ->
-#   basicAuth = new HttpBasicAuth("dixon","d1x0n")
+#   basicAuth = new HttpBasicAuth("socialcentiv","S0cialCent1v")
 #   basicAuth.protect()

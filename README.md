@@ -1,8 +1,45 @@
-# socialcentiv-meteor
+# Meteor-React Starter Kit
+
+Clone this repo for a head start with:
+- Meteor
+- React
+- JSX (ES6/ES2015)
+- Modules (universe:modules)
+- SCSS
+- Coffeescript
+- NPM packages
+- FlowRouter
+
+## Default Packages
+- meteor-platform
+- insecure
+- coffeescript
+- http
+- jquery
+- meteorhacks:fast-render
+- mrt:momentjs
+- mrt:underscore-string-latest
+- mrt:modernizr-meteor
+- jabbslad:basic-auth
+- fourseven:scss
+- chuangbo:cookie
+- aldeed:collection2
+- reactive-var
+- underscore
+- react
+- react-template-helper
+- kadira:flow-router
+- kadira:react-layout
+- universe:modules
+- meteorhacks:npm
+- cosmos:browserify
+
 
 ## Installation
 
 - [Install Meteor](https://www.meteor.com/install)
+
+## Clone this repo
 
 ## Start your server
 

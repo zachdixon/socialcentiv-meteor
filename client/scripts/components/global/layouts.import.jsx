@@ -12,16 +12,16 @@ export let SessionsLayout =  React.createClass({
 
   mixins: [ReactMeteorData],
 
+  propTypes: {
+    content: element.isRequired
+  },
+
   getMeteorData() {
     App.Utils.AutoLogin();
 
     return {
       currentUser: Session.get('currentUser')
     };
-  },
-
-  propTypes: {
-    content: element
   },
 
   render() {
@@ -46,16 +46,16 @@ export let MainLayout = React.createClass({
 
   mixins: [ReactMeteorData],
 
+  propTypes: {
+    content: element.isRequired
+  },
+
   getMeteorData() {
     App.Utils.AutoLogin();
 
     return {
       currentUser: Session.get('currentUser')
     };
-  },
-
-  propTypes: {
-    content: element
   },
 
   render() {

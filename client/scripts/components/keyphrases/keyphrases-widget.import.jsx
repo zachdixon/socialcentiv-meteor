@@ -63,7 +63,7 @@ let KeyphrasesList = React.createClass({
         {(() => {
           let keyphrases = this.props.keyphrases;
           if (keyphrases && keyphrases.length) {
-            this.props.keyphrases.map((keyphrase) => {
+            return keyphrases.map((keyphrase) => {
               return (
                 <Keyphrase key={keyphrase.id} type={this.props.type} keyphrase={keyphrase} />
               );
@@ -83,9 +83,16 @@ export let Keyphrase = React.createClass({
   displayName: "Keyphrase",
 
   propTypes: {
-    type: string.isRequired,
+    type: string,
     keyphrase: object.isRequired,
     showDelete: bool
+  },
+
+  getDefaultProps() {
+    return {
+      type: "positive",
+      showDelete: false
+    }
   },
 
   getInitialState() {

@@ -1,6 +1,7 @@
 "use strict";
 
 import { ReactOnClickOutside, classNames } from 'app-deps';
+import { Link } from 'client/scripts/components/global/link';
 
 let {string} = React.PropTypes;
 
@@ -37,7 +38,6 @@ let MainNav = React.createClass({
       <nav>
         <a className="main-nav-menu" href="#"><span className="glyphicon glyphicon-th"></span></a>
         <ul id="main-nav">
-          <a className="close-mobile-menu" href="#"><span className="glyphicon glyphicon-remove"></span></a>
           {this.routes.map(route => {
             return (
               <MainNavItem key={route.id} name={route.name} iconSrc={route.iconSrc} iconClass={route.iconClass} />
@@ -62,7 +62,7 @@ let MainNavItem = React.createClass({
   render() {
     return (
       <li className="main-nav-item">
-        <a className='main-nav-link' href={FlowRouter.path(this.props.name)}>
+        <Link className='main-nav-link' to={FlowRouter.path(this.props.name)}>
           {
             this.props.iconSrc? (
               <img className="smallimg main-nav-icon" src={this.props.iconSrc} />
@@ -71,7 +71,7 @@ let MainNavItem = React.createClass({
             )
           }
           <span className="label">{this.props.name.toUpperCase()}</span>
-        </a>
+        </Link>
       </li>
     )
   }
@@ -125,7 +125,7 @@ let MainUtilityNav = React.createClass({
     let business = this.data.business;
     return (
       <li className="main-nav-item pull-right dropdown-nav">
-        <a className="main-nav-link sub-nav-toggle" href="" onClick={this.toggle}>
+        <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
           {(() => {
             if(business && business.status == "active") {
               return (
@@ -136,19 +136,19 @@ let MainUtilityNav = React.createClass({
             }
           })()}
           <span className="label">{business? business.name : ""}</span>
-        </a>
+        </Link>
         <ul className="sub-nav" style={{display: this.state.open? 'block' : 'none'}}>
           <li className="sub-nav-item">
-            <a className="sub-nav-link" href="/account">
+            <Link className="sub-nav-link" to="/account">
               <span className="glyphicon glyphicon-user main-nav-icon"></span>
               <span className="label">My Account</span>
-            </a>
+            </Link>
           </li>
           <li className="sub-nav-item">
-            <a className="sub-nav-link link-logout" href="" onClick={this.handleLogout}>
+            <Link className="sub-nav-link link-logout" to="" onClick={this.handleLogout}>
               <span className="glyphicon glyphicon-log-out main-nav-icon"></span>
               <span className="label">Log Out</span>
-            </a>
+            </Link>
           </li>
         </ul>
       </li>

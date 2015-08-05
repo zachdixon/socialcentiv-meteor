@@ -29,4 +29,8 @@ kadira:flow-router
 kadira:react-layout
 universe:modules
 
-app-deps
+meteorhacks:npm
+
+
+npm-container
+cosmos:browserify

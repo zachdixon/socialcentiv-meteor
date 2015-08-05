@@ -28,9 +28,8 @@ jhartma:cjsx
 kadira:flow-router
 kadira:react-layout
 universe:modules
-
 meteorhacks:npm
+cosmos:browserify
 
 
 npm-container
-cosmos:browserify

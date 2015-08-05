@@ -1,8 +1,8 @@
 "use strict";
 
 import { classNames } from 'app-deps';
-import CampaignsSelector from 'client/scripts/components/tweets/campaign-selector';
-import SuggestedResponses from 'client/scripts/components/tweets/suggested-responses';
+import { CampaignsSelector } from 'client/scripts/components/tweets/campaign-selector';
+import { SuggestedResponses } from 'client/scripts/components/tweets/suggested-responses';
 
 let {string, number, object, array, func, oneOfType} = React.PropTypes;
 

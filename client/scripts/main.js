@@ -3,16 +3,11 @@
 "use strict";
 FlowRouter.wait();
 
-// FlowRouter.route('/', {
-//   name: "home",
-//   action: function() {
-//     return console.log('test');
-//   }
-// });
-
 Meteor.startup(function() {
-  System.import('client/scripts/routes').then(function(m) {
-    FlowRouter.initialize();
+  System.import('client/lib/main').then(function(m1) {
+    System.import('client/scripts/routes').then(function(m2) {
+      FlowRouter.initialize();
+    });
   });
 });
 

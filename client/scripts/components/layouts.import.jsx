@@ -1,7 +1,7 @@
 "use strict";
 
-import Header from 'client/scripts/components/global/header';
-import Footer from 'client/scripts/components/global/footer';
+import { Header } from 'client/scripts/components/global/header';
+import { Footer } from 'client/scripts/components/global/footer';
 
 let {
   element

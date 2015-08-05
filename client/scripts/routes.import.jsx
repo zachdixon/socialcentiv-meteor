@@ -1,8 +1,10 @@
 "use strict";
 
 import { SessionsLayout, MainLayout} from 'client/scripts/components/layouts';
-import LoginPage from 'client/scripts/components/sessions/login-page';
-import TweetsPage from 'client/scripts/components/tweets/tweets-page';
+import { LoginPage } from 'client/scripts/components/sessions/login-page';
+import { TweetsPage } from 'TweetsPage';
+
+debugger
 
 FlowRouter.route('/', {
   name: 'tweets',

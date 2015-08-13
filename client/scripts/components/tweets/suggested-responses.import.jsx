@@ -57,7 +57,7 @@ export let SuggestedResponses = React.createClass({
             {
               this.props.responses.map((responses) => {
                 return (
-                  <SuggestedResponseCategory key={responses.id} category={responses.category} responses={responses.responses} onClick={this.props.onCategoryClick} />
+                  <SuggestedResponseCategory key={responses.id} category={responses.category} responses={responses.introduction} onClick={this.props.onCategoryClick} />
                 )
               })
             }

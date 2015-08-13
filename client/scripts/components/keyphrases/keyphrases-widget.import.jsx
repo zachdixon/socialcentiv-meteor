@@ -65,7 +65,7 @@ let KeyphrasesList = React.createClass({
           if (keyphrases && keyphrases.length) {
             return keyphrases.map((keyphrase) => {
               return (
-                <Keyphrase key={keyphrase.id} type={this.props.type} keyphrase={keyphrase} />
+                <Keyphrase key={keyphrase.id} keyphrase={keyphrase} />
               );
             });
           }
@@ -83,14 +83,12 @@ export let Keyphrase = React.createClass({
   displayName: "Keyphrase",
 
   propTypes: {
-    type: string,
     keyphrase: object.isRequired,
     showDelete: bool
   },
 
   getDefaultProps() {
     return {
-      type: "positive",
       showDelete: false
     }
   },
@@ -101,21 +99,36 @@ export let Keyphrase = React.createClass({
     };
   },
 
+  handleToggle(e) {
+    if (this.props.keyphrase.action_type === 'pump') {
+      let $toggle = $(React.findDOMNode(this.refs.toggle));
+      $toggle.slideToggle()
+      this.setState({is_open: !this.state.is_open});
+    }
+  },
+
+  handleShowHideTweets(e) {
+    e.stopPropagation();
+    Keyphrases.observer.stop();
+    Keyphrases.update(this.props.keyphrase._id, {$set: {hidden: !this.props.keyphrase.hidden}});
+    Keyphrases.startObserving();
+  },
+
   render() {
-    if (this.props.type == "positive") {
+    if (this.props.keyphrase.action_type === "pump") {
       return (
-        <div className="keyphrase">
-          <div className={classNames("keyword-details", {"open": this.state.is_open})}>
+        <div className={classNames("keyphrase", {"hidden-phrase": this.props.keyphrase.hidden})}>
+          <div className={classNames("keyword-details", {"open": this.state.is_open})} onClick={this.handleToggle}>
             <span className={classNames("chevron", "glyphicon", {"glyphicon-chevron-up": this.state.is_open}, {"glyphicon-chevron-down": !this.state.is_open})}></span>
             <span className="phrase" title={this.props.keyphrase.phrase}>{this.props.keyphrase.phrase}</span>
-            <span className="hide-tweets">HIDE TWEETS</span>
+            <span className="hide-tweets" onClick={this.handleShowHideTweets}>{this.props.keyphrase.hidden? "SHOW TWEETS" : "HIDE TWEETS"}</span>
             {
               this.props.showDelete? (
                 <span className="btn glyphicon-trash glyphicon"></span>
-              ) : null
+              ) : void 0
             }
           </div>
-          <div className="keyword-performance-indicators">
+          <div className="keyword-performance-indicators" ref="toggle">
             <ul className="indicators">
               <li className="conversion_rate">
                 <span className="context">Conversion Rate</span>
@@ -147,7 +160,7 @@ export let Keyphrase = React.createClass({
           </div>
         </div>
       )
-    } else if (this.props.type == "negative") {
+    } else if (this.props.keyphrase.action_type === "filter") {
       return (
         <div className="keyphrase">
           <div className="keyword-details less">

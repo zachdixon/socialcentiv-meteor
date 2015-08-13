@@ -6,7 +6,7 @@ Meteor.startup ->
         user_id: Session.get('currentUser').id
       , (err, res) ->
         unless err
-          Session.set('business', res[0])
+          Session.set('business', res.data[0])
 
     # Get Campaigns
     if Session.get('business')?
@@ -16,11 +16,11 @@ Meteor.startup ->
         unless err
           Campaigns.observer.stop()
           Campaigns.remove({})
-          res.forEach (doc) ->
+          res.data.forEach (doc) ->
             Campaigns.insert doc
           Campaigns.startObserving()
           # Remove once multiple campaigns implemented
-          Session.set 'campaign', res[0]
+          Session.set 'campaign', res.data[0]
 
     # Get Keyphrases
     if Session.get('campaign')?
@@ -31,7 +31,7 @@ Meteor.startup ->
         unless err
           Keyphrases.observer?.stop()
           Keyphrases.remove({})
-          res.forEach (doc) ->
+          res.data.forEach (doc) ->
             doc.campaign_id = campaign_id
             Keyphrases.insert doc
           Keyphrases.startObserving()

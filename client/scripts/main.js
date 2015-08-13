@@ -1,6 +1,10 @@
 /* jshint: esnext: true */
 /* global System */
 "use strict";
+
+/* override _ (underscore) to use lodash instead */
+window._ = lodash;
+
 FlowRouter.wait();
 
 Meteor.startup(function() {

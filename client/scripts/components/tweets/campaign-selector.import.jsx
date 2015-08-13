@@ -24,7 +24,8 @@ export let CampaignsSelector = React.createClass({
   },
 
   getReplyCampaignId() {
-    return this.props.reply_campaign_id || this.data.campaigns? this.data.campaigns[0].id : null || "none";
+    let campaigns = this.data.campaigns
+    return this.props.reply_campaign_id || _.get(campaigns, '0.id') || "none";
   },
 
   render() {

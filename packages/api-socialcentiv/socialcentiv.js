@@ -179,7 +179,7 @@ if(Meteor.isClient) {
             params: options
           },
           function(err, res) {
-            cb(err,res.data);
+            cb(err,res);
           }
         );
       };

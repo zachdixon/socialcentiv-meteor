@@ -9,6 +9,19 @@ let {string, number, object, array, func, oneOfType} = React.PropTypes;
 
 export let ConversationsList = React.createClass({
   mixins: [ReactMeteorData],
+
+  propTypes: {
+    orderBy: string,
+    numPerPage: number
+  },
+
+  getDefaultProps() {
+    return {
+      orderBy: "newest",
+      numPerPage: 10
+    }
+  },
+
   getMeteorData() {
     return {
       conversations: Conversations.find().fetch()
@@ -23,12 +36,12 @@ export let ConversationsList = React.createClass({
     this.getSuggestedResponses();
   },
   getSuggestedResponses() {
-    API.suggestedResponses.getAll({}, (err, result) => {
+    API.suggestedResponses.getAll({}, (err, res) => {
       if (!err) {
         let order = ["invite", "agree", "celebrate", "support", "sympathize"],
             sortedResults = [];
         order.forEach((sortedCategory) => {
-          result.forEach((category) => {
+          res.data.forEach((category) => {
             if (sortedCategory == category.category.toLowerCase()) {
               sortedResults.push(category);
             }

@@ -78,7 +78,7 @@ Dependencies = {
     // Node. Note that this does not work with strict
     // CommonJS, but only CommonJS-like environments
     // that support module.exports
-    module.exports = factory((typeof window !== "undefined" ? window['React']['require'] : typeof global !== "undefined" ? global['React']['require'] : null)("react"));
+    module.exports = factory((typeof window !== "undefined" ? window.React.require : typeof global !== "undefined" ? global.React.require : null)("react"));
   } else {
     // Browser globals (root is window)
     root.OnClickOutside = factory(React);

@@ -2,77 +2,107 @@
 
 import { ReactOnClickOutside, classNames } from 'app-deps';
 import { Link } from 'client/scripts/components/global/link';
+import { ShowFor } from 'client/scripts/components/_utils/show-for';
+import { CONSTANTS } from 'client/scripts/constants';
 
-let {string} = React.PropTypes;
+let Types = React.PropTypes;
 
 export let Header = React.createClass({
   displayName: "Header",
+
+  render() {
+    let account_routes = [
+          {id: 1, name: "tweets"}
+          // {id: 2, name: "campaigns"}
+          // {id: 3, name: "reports"}
+        ],
+        managed_routes = [
+          {id: 1, name: "accounts", url: "/managed/accounts"}
+        ];
+    return (
+      <div>
+        <ShowFor accountType={CONSTANTS.BO}>
+          <PrimaryNav routes={account_routes} />
+        </ShowFor>
+        <ShowFor accountType={[CONSTANTS.IP, CONSTANTS.AM, CONSTANTS.ADMIN]}>
+          <div>
+            <PrimaryNav routes={managed_routes} />
+            <SecondaryNav routes={account_routes} />
+          </div>
+        </ShowFor>
+      </div>
+    )
+  }
+});
+
+let PrimaryNav = React.createClass({
+  displayName: "PrimaryNav",
+  
+  propTypes: {
+    routes: Types.array
+  },
+
   render() {
     return (
       <div className="main-nav-wrapper">
         <div className="container">
           <div className="row">
             <a>
-              <div className="logo col-md-2 col-sm-2 col-xs-2">
-                <img alt="socialcentiv logo" className="logo-img" src="images/new-logo.png" />
+              <div className="logo">
+                <img alt="socialcentiv logo" className="logo-img" src="/images/new-logo.png" />
               </div>
             </a>
-            <MainNav/>
+            <nav>
+              <ul id="main-nav">
+                {this.props.routes.map(route => {
+                  return (
+                    <li key={route.id} className="main-nav-item">
+                      <Link className='main-nav-link' to={route.url || FlowRouter.path(route.name)}>
+                        <span className="label">{route.name.toUpperCase()}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+                <MainUtilityNav />
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
-    );
-  }
-});
-
-let MainNav = React.createClass({
-  displayName: "MainNav",
-  routes: [
-    {id: 1, name: "tweets", iconSrc: "images/Twitter_logo_white.png"}
-    // {id: 2, name: "campaigns", iconClass: "ss-bullseye main-nav-icon"}
-    // {id: 3, name: "reports", iconClass: "icon-pie main-nav-icon"}
-  ],
-
-  render() {
-    return (
-      <nav>
-        <a className="main-nav-menu" href="#"><span className="glyphicon glyphicon-th"></span></a>
-        <ul id="main-nav">
-          {this.routes.map(route => {
-            return (
-              <MainNavItem key={route.id} name={route.name} iconSrc={route.iconSrc} iconClass={route.iconClass} />
-            );
-          })}
-          <MainUtilityNav />
-        </ul>
-      </nav>
     )
   }
 });
 
+let SecondaryNav = React.createClass({
+  displayName: "SecondaryNav",
 
-let MainNavItem = React.createClass({
-  displayName: "MainNavItem",
   propTypes: {
-    name: string,
-    iconSrc: string,
-    iconClass: string
+    routes: Types.array
   },
-  
+
   render() {
     return (
-      <li className="main-nav-item">
-        <Link className='main-nav-link' to={FlowRouter.path(this.props.name)}>
-          {
-            this.props.iconSrc? (
-              <img className="smallimg main-nav-icon" src={this.props.iconSrc} />
-            ) : (
-              <span className={this.props.iconClass}></span>
-            )
-          }
-          <span className="label">{this.props.name.toUpperCase()}</span>
-        </Link>
-      </li>
+      <div className="secondary-nav-wrapper">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-12">
+              <nav className="secondary-nav">
+                <ul>
+                  {this.props.routes.map(route => {
+                    return (
+                      <li key={route.id} className="secondary-nav-item">
+                        <Link className='secondary-nav-link' to={route.url || FlowRouter.path(route.name)}>
+                          <span className="label">{route.name.toUpperCase()}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 });

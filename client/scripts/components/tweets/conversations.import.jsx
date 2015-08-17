@@ -32,7 +32,7 @@ export let ConversationsList = React.createClass({
       responses: []
     };
   },
-  componentWillMount() {
+  componentDidMount() {
     this.getSuggestedResponses();
   },
   getSuggestedResponses() {

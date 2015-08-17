@@ -20,7 +20,7 @@ export let Footer = React.createClass({
           <div className="col-md-4 hiplogiq-app">
             <span>Powered By</span>
             <a href="http://www.socialcentiv.com">
-              <img alt="SocialCentiv logo" src="images/new-logo-white.png" />
+              <img alt="SocialCentiv logo" src="/images/new-logo-white.png" />
             </a>
           </div>
         </div>

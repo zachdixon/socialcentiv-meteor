@@ -1,27 +1,16 @@
 "use strict";
 
+import { Authorize } from 'client/scripts/components/_utils/authorize';
 import { Header } from 'client/scripts/components/global/header';
 import { Footer } from 'client/scripts/components/global/footer';
 
-let {
-  element
-} = React.PropTypes;
+let Types = React.PropTypes;
 
 export let SessionsLayout =  React.createClass({
   displayName: "SessionsLayout",
 
-  mixins: [ReactMeteorData],
-
   propTypes: {
-    content: element.isRequired
-  },
-
-  getMeteorData() {
-    App.Utils.AutoLogin();
-
-    return {
-      currentUser: Session.get('currentUser')
-    };
+    content: Types.element.isRequired
   },
 
   render() {
@@ -44,35 +33,27 @@ export let SessionsLayout =  React.createClass({
 export let MainLayout = React.createClass({
   displayName: "MainLayout",
 
-  mixins: [ReactMeteorData],
-
   propTypes: {
-    content: element.isRequired
-  },
-
-  getMeteorData() {
-    App.Utils.AutoLogin();
-
-    return {
-      currentUser: Session.get('currentUser')
-    };
+    content: Types.element.isRequired,
   },
 
   render() {
     return (
-      <div id="app-wrapper">
-        <Header />
-        <div className="container dashboard" id="main-container">
-          <div className="row">
-            <div className="col-md-12 col-xs-12 page-wrap">
-              <div className="main-content">
-                {this.props.content}
+      <Authorize>
+        <div id="app-wrapper">
+          <Header />
+          <div className="container dashboard" id="main-container">
+            <div className="row">
+              <div className="col-md-12 col-xs-12 page-wrap">
+                <div className="main-content">
+                  {this.props.content}
+                </div>
               </div>
             </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </Authorize>
     );
   }
 });

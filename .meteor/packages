@@ -31,5 +31,4 @@ universe:modules
 meteorhacks:npm
 cosmos:browserify
 
-
 npm-container

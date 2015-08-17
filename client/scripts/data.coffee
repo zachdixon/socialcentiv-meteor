@@ -8,6 +8,7 @@ Meteor.startup ->
         unless err
           Session.set('business', res.data[0])
 
+  Tracker.autorun ->
     # Get Campaigns
     if Session.get('business')?
       API.campaigns.getAll
@@ -22,6 +23,7 @@ Meteor.startup ->
           # Remove once multiple campaigns implemented
           Session.set 'campaign', res.data[0]
 
+  Tracker.autorun ->
     # Get Keyphrases
     if Session.get('campaign')?
       campaign_id = Session.get('campaign').id
@@ -35,3 +37,10 @@ Meteor.startup ->
             doc.campaign_id = campaign_id
             Keyphrases.insert doc
           Keyphrases.startObserving()
+
+  Tracker.autorun ->
+    # Get accounts
+    if Session.get('currentUser')?
+      if Session.get('currentUser').type isnt "BusinessOwner"
+        $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (result) ->
+          Session.set('accounts', result)

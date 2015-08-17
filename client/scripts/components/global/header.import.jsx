@@ -10,6 +10,14 @@ let Types = React.PropTypes;
 export let Header = React.createClass({
   displayName: "Header",
 
+  // Figure out a more React way of doing this
+  // Tried passing a prop but the prop stayed the same on re-render
+  showSubNav() {
+    return !_.includes([
+        'managedAccounts'
+      ], FlowRouter.getRouteName());
+  },
+
   render() {
     let account_routes = [
           {id: 1, name: "tweets"}
@@ -27,7 +35,9 @@ export let Header = React.createClass({
         <ShowFor accountType={[CONSTANTS.IP, CONSTANTS.AM, CONSTANTS.ADMIN]}>
           <div>
             <PrimaryNav routes={managed_routes} />
-            <SecondaryNav routes={account_routes} />
+            {this.showSubNav()?
+              <SecondaryNav routes={account_routes} />
+            : null}
           </div>
         </ShowFor>
       </div>

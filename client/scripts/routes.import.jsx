@@ -29,3 +29,14 @@ FlowRouter.route('/managed/accounts', {
     });
   }
 });
+
+// FIXME - load correct business based on id
+FlowRouter.route('/managed/accounts/:id/tweets', {
+  name: 'accountTweets',
+  action: (params, queryParams) => {
+    ReactLayout.render(LayoutManager, {
+      layout: MainLayout,
+      content: <TweetsPage />
+    });
+  }
+});

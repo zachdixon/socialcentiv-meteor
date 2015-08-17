@@ -1,5 +1,7 @@
 "use strict";
 
+import { CONSTANTS } from 'client/scripts/constants';
+
 export let LoginPage = React.createClass({
   displayName: "LoginPage",
   login(e) {
@@ -17,8 +19,13 @@ export let LoginPage = React.createClass({
           let user = res.data;
           Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN});
           Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN});
+          user.account_type = "InteractiveProducer"; // FIXME - remove me once server returns
           Session.set('currentUser', user);
-          FlowRouter.go('tweets');
+          if(user.account_type === CONSTANTS.BO) {
+            FlowRouter.go('tweets');
+          } else {
+            FlowRouter.go('managedAccounts');
+          }
         }
       });
     }

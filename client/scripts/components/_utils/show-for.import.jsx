@@ -7,7 +7,7 @@ export let ShowFor = React.createClass({
   mixins: [ReactMeteorData],
 
   propTypes: {
-    accountType: React.PropTypes.oneOfType([
+    type: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.array
     ])
@@ -20,12 +20,12 @@ export let ShowFor = React.createClass({
   },
 
   isValid() {
-    let type = this.props.accountType;
+    let type = this.props.type;
     if (this.data.user) {
       if (type instanceof Array) {
-        return !!_.include(type, this.data.user.account_type);
+        return !!_.include(type, this.data.user.type);
       } else if (typeof(type) === "string") {
-        return type === this.data.user.account_type;
+        return type === this.data.user.type;
       } else {
         return false;
       } 

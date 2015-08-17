@@ -1,5 +1,7 @@
 "use strict";
 
+// NOTE - Remember to update permissions in permit-utility for route permissions
+
 import { LayoutManager } from 'client/scripts/components/global/layout-manager';
 import { SessionsLayout, MainLayout, AccountsLayout} from 'client/scripts/components/global/layouts';
 import { LoginPage } from 'client/scripts/components/sessions/login-page';

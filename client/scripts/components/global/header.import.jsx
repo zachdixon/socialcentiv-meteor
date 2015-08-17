@@ -29,10 +29,10 @@ export let Header = React.createClass({
         ];
     return (
       <div>
-        <ShowFor accountType={CONSTANTS.BO}>
+        <ShowFor type={CONSTANTS.BO}>
           <PrimaryNav routes={account_routes} />
         </ShowFor>
-        <ShowFor accountType={[CONSTANTS.IP, CONSTANTS.AM, CONSTANTS.ADMIN]}>
+        <ShowFor type={[CONSTANTS.IP, CONSTANTS.AM, CONSTANTS.ADMIN]}>
           <div>
             <PrimaryNav routes={managed_routes} />
             {this.showSubNav()?

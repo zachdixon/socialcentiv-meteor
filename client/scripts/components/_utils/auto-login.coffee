@@ -1,10 +1,10 @@
 AutoLogin = ->
   user = Session.get('currentUser')
   if user
-    user.account_type = "InteractiveProducer"
-    Session.set('currentUser', user) # FIXME - remove once server returns account_type
+    user.type = "InteractiveProducer"
+    Session.set('currentUser', user) # FIXME - remove once server returns type
     if FlowRouter.getRouteName() is 'login'
-      if user.account_type is "BusinessOwner"
+      if user.type is "BusinessOwner"
         FlowRouter.go('tweets')
       else
         FlowRouter.go('managedAccounts')
@@ -21,7 +21,7 @@ AutoLogin = ->
           user = res.data
           Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN})
           Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN})
-          user.account_type = "InteractiveProducer"
+          user.type = "InteractiveProducer"
           Session.set('currentUser', user)
       API.sessions.login({auth_type: "token"}, callback.bind(@))
     else

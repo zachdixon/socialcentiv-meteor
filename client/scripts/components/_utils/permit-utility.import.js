@@ -10,21 +10,17 @@ const PERMISSIONS = {
 let policies = {};
 policies[PERMISSIONS.BO] = {
   routes: {
-    "accounts": false,
+    "managedAccounts": false,
+    "accountTweets": false,
     "tweets": true
-  },
-  UI: {
-    "suggested_responses": true
   }
 };
 
 policies[PERMISSIONS.IP] = {
   routes: {
-    "accounts": true,
+    "managedAccounts": true,
+    "accountTweets": true,
     "tweets": true
-  },
-  UI: {
-    "suggested_responses": false
   }
 };
 

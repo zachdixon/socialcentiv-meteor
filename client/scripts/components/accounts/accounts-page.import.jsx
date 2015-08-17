@@ -55,7 +55,7 @@ export let AccountsPage = React.createClass({
               </thead>
               <tbody>
                 {this.data.accounts.map((account) => {
-                  if (this.state.filter === "all" || account.type === this.state.filter) {
+                  if (this.state.filter === "all" || account.account_type === this.state.filter) {
                     return (
                       <AccountRow key={account.id} account={account} />
                     )

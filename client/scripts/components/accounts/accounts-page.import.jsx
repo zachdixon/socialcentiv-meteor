@@ -28,7 +28,9 @@ export let AccountsPage = React.createClass({
     return {
       accountTypeFilter: "all",
       textFilter: "",
-      sortBy: {}
+      sortBy: {
+        "name": "asc"
+      }
     }
   },
 

@@ -33,7 +33,7 @@ FlowRouter.route('/managed/accounts', {
 });
 
 // FIXME - load correct business based on id
-FlowRouter.route('/managed/accounts/:id/tweets', {
+FlowRouter.route('/managed/accounts/:business_id/tweets', {
   name: 'accountTweets',
   action: (params, queryParams) => {
     ReactLayout.render(LayoutManager, {

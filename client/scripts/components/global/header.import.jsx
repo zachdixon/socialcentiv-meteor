@@ -6,6 +6,7 @@ import { ShowFor } from 'client/scripts/components/_utils/show-for';
 import { CONSTANTS } from 'client/scripts/constants';
 
 let Types = React.PropTypes;
+const {BO,IP,AM,ADMIN} = CONSTANTS;
 
 export let Header = React.createClass({
   displayName: "Header",
@@ -19,24 +20,30 @@ export let Header = React.createClass({
   },
 
   render() {
+    let business_id = FlowRouter.getParam('business_id');
     let account_routes = [
-          {id: 1, name: "tweets"}
+          {id: 1, name: "Tweets", to: "tweets"}
           // {id: 2, name: "campaigns"}
           // {id: 3, name: "reports"}
         ],
-        managed_routes = [
-          {id: 1, name: "accounts", url: "/managed/accounts"}
-        ];
+        managed_routes = {
+          primary: [
+            {id: 1, name: "Accounts", to: "managedAccounts"}
+          ],
+          secondary: [
+            {id: 1, name: "Tweets", to: "accountTweets", params: {business_id: business_id}}
+          ]
+        };
     return (
       <div>
-        <ShowFor type={CONSTANTS.BO}>
+        <ShowFor type={BO}>
           <PrimaryNav routes={account_routes} />
         </ShowFor>
-        <ShowFor type={[CONSTANTS.IP, CONSTANTS.AM, CONSTANTS.ADMIN]}>
+        <ShowFor type={[IP, AM, ADMIN]}>
           <div>
-            <PrimaryNav routes={managed_routes} />
+            <PrimaryNav routes={managed_routes.primary} />
             {this.showSubNav()?
-              <SecondaryNav routes={account_routes} />
+              <SecondaryNav routes={managed_routes.secondary} />
             : null}
           </div>
         </ShowFor>
@@ -67,7 +74,7 @@ let PrimaryNav = React.createClass({
                 {this.props.routes.map(route => {
                   return (
                     <li key={route.id} className="main-nav-item">
-                      <Link className='main-nav-link' to={route.url || FlowRouter.path(route.name)}>
+                      <Link className='main-nav-link' to={route.to || FlowRouter.path(route.name)} params={route.params}>
                         <span className="label">{route.name.toUpperCase()}</span>
                       </Link>
                     </li>
@@ -101,7 +108,7 @@ let SecondaryNav = React.createClass({
                   {this.props.routes.map(route => {
                     return (
                       <li key={route.id} className="secondary-nav-item">
-                        <Link className='secondary-nav-link' to={route.url || FlowRouter.path(route.name)}>
+                        <Link className='secondary-nav-link' to={route.to || FlowRouter.path(route.name)} params={route.params}>
                           <span className="label">{route.name.toUpperCase()}</span>
                         </Link>
                       </li>
@@ -123,6 +130,7 @@ let MainUtilityNav = React.createClass({
 
   getMeteorData() {
     return {
+      user: Session.get('currentUser'),
       business: Session.get('business')
     }
   },
@@ -162,20 +170,26 @@ let MainUtilityNav = React.createClass({
   },
 
   render() {
-    let business = this.data.business;
+    let user = this.data.user,
+        business = this.data.business;
     return (
       <li className="main-nav-item pull-right dropdown-nav">
         <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
-          {(() => {
-            if(business && business.status == "active") {
-              return (
-                <span className="account-logo-wrapper">
-                  <img className="account-logo" src={business.twitter_avatar_url}/>
-                </span>
-              );
-            }
-          })()}
-          <span className="label">{business? business.name : ""}</span>
+          <ShowFor type={BO}>
+            {(() => {
+              if(business && business.status == "active") {
+                return (
+                  <span className="account-logo-wrapper">
+                    <img className="account-logo" src={business.twitter_avatar_url}/>
+                  </span>
+                );
+              }
+            })()}
+            <span className="label">{business? business.name : ""}</span>
+          </ShowFor>
+          <ShowFor type={[IP,AM,ADMIN]}>
+            <span className="label">{user? user.name || user.email : ""}</span>
+          </ShowFor>
         </Link>
         <ul className="sub-nav" style={{display: this.state.open? 'block' : 'none'}}>
           <li className="sub-nav-item">

@@ -15,15 +15,14 @@ export let LayoutManager = React.createClass({
   },
 
   getMeteorData() {
-    return {
-      currentUser: Session.get('currentUser')
-    };
-  },
-
-  componentWillMount() {
+    let user = Session.get('currentUser');
     // Checks permission for current route
-    if (this.data.currentUser && !permit('routes', FlowRouter.current().route.name)) {
+    if (user && !permit('routes', FlowRouter.current().route.name)) {
       FlowRouter.go('tweets');
+    };
+
+    return {
+      user: user
     };
   },
 

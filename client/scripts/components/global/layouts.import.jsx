@@ -1,6 +1,6 @@
 "use strict";
 
-import { Authorize } from 'client/scripts/components/_utils/authorize';
+import { Authorize } from 'Authorize';
 import { Header } from 'client/scripts/components/global/header';
 import { Footer } from 'client/scripts/components/global/footer';
 

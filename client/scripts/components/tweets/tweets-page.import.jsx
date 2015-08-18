@@ -1,8 +1,8 @@
 "use strict";
 
 import { classNames } from 'app-deps';
-import { ShowFor } from 'client/scripts/components/_utils/show-for';
-import { CONSTANTS } from 'client/scripts/constants';
+import { ShowFor } from 'ShowFor';
+import { CONSTANTS } from 'Constants';
 
 import { AccountDetails } from 'client/scripts/components/tweets/account-details';
 import { KeyphrasesWidget } from 'client/scripts/components/keyphrases/keyphrases-widget';

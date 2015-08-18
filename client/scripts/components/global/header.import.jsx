@@ -1,9 +1,10 @@
 "use strict";
 
+import { MeteorData } from 'MeteorData';
 import { ReactOnClickOutside, classNames } from 'app-deps';
-import { Link } from 'client/scripts/components/global/link';
-import { ShowFor } from 'client/scripts/components/_utils/show-for';
-import { CONSTANTS } from 'client/scripts/constants';
+import { Link } from 'Link';
+import { ShowFor } from 'ShowFor';
+import { CONSTANTS } from 'Constants';
 
 let Types = React.PropTypes;
 const {BO,IP,AM,ADMIN} = CONSTANTS;
@@ -70,6 +71,13 @@ let IPHeader = React.createClass({
 
 let PrimaryNav = React.createClass({
   displayName: "PrimaryNav",
+
+  getMeteorData() {
+    return {
+      user: Session.get('currentUser'),
+      business: Session.get('business')
+    }
+  },
   
   propTypes: {
     routes: Types.array
@@ -96,7 +104,9 @@ let PrimaryNav = React.createClass({
                     </li>
                   );
                 })}
-                <MainUtilityNav />
+                <MeteorData getMeteorData={this.getMeteorData}>
+                  <MainUtilityNav />
+                </MeteorData>
               </ul>
             </nav>
           </div>
@@ -142,14 +152,7 @@ let SecondaryNav = React.createClass({
 
 let MainUtilityNav = React.createClass({
   displayName: "MainUtilityNav",
-  mixins: [ReactMeteorData, ReactOnClickOutside],
-
-  getMeteorData() {
-    return {
-      user: Session.get('currentUser'),
-      business: Session.get('business')
-    }
-  },
+  mixins: [ReactOnClickOutside],
 
   getInitialState() {
     return {
@@ -186,28 +189,26 @@ let MainUtilityNav = React.createClass({
   },
 
   render() {
-    let user = this.data.user,
-        business = this.data.business;
     return (
       <li className="main-nav-item pull-right dropdown-nav">
         <ShowFor type={BO}>
           <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
             {(() => {
-              if(business && business.status == "active") {
+              if(this.props.data.business && this.props.data.business.status == "active") {
                 return (
                   <span className="account-logo-wrapper">
-                    <img className="account-logo" src={business.twitter_avatar_url}/>
+                    <img className="account-logo" src={this.props.data.business.twitter_avatar_url}/>
                   </span>
                 );
               }
             })()}
-            <span className="label">{business? business.name : ""}</span>
+            <span className="label">{this.props.data.business? this.props.data.business.name : ""}</span>
           </Link>
         </ShowFor>
         <ShowFor type={[IP,AM,ADMIN]}>
           <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"paddingLeft": "15px !important"}}>
             <span className="main-nav-icon glyphicon glyphicon-user" style={{"marginRight": "15px"}}></span>
-            <span className="label">{user? user.name || user.email : ""}</span>
+            <span className="label">{this.props.data.user? this.props.data.user.name || this.props.data.user.email : ""}</span>
           </Link>
         </ShowFor>
         <ul className="sub-nav" style={{display: this.state.open? 'block' : 'none'}}>

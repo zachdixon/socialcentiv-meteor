@@ -1,7 +1,7 @@
 "use strict";
 
 import { classNames } from 'app-deps';
-import { Link } from 'client/scripts/components/global/link';
+import { Link } from 'Link';
 
 export let AccountsPage = React.createClass({
   mixins: [ReactMeteorData],

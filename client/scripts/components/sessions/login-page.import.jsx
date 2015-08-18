@@ -1,6 +1,6 @@
 "use strict";
 
-import { CONSTANTS } from 'client/scripts/constants';
+import { CONSTANTS } from 'Constants';
 
 export let LoginPage = React.createClass({
   displayName: "LoginPage",

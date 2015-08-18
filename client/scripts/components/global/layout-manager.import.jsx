@@ -1,7 +1,7 @@
 "use strict";
 
-import { permit } from 'client/scripts/components/_utils/permit-utility';
-import { CONSTANTS } from 'client/scripts/constants';
+import { permit } from 'Permit';
+import { CONSTANTS } from 'Constants';
 
 let {BO,IP,AM,ADMIN} = CONSTANTS;
 let Types = React.PropTypes;

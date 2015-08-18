@@ -205,8 +205,8 @@ let MainUtilityNav = React.createClass({
           </Link>
         </ShowFor>
         <ShowFor type={[IP,AM,ADMIN]}>
-          <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"padding-left": "15px !important"}}>
-            <span className="main-nav-icon glyphicon glyphicon-user" style={{"margin-right": "15px"}}></span>
+          <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"paddingLeft": "15px !important"}}>
+            <span className="main-nav-icon glyphicon glyphicon-user" style={{"marginRight": "15px"}}></span>
             <span className="label">{user? user.name || user.email : ""}</span>
           </Link>
         </ShowFor>

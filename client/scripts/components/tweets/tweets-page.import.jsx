@@ -1,10 +1,14 @@
 "use strict";
 
 import { classNames } from 'app-deps';
+import { ShowFor } from 'client/scripts/components/_utils/show-for';
+import { CONSTANTS } from 'client/scripts/constants';
 
 import { AccountDetails } from 'client/scripts/components/tweets/account-details';
 import { KeyphrasesWidget } from 'client/scripts/components/keyphrases/keyphrases-widget';
 import { ConversationsList } from 'client/scripts/components/tweets/conversations';
+
+let {BO,IP,AM,ADMIN} = CONSTANTS;
 
 export let TweetsPage = React.createClass({
   displayName: "TweetsPage",
@@ -177,21 +181,23 @@ let RightColumn = React.createClass({
   render() {
     return (
       <div id="right-col">
-        <div className="tips">
-          <p className="label">Tweet Reply Tips</p>
-          <div className="tip"><span className="glyphicon glyphicon-user"></span>
-            <p className="header">Personalize the Tweet</p>
-            <p>Make your Tweets personalized by including the person's name or relating your response to something they mentioned in their Tweet.</p>
+        <ShowFor type={BO}>
+          <div className="tips">
+            <p className="label">Juice it up</p>
+            <div className="tip">
+              <p className="header">Personalize the Tweet</p>
+              <p>Ensure your Tweet is as appealing as possible to help drive a higher conversion rate.</p>
+            </div>
+            <div className="tip">
+              <p className="header">Less characters, more opportunities</p>
+              <p>The 140 character limit is already difficult to work with, but we’re challenging you to aim to use even less. In fact, Tweets with less than 100 characters receive the highest engagement.</p>
+            </div>
+            <div className="tip">
+              <p className="header">Know Your Audience</p>
+              <p>Understanding your target audience is a key factor in determining the success of your social strategy. Therefore, keep your ideal customer in mind when replying to Tweets.</p>
+            </div>
           </div>
-          <div className="tip"><span className="glyphicon glyphicon-bullhorn"></span>
-            <p className="header">Include Your Offer in the Tweet</p>
-            <p>According to our studies, 68% of people are more likely to click on your link if you mention what you're offering in your reply.</p>
-          </div>
-          <div className="tip"><span className="glyphicon glyphicon-globe"></span>
-            <p className="header">Know Your Audience</p>
-            <p>Experiment with tweeting at different times and in different ways to figure out when and how your audience prefers to be responded to.</p>
-          </div>
-        </div>
+        </ShowFor>
       </div>
     )
   }

@@ -183,9 +183,9 @@ let RightColumn = React.createClass({
       <div id="right-col">
         <ShowFor type={BO}>
           <div className="tips">
-            <p className="label">Juice it up</p>
+            <p className="label">Tweet Reply Tips</p>
             <div className="tip">
-              <p className="header">Personalize the Tweet</p>
+              <p className="header">Juice it up</p>
               <p>Ensure your Tweet is as appealing as possible to help drive a higher conversion rate.</p>
             </div>
             <div className="tip">

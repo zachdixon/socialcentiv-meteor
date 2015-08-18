@@ -4231,11 +4231,10 @@ div.header{
     margin-bottom:10px;
   }
   .header{
+    border-left: 5px solid #0191cc;
+    padding-left: 5px;
     font-weight:bold;
-    margin-bottom:10px;
-    height:40px;
     font-size:13px;
-    text-transform: uppercase;
     color:#444;
   }
   p{

@@ -1,14 +1,11 @@
 "use strict";
 
-const PERMISSIONS = {
-  BO: "BusinessOwner",
-  IP: "InteractiveProducer",
-  AM: "AccountManager",
-  ADMIN: "Admin"
-};
+import {CONSTANTS} from 'client/scripts/constants';
+
+let {BO,IP,AM,ADMIN} = CONSTANTS;
 
 let policies = {};
-policies[PERMISSIONS.BO] = {
+policies[BO] = {
   routes: {
     "managedAccounts": false,
     "accountTweets": false,
@@ -16,11 +13,11 @@ policies[PERMISSIONS.BO] = {
   }
 };
 
-policies[PERMISSIONS.IP] = {
+policies[IP] = {
   routes: {
     "managedAccounts": true,
     "accountTweets": true,
-    "tweets": true
+    "tweets": false
   }
 };
 

@@ -47,7 +47,9 @@ export let ConversationsList = React.createClass({
             }
           });
         });
-        this.setState({responses: sortedResults});
+        if(this.isMounted()) {
+          this.setState({responses: sortedResults});
+        }
       }
     });
   },

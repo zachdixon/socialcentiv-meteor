@@ -11,6 +11,34 @@ const {BO,IP,AM,ADMIN} = CONSTANTS;
 export let Header = React.createClass({
   displayName: "Header",
 
+  render() {
+    return (
+      <div>
+        <ShowFor type={BO}>
+          <BOHeader/>
+        </ShowFor>
+        <ShowFor type={[IP, AM, ADMIN]}>
+          <IPHeader/>
+        </ShowFor>
+      </div>
+    )
+  }
+});
+
+let BOHeader = React.createClass({
+  render() {
+    let primary_routes = [
+      {id: 1, name: "Tweets", to: "tweets"}
+      // {id: 2, name: "campaigns"}
+      // {id: 3, name: "reports"}
+    ]
+    return (
+      <PrimaryNav routes={primary_routes} />
+    )
+  }
+});
+
+let IPHeader = React.createClass({
   // Figure out a more React way of doing this
   // Tried passing a prop but the prop stayed the same on re-render
   showSubNav() {
@@ -21,12 +49,7 @@ export let Header = React.createClass({
 
   render() {
     let business_id = FlowRouter.getParam('business_id');
-    let account_routes = [
-          {id: 1, name: "Tweets", to: "tweets"}
-          // {id: 2, name: "campaigns"}
-          // {id: 3, name: "reports"}
-        ],
-        managed_routes = {
+    let routes = {
           primary: [
             {id: 1, name: "Accounts", to: "managedAccounts"}
           ],
@@ -36,17 +59,10 @@ export let Header = React.createClass({
         };
     return (
       <div>
-        <ShowFor type={BO}>
-          <PrimaryNav routes={account_routes} />
-        </ShowFor>
-        <ShowFor type={[IP, AM, ADMIN]}>
-          <div>
-            <PrimaryNav routes={managed_routes.primary} />
-            {this.showSubNav()?
-              <SecondaryNav routes={managed_routes.secondary} />
-            : null}
-          </div>
-        </ShowFor>
+        <PrimaryNav routes={routes.primary} />
+        {this.showSubNav()?
+          <SecondaryNav routes={routes.secondary} />
+        : null}
       </div>
     )
   }
@@ -174,8 +190,8 @@ let MainUtilityNav = React.createClass({
         business = this.data.business;
     return (
       <li className="main-nav-item pull-right dropdown-nav">
-        <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
-          <ShowFor type={BO}>
+        <ShowFor type={BO}>
+          <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
             {(() => {
               if(business && business.status == "active") {
                 return (
@@ -186,18 +202,23 @@ let MainUtilityNav = React.createClass({
               }
             })()}
             <span className="label">{business? business.name : ""}</span>
-          </ShowFor>
-          <ShowFor type={[IP,AM,ADMIN]}>
+          </Link>
+        </ShowFor>
+        <ShowFor type={[IP,AM,ADMIN]}>
+          <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"padding-left": "15px !important"}}>
+            <span className="main-nav-icon glyphicon glyphicon-user" style={{"margin-right": "15px"}}></span>
             <span className="label">{user? user.name || user.email : ""}</span>
-          </ShowFor>
-        </Link>
+          </Link>
+        </ShowFor>
         <ul className="sub-nav" style={{display: this.state.open? 'block' : 'none'}}>
-          <li className="sub-nav-item">
-            <Link className="sub-nav-link" to="/account">
-              <span className="glyphicon glyphicon-user main-nav-icon"></span>
-              <span className="label">My Account</span>
-            </Link>
-          </li>
+          <ShowFor type={BO}>
+            <li className="sub-nav-item">
+              <Link className="sub-nav-link" to="/account">
+                <span className="glyphicon glyphicon-user main-nav-icon"></span>
+                <span className="label">My Account</span>
+              </Link>
+            </li>
+          </ShowFor>
           <li className="sub-nav-item">
             <Link className="sub-nav-link link-logout" to="" onClick={this.handleLogout}>
               <span className="glyphicon glyphicon-log-out main-nav-icon"></span>

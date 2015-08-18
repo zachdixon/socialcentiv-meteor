@@ -42,5 +42,10 @@ Meteor.startup ->
     # Get accounts
     if Session.get('currentUser')?
       if Session.get('currentUser').type isnt "BusinessOwner"
-        $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (result) ->
-          Session.set('accounts', result)
+        $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (res) ->
+          if res.length
+            Businesses.observer?.stop()
+            Businesses.remove({})
+            res.forEach (doc) ->
+              Businesses.insert doc
+            Businesses.startObserving()

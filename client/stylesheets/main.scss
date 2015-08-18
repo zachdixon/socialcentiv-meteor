@@ -194,6 +194,14 @@ body{
     font-size: 3em;
   }
 }
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 ul {
   list-style: none;
   margin: 0;
@@ -592,6 +600,9 @@ hr{
         }
       }
     }
+    .sortable-header {
+      cursor: pointer;
+    }
   }
   .filter-bar {
     font-size: 11px;
@@ -616,6 +627,10 @@ hr{
     p {
       border-color: transparent;
       background-color: transparent;
+    }
+    input {
+      width: 185px;
+      margin-right: 10px;
     }
     button {
       transition: 200ms ease-in-out;

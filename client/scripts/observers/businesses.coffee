@@ -7,9 +7,3 @@ Meteor.startup ->
         API.Businesses.update newDoc, (err, res) ->
           if err
             Businesses.update(oldDoc._id, {$set: oldDoc})
-
-  Tracker.autorun ->
-    if Session.get('currentUser')
-      Businesses.startObserving()
-    else
-      Businesses.observer?.stop()

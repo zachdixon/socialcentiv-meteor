@@ -5,7 +5,6 @@ Meteor.startup ->
     Keyphrases.observer = Keyphrases.find().observe
       added: (doc) ->
         unless init
-          doc.campaign_id = Session.get('campaign').id
           API.keyphrases.create(doc, (err, res) ->)
       changed: (newDoc, oldDoc) ->
       removed: (oldDoc) ->
@@ -14,9 +13,3 @@ Meteor.startup ->
             Keyphrases.insert(oldDoc)
           )
     init = false
-
-  Tracker.autorun ->
-    if Session.get('campaign')
-      Keyphrases.startObserving()
-    else
-      Keyphrases.observer?.stop()

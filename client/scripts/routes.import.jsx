@@ -8,21 +8,30 @@ import { LoginPage } from 'LoginPage';
 import { AccountsPage } from 'AccountsPage';
 import { TweetsPage } from 'TweetsPage';
 
-FlowRouter.route('/', {
-  name: 'tweets',
-  action: (params, queryParams) => {
-    ReactLayout.render(LayoutManager, {layout: MainLayout, content: <TweetsPage />});
-  }
-});
+var main = FlowRouter.group({}),
+    basic = FlowRouter.group({}),
+    managed = FlowRouter.group({
+      prefix: '/managed'
+    }),
+    managedAccounts = managed.group({
+      prefix: '/accounts'
+    });
 
-FlowRouter.route('/login', {
+main.route('/login', {
   name: 'login',
   action: (params, queryParams) => {
     ReactLayout.render(LayoutManager, {layout: SessionsLayout, content: <LoginPage />});
   }
 });
 
-FlowRouter.route('/managed/accounts', {
+basic.route('/', {
+  name: 'tweets',
+  action: (params, queryParams) => {
+    ReactLayout.render(LayoutManager, {layout: MainLayout, content: <TweetsPage />});
+  }
+});
+
+managedAccounts.route('/', {
   name: 'managedAccounts',
   action: (params, queryParams) => {
     ReactLayout.render(LayoutManager, {
@@ -33,9 +42,10 @@ FlowRouter.route('/managed/accounts', {
 });
 
 // FIXME - load correct business based on id
-FlowRouter.route('/managed/accounts/:business_id/tweets', {
+managedAccounts.route('/:business_id/tweets', {
   name: 'accountTweets',
   action: (params, queryParams) => {
+    Session.set('business_id', parseInt(params.business_id));
     ReactLayout.render(LayoutManager, {
       layout: MainLayout,
       content: <TweetsPage />

@@ -5,7 +5,7 @@ import { ShowFor } from 'ShowFor';
 import { CONSTANTS } from 'Constants';
 
 import { AccountDetails } from 'client/scripts/components/tweets/account-details';
-import { KeyphrasesWidget } from 'client/scripts/components/keyphrases/keyphrases-widget';
+import { CampaignsWidget } from 'client/scripts/components/tweets/campaigns-widget';
 import { ConversationsList } from 'client/scripts/components/tweets/conversations';
 
 let {BO,IP,AM,ADMIN} = CONSTANTS;
@@ -31,7 +31,7 @@ let LeftColumn = React.createClass({
     return (
       <div id="left-col" className="hidden-xs clearfix">
         <AccountDetails />
-        <KeyphrasesWidget />
+        <CampaignsWidget />
       </div>
     )
   }
@@ -69,7 +69,7 @@ let CenterColumn = React.createClass({
 
   getConversations() {
     if (this.data.business && this.data.keyphrases.length) {
-      API.conversations.getAll({
+      API.Conversations.getAll({
         business_id: this.data.business.id,
         num_per_page: this.state.numPerPage,
         status: 'awaiting_reply',
@@ -78,12 +78,7 @@ let CenterColumn = React.createClass({
       }, (err, res) => {
         if (res && !err) {
           // Stop observer, remove all current records, insert new records, start observer
-          Conversations.observer.stop();
-          Conversations.remove({});
-          res.data.forEach((doc) => {
-            Conversations.insert(doc);
-          });
-          Conversations.startObserving();
+          Conversations.replaceWith(res.data);
         }
       });
     }
@@ -102,19 +97,13 @@ let CenterColumn = React.createClass({
     return (
       <div className="comments" id="center-col">
         <div className="col-xs-12">
-          <div className="row comments-header">
-            <ul className="comments-nav">
-              <li className="nav-item">
-                <a className="nav-item-link active" href="#">
-                  <span className="text">Tweets</span>
-                  <span className="count">{this.getTotalConversations()}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
           <div>
             <div className="header clearfix row">
-              <div className="sort-bar">
+              <div className="tweet-count pull-left">
+                <span className="count">{this.getTotalConversations()}</span>
+                <span className="text">Tweets</span>
+              </div>
+              <div className="sort-bar pull-right">
                 <div className="sort-by">
                   <span>Sort By:</span>
                   <button

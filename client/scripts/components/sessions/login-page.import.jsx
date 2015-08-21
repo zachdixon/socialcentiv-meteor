@@ -19,7 +19,7 @@ export let LoginPage = React.createClass({
           let user = res.data;
           Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN});
           Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN});
-          user.type = "InteractiveProducer"; // FIXME - remove me once server returns
+          user.type = CONSTANTS.IP; // FIXME - remove me once server returns
           Session.set('currentUser', user);
           if(user.type === CONSTANTS.BO) {
             FlowRouter.go('tweets');

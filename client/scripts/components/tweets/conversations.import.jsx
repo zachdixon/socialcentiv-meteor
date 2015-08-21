@@ -24,41 +24,16 @@ export let ConversationsList = React.createClass({
 
   getMeteorData() {
     return {
-      conversations: Conversations.find().fetch()
+      conversations: Conversations.find().fetch(),
+      responses: Session.get('suggestedResponses') || []
     };
-  },
-  getInitialState() {
-    return {
-      responses: []
-    };
-  },
-  componentDidMount() {
-    this.getSuggestedResponses();
-  },
-  getSuggestedResponses() {
-    API.suggestedResponses.getAll({}, (err, res) => {
-      if (!err) {
-        let order = ["invite", "agree", "celebrate", "support", "sympathize"],
-            sortedResults = [];
-        order.forEach((sortedCategory) => {
-          res.data.forEach((category) => {
-            if (sortedCategory == category.category.toLowerCase()) {
-              sortedResults.push(category);
-            }
-          });
-        });
-        if(this.isMounted()) {
-          this.setState({responses: sortedResults});
-        }
-      }
-    });
   },
   render() {
     return (
       <ul className="convos clearfix">
         {this.data.conversations.map((conversation) => {
           return (
-            <Conversation key={conversation.id} conversation={conversation} responses={this.state.responses} />
+            <Conversation key={conversation.id} conversation={conversation} responses={this.data.responses} />
           )
         })}
       </ul>
@@ -73,7 +48,7 @@ let Conversation = React.createClass({
 
   propTypes: {
     conversation: object.isRequired,
-    responses: array.isRequired
+    responses: array
   },
 
   getMeteorData() {
@@ -197,7 +172,13 @@ let Conversation = React.createClass({
             </div>
             <div className="reply-text-wrapper">
               <label className="reply-username">{`@${lbc_tweet.author_screen_name}`}</label>
-              <textarea className={classNames('reply-txt', 'form-control' ,{'red-text': red_text})} name="comment-reply-text" placeholder="Reply or Use Suggested Replies" value={this.state.reply_message} onChange={this.handleReplyMessageChange}></textarea>
+              <textarea 
+                  className={classNames('reply-txt', 'form-control' ,{'red-text': red_text})}
+                  name="comment-reply-text"
+                  placeholder="Reply or Use Suggested Replies"
+                  value={this.state.reply_message}
+                  onChange={this.handleReplyMessageChange}>
+              </textarea>
               <label className="reply-link">{this.data.business.public_url}</label>
             </div>
             <div className="row">

@@ -1,6 +1,5 @@
 "use strict";
 
-import { MeteorData } from 'MeteorData';
 import { ReactOnClickOutside, classNames } from 'app-deps';
 import { Link } from 'Link';
 import { ShowFor } from 'ShowFor';
@@ -71,13 +70,6 @@ let IPHeader = React.createClass({
 
 let PrimaryNav = React.createClass({
   displayName: "PrimaryNav",
-
-  getMeteorData() {
-    return {
-      user: Session.get('currentUser'),
-      business: Session.get('business')
-    }
-  },
   
   propTypes: {
     routes: Types.array
@@ -104,9 +96,7 @@ let PrimaryNav = React.createClass({
                     </li>
                   );
                 })}
-                <MeteorData getMeteorData={this.getMeteorData}>
-                  <MainUtilityNav />
-                </MeteorData>
+                <MainUtilityNav />
               </ul>
             </nav>
           </div>
@@ -152,11 +142,18 @@ let SecondaryNav = React.createClass({
 
 let MainUtilityNav = React.createClass({
   displayName: "MainUtilityNav",
-  mixins: [ReactOnClickOutside],
+  mixins: [ReactMeteorData, ReactOnClickOutside],
 
   getInitialState() {
     return {
       open: false
+    }
+  },
+
+  getMeteorData() {
+    return {
+      user: Session.get('currentUser'),
+      business: Session.get('business')
     }
   },
 
@@ -194,21 +191,21 @@ let MainUtilityNav = React.createClass({
         <ShowFor type={BO}>
           <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
             {(() => {
-              if(this.props.data.business && this.props.data.business.status == "active") {
+              if(this.data.business && this.data.business.status == "active") {
                 return (
                   <span className="account-logo-wrapper">
-                    <img className="account-logo" src={this.props.data.business.twitter_avatar_url}/>
+                    <img className="account-logo" src={this.data.business.twitter_avatar_url}/>
                   </span>
                 );
               }
             })()}
-            <span className="label">{this.props.data.business? this.props.data.business.name : ""}</span>
+            <span className="label">{this.data.business? this.data.business.name : ""}</span>
           </Link>
         </ShowFor>
         <ShowFor type={[IP,AM,ADMIN]}>
           <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"paddingLeft": "15px !important"}}>
             <span className="main-nav-icon glyphicon glyphicon-user" style={{"marginRight": "15px"}}></span>
-            <span className="label">{this.props.data.user? this.props.data.user.name || this.props.data.user.email : ""}</span>
+            <span className="label">{this.data.user? this.data.user.name || this.data.user.email : ""}</span>
           </Link>
         </ShowFor>
         <ul className="sub-nav" style={{display: this.state.open? 'block' : 'none'}}>

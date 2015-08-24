@@ -157,6 +157,12 @@
         }
       }
     },
+    "lodash": {
+      "version": "3.10.1"
+    },
+    "lodash-inflection": {
+      "version": "1.2.2"
+    },
     "react-onclickoutside": {
       "version": "0.3.0"
     }

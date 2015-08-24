@@ -86,15 +86,13 @@ if(Meteor.isClient) {
               name: "getSingle",
               url: "/:id",
               type: "get",
-              url_params: ["id"],
-              required_params: ["business_id"]
+              url_params: ["id"]
             },
             {
               name: "update",
               url: "/:id",
               type: "put",
-              url_params: ["id"],
-              required_params: ["business_id"]
+              url_params: ["id"]
             },
             {
               name: "delete",
@@ -274,12 +272,17 @@ if(Meteor.isClient) {
         var response = Meteor.http[method.type.toLowerCase()](
           url,
           {
+            responseType: "JSON",
             headers: {
               "X-User-Email": Cookie.get('currentUserEmail'),
               "X-User-Token": Cookie.get('currentUserAuth'),
               "Accept": "application/vnd.socialcentiv.v2"
             },
-            params: options
+            // FIXME - update params to use only requiredParams from config
+            // i.e. params = {business_id: 3}
+            // options = {business_id: 3, accountinfo...}
+            params: options,
+            data: options
           },
           function(err, res) {
             cb(err,res);

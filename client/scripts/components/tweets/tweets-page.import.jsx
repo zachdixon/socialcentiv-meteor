@@ -6,6 +6,7 @@ import { CONSTANTS } from 'Constants';
 
 import { AccountDetails } from 'client/scripts/components/tweets/account-details';
 import { CampaignsWidget } from 'client/scripts/components/tweets/campaigns-widget';
+import { HighlightToggle } from 'client/scripts/components/tweets/highlight-toggle';
 import { ConversationsList } from 'client/scripts/components/tweets/conversations';
 
 let {BO,IP,AM,ADMIN} = CONSTANTS;
@@ -31,6 +32,7 @@ let LeftColumn = React.createClass({
     return (
       <div id="left-col" className="hidden-xs clearfix">
         <AccountDetails />
+        <HighlightToggle />
         <CampaignsWidget />
       </div>
     )
@@ -154,7 +156,7 @@ let CenterColumn = React.createClass({
             <div className="conversations row">
               {/*galleryModal*/ }
               <div>
-                <ConversationsList orderBy={this.state.orderBy} numPerPage={this.state.numPerPage} />
+                <ConversationsList />
               </div>
             </div>
             <LoadMoreButton />

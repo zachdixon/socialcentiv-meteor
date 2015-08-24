@@ -3,7 +3,7 @@
 "use strict";
 
 /* override _ (underscore) to use lodash instead */
-window._ = lodash;
+// window._ = lodash;
 
 FlowRouter.wait();
 

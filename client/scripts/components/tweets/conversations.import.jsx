@@ -10,18 +10,6 @@ let {string, number, object, array, func, oneOfType} = React.PropTypes;
 export let ConversationsList = React.createClass({
   mixins: [ReactMeteorData],
 
-  propTypes: {
-    orderBy: string,
-    numPerPage: number
-  },
-
-  getDefaultProps() {
-    return {
-      orderBy: "newest",
-      numPerPage: 10
-    }
-  },
-
   getMeteorData() {
     return {
       conversations: Conversations.find().fetch(),
@@ -53,12 +41,13 @@ let Conversation = React.createClass({
 
   getMeteorData() {
     return {
-      business: Session.get('business')
+      business: Session.get('business'),
+      keyphrases: Keyphrases.find({id: {$in: this.props.conversation.keyphrase_ids}}).fetch(),
+      keywordHighlightOn: Session.get('keyword-highlight-on')
     };
   },
 
   getInitialState() {
-
     return {
       reply_length: 0,
       reply_message: "",
@@ -70,8 +59,25 @@ let Conversation = React.createClass({
     this.max_reply_length = (115 - this.props.conversation.lbc_tweet.author_screen_name.length);
   },
 
-  componentDidMount() {
-    $(this.getDOMNode()).on('click', '.btn-reply, .tweet-row, .tweet-row *:not(a):not(button)', this.handleToggleReply);
+  messageHighlighted() {
+    let phrases = _.pluck(this.data.keyphrases, 'phrase'),
+        message = this.props.conversation.lbc_tweet.message;
+
+    phrases.forEach((phrase) => {
+      let singular = _.singularize(phrase),
+          plural = _.pluralize(phrase);
+
+      if (singular !== phrase) phrases.push(singular);
+      if (plural !== phrase) phrases.push(plural);
+    });
+    phrases = phrases.join('|');
+
+    if (phrases.length && this.data.keywordHighlightOn) {
+      let regex = new RegExp(`(\w+)?(${phrases})+(\w+)?`, "ig");
+      return message.replace(regex, "<span class='highlight'>$2</span>");
+    } else {
+      return message;
+    }
   },
 
   timeFromNow() {
@@ -125,34 +131,54 @@ let Conversation = React.createClass({
     this.setState({reply_message: response});
   },
 
+  handleRetweet(e) {
+    e.stopPropagation();
+    Conversations.update({id: this.props.conversation.id}, {$set: {retweet: true}});
+  },
+
+  handleFavorite(e) {
+    e.stopPropagation()
+    Conversations.update({id: this.props.conversation.id}, {$set: {favorite_tweet: true}});
+  },
+
   render() {
     
-    let lbc_tweet = this.props.conversation.lbc_tweet,
-        reply_tweet = this.props.conversation.reply_tweet,
+    let conversation = this.props.conversation,
+        lbc_tweet = conversation.lbc_tweet,
+        reply_tweet = conversation.reply_tweet,
         red_text = this.remainingChars() < 0;
 
     return (
       <li className="comment nopadding">
-        <div className="tweet-row clearfix">
-          <div className="tweet-stuff inner">
-            <div className="user-avatar">
-              <img className="img img-rounded" width="60" src={lbc_tweet.author_avatar_url} />
+        <div className="tweet-row clearfix" onClick={this.handleToggleReply}>
+          <div className="tweet-stuff inner" onClick={this.handleToggleReply}>
+            <div className="user-avatar" onClick={this.handleToggleReply}>
+              <img className="img img-rounded" onClick={this.handleToggleReply} width="60" src={lbc_tweet.author_avatar_url} />
             </div>
-            <div className="tweet-details">
-              <span className="name">{lbc_tweet.author_name}</span>
+            <div className="tweet-details" onClick={this.handleToggleReply}>
+              <span className="name" onClick={this.handleToggleReply}>{lbc_tweet.author_name}</span>
               <a className="comment-user-handle" target="_blank" href={`https://twitter.com/${lbc_tweet.author_screen_name}`}>
                 <span className="username">{`@${lbc_tweet.author_screen_name}`}</span>
               </a>
-              <span className="timeFromNow">{lbc_tweet.timeFromNow}</span>
-              <span className="hide-if-mobile" style={{display:'inline-block'}}>ago</span>
-              <span className="hide-if-mobile location" title={this.location()}>{this.location()}</span>
+              <span className="timeFromNow" onClick={this.handleToggleReply}>{lbc_tweet.timeFromNow}</span>
+              <span className="hide-if-mobile" onClick={this.handleToggleReply} style={{display:'inline-block'}}>ago</span>
+              <span className="hide-if-mobile location" onClick={this.handleToggleReply} title={this.location()}>{this.location()}</span>
               </div>
-            <p className="tweet-msg">{lbc_tweet.message}</p>
-            <div className="tweet-tools inner">
-              <div className="tool-inner inner">
-                <button className="plain reply-button btn-reply comment-option pull-left sc-tooltip"><span className="icon-reply icon"></span><span className="sc-tooltip-content">Reply</span></button>
-                <button className="retweet plain sc-tooltip"><span className="iconmoon icon-retweet icon"></span><span className="sc-tooltip-content">Retweet</span></button>
-                <button className="fav plain sc-tooltip"><span className="iconmoon icon-star icon"></span><span className="sc-tooltip-content">Favorite</span></button>
+            <p className="tweet-msg" onClick={this.handleToggleReply} dangerouslySetInnerHTML={{__html: this.messageHighlighted()}}></p>
+            <div className="tweet-tools inner" onClick={this.handleToggleReply}>
+              <div className="tool-inner inner" onClick={this.handleToggleReply}>
+                <button className="plain reply-button btn-reply comment-option pull-left sc-tooltip">
+                  <span className="icon-reply icon"></span>
+                  <span className="sc-tooltip-content">Reply</span>
+                </button>
+                <button className={classNames("retweet","plain","sc-tooltip",{active: conversation.retweet})} onClick={this.handleRetweet} disabled={conversation.retweet}>
+                  <span className="iconmoon icon-retweet icon ignore-toggle" onClick={this.handleRetweet}></span>
+                  <span className="sc-tooltip-content">Retweet</span>
+                </button>
+                <button className={classNames("fav","plain","sc-tooltip",{active: conversation.favorite_tweet})} onClick={this.handleFavorite} disabled={conversation.favorite_tweet}>
+                  <span className="iconmoon icon-star icon ignore-toggle"></span>
+                  <span className="sc-tooltip-content">Favorite</span>
+                </button>
                 <button className="delete plain sc-tooltip" data-original-title="Delete this conversation"><span className="icon-trash icon"></span><span className="sc-tooltip-content">Delete</span></button>
               </div>
             </div>
@@ -160,9 +186,9 @@ let Conversation = React.createClass({
         </div>
         <div className="reply-section">
           <CampaignsSelector
-            conversation_id={this.props.conversation.id}
+            conversation_id={conversation.id}
             reply_campaign_id={this.state.reply_campaign_id}
-            keyphrase_ids={this.props.conversation.keyphrase_ids}
+            keyphrase_ids={conversation.keyphrase_ids}
             onChange={this.handleCampaignChange} 
           />
           <SuggestedResponses responses={this.props.responses} onCategoryClick={this.handleSuggestedResponseClick} />

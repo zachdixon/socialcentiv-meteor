@@ -387,6 +387,11 @@ p{
   // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20446f', endColorstr='#5561ac',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
 }
 
+span.highlight {
+  background-color: rgba(255,255,0,0.4);
+  padding: 3px 5px;
+}
+
 @media (min-width: 768px) {
   .center-right-wrapper {
     width: calc(100% - 250px);
@@ -773,6 +778,32 @@ hr{
     float: right;
   }
 
+}
+.highlight-keywords {
+  display: -ms-flexbox; /* IE10 */
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center; /* IE10 */
+  -webkit-align-items: center;
+  align-items: center;
+  > label {
+    -ms-flex: 1; /* IE10 */
+    -webkit-flex: 1;
+    flex: 1;
+    font-size: 12px;
+    font-weight: 700;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 0;
+  }
+  .on-off-switch-label {
+    width: 75px;
+    float: right;
+    margin-bottom: 0;
+  }
+  .on-off-switch-switch {
+    right: 44px;
+  }
 }
 .keyword-helper-text{
     display: inline-block;

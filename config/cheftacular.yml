@@ -130,6 +130,11 @@ repositories:
     database:           none
     stack:              lamp
     has_split_branches: true
+  myscentiv_meteor:
+    repo_name:          my-socialcentiv-com-meteor
+    database:           none
+    stack:              nodejs
+    has_split_branches: true
   all:
     repo_name: all
     database:  none #we dont want to run migrations on an all deploy

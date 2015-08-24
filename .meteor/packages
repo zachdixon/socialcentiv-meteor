@@ -6,7 +6,6 @@
 
 meteor-platform
 insecure
-iron:router
 coffeescript
 http
 jquery
@@ -21,6 +20,14 @@ api-socialcentiv
 chuangbo:cookie
 aldeed:collection2
 reactive-var
-underscore
 peerlibrary:blaze-components
-zimme:active-route
+react
+react-template-helper
+jhartma:cjsx
+kadira:flow-router
+kadira:react-layout
+universe:modules
+meteorhacks:npm
+cosmos:browserify
+
+npm-container

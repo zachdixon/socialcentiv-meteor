@@ -1,3 +1,7 @@
+Template.sessionsLayout.helpers
+  footer: ->
+    App.Components.Footer
+
 View =
   login: (e, doc) ->
     e.preventDefault()

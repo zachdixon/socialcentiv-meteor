@@ -81,7 +81,6 @@ class Conversation extends BlazeComponent
       @$('.reply-txt')
         .css('text-indent', @$('.reply-username').width())
         .focus()
-      @replyState.set true
 
   cancelReply: (e) ->
     $(@firstNode()).removeClass('active').find(".reply-section").slideUp(200)

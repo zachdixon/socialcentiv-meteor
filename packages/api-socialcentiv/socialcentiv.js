@@ -22,47 +22,59 @@ if(Meteor.isClient) {
       },
       "resources": [
         {
-          name: "users",
+          name: "Users",
           url: "/users",
           methods: [
             {
               name: "update",
+              url: "/:id",
               type: "put",
-              url_param: "id",
-              required_params: ["id"]
+              url_params: ["id"]
             }
           ]
         },
         {
-          name: "businesses",
+          name: "Businesses",
           url: "/businesses",
           methods: [
             {
-              name: "getSingle",
+              name: "getAll",
               type: "get",
               required_params: ["user_id"]
             },
             {
+              name: "getSingle",
+              url: "/:id",
+              type: "get",
+              url_params: ["id"]
+            },
+            {
               name: "update",
+              url: "/:id",
               type: "put",
-              url_param: "id",
-              required_params: ["id"]
+              url_params: ["id"]
             }
           ]
         },
         {
-          name: "campaigns",
+          name: "Campaigns",
           url: "/campaigns",
           methods: [
             {
-              name: "getSingle",
+              name: "getAll",
               type: "get",
-              required_params: ["business_id"]
+              requried_params: ["business_id"]
+            },
+            {
+              name: "getSingle",
+              url: "/:id",
+              type: "get",
+              url_params: ["id"]
             }
           ]
         },
         {
-          name: "conversations",
+          name: "Conversations",
           url: "/conversations",
           methods: [
             {
@@ -72,24 +84,92 @@ if(Meteor.isClient) {
             },
             {
               name: "getSingle",
+              url: "/:id",
               type: "get",
-              required_params: ["business_id", "id"]
+              url_params: ["id"]
             },
             {
               name: "update",
+              url: "/:id",
               type: "put",
-              required_params: ["business_id", "id"]
+              url_params: ["id"]
             },
             {
               name: "delete",
+              url: "/:id",
               type: "del",
-              url_param: "id",
-              required_params: ["id"]
+              url_params: ["id"]
             }
           ]
         },
         {
-          name: "keyphrases",
+          name: "SuggestedResponses",
+          url: "/suggested_responses",
+          methods: [
+            {
+              name: "getAll",
+              type: "get"
+            }
+          ]
+        },
+        {
+          name: "CountryTargets",
+          url: "/country_targets",
+          methods: [
+            {
+              name: "getAll",
+              type: "get",
+              required_params: ["campaign_id"]
+            },
+            {
+              // FIXME - complete with required_params
+              name: "create",
+              type: "post"
+            },
+            {
+              name: "update",
+              url: "/:id",
+              type: "put",
+              url_params: ["id"]
+            },
+            {
+              name: "delete",
+              url: "/:id",
+              type: "del",
+              url_params: ["id"]
+            }
+          ]
+        },
+        {
+          name: "RadiusTargets",
+          url: "/radius_targets",
+          methods: [
+            {
+              name: "getAll",
+              type: "get",
+              required_params: ["country_target_id"]
+            },
+            {
+              // FIXME - finish with required_params
+              name: "create",
+              type: "post"
+            },
+            {
+              name: "update",
+              url: "/:id",
+              type: "put",
+              url_params: ["id"]
+            },
+            {
+              name: "delete",
+              url: "/:id",
+              type: "del",
+              url_params: ["id"]
+            }
+          ]
+        },
+        {
+          name: "Keyphrases",
           url: "/keyphrases",
           methods: [
             {
@@ -104,9 +184,37 @@ if(Meteor.isClient) {
             },
             {
               name: "delete",
+              url: "/:id",
               type: "del",
-              url_param: "id",
-              required_params: ["id"]
+              url_params: ["id"]
+            }
+          ]
+        },
+        {
+          name: "Images",
+          url: "/campaign_images",
+          methods: [
+            {
+              name: "getAll",
+              type: "get",
+              required_params: ["campaign_id"]
+            },
+            {
+              // FIXME - finish with required_params
+              name: "create",
+              type: "post"
+            },
+            {
+              name: "update",
+              url: "/:id",
+              type: "put",
+              url_params: ["id"]
+            },
+            {
+              name: "delete",
+              url: "/:id",
+              type: "del",
+              url_params: ["id"]
             }
           ]
         }
@@ -122,12 +230,14 @@ if(Meteor.isClient) {
     url = APIConfig.config.defaults.base_url + route_config.url;
     if(options.auth_type.toLowerCase() == "basic") {
       headers = {
-        "Authorization": "Basic " + options.auth_string
+        "Authorization": "Basic " + options.auth_string,
+        "Accept": "application/vnd.socialcentiv.v2"
       };
     }else if(options.auth_type.toLowerCase() == "token") {
       headers = {
         "X-User-Email": Cookie.get('currentUserEmail'),
-        "X-User-Token": Cookie.get('currentUserAuth')
+        "X-User-Token": Cookie.get('currentUserAuth'),
+        "Accept": "application/vnd.socialcentiv.v2"
       };
     }
     var response = Meteor.http.get(
@@ -146,21 +256,36 @@ if(Meteor.isClient) {
       API[resource.name][method.name] = function(options, cb) {
         check(options, Object);
         check(cb, Function);
-        url = APIConfig.config.defaults.base_url + resource.url;
-        if(!!method.url_param) {
-          url += ("/" + options[method.url_param]);
+
+        var url = APIConfig.config.defaults.base_url + resource.url;
+        // Replace url params with values
+        // i.e. looks for :id inside url /businesses/:id,
+        // then replaces it with the value from options
+        if(!!method.url_params) {
+          url = url + method.url;
+          method.url_params.forEach(function(param) {
+            var regex = new RegExp("\:" + param, "ig");
+            url = url.replace(regex, options[param])
+            delete options[param];
+          });
         }
         var response = Meteor.http[method.type.toLowerCase()](
           url,
           {
+            responseType: "JSON",
             headers: {
               "X-User-Email": Cookie.get('currentUserEmail'),
-              "X-User-Token": Cookie.get('currentUserAuth')
+              "X-User-Token": Cookie.get('currentUserAuth'),
+              "Accept": "application/vnd.socialcentiv.v2"
             },
-            params: options
+            // FIXME - update params to use only requiredParams from config
+            // i.e. params = {business_id: 3}
+            // options = {business_id: 3, accountinfo...}
+            params: options,
+            data: options
           },
           function(err, res) {
-            cb(err,res.data);
+            cb(err,res);
           }
         );
       };

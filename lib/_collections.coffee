@@ -32,9 +32,16 @@ Mongo.Collection.prototype.replaceWith = (docs, foreign_key, foreign_key_value) 
   this.startObserving()
 
 Mongo.Collection.prototype.stealthUpdate = (selectors, modifiers) ->
-  check(selectors, Object)
+  check(selectors, Match.OneOf(Object, String))
   check(modifiers, Object)
 
   this.observer?.stop()
   this.update(selectors, modifiers)
+  this.startObserving()
+
+Mongo.Collection.prototype.stealthRemove = (selectors) ->
+  check(selectors, Match.OneOf(Object, String))
+
+  this.observer?.stop()
+  this.remove(selectors)
   this.startObserving()

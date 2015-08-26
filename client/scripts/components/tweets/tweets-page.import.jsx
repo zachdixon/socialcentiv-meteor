@@ -8,6 +8,7 @@ import { AccountDetails } from 'client/scripts/components/tweets/account-details
 import { CampaignsWidget } from 'client/scripts/components/tweets/campaigns-widget';
 import { HighlightToggle } from 'client/scripts/components/tweets/highlight-toggle';
 import { ConversationsList } from 'client/scripts/components/tweets/conversations';
+import { CampaignImagesModal } from 'client/scripts/components/tweets/campaign-images-modal';
 
 let {BO,IP,AM,ADMIN} = CONSTANTS;
 
@@ -154,10 +155,8 @@ let CenterColumn = React.createClass({
               </div>
             </div>
             <div className="conversations row">
-              {/*galleryModal*/ }
-              <div>
-                <ConversationsList />
-              </div>
+              <CampaignImagesModal />
+              <ConversationsList />
             </div>
             <LoadMoreButton />
           </div>

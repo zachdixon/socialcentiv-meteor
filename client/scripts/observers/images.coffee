@@ -5,7 +5,11 @@ Meteor.startup ->
     Images.observer = Images.find().observe
       added: (doc) ->
         unless init
-          API.Images.create(doc, (err, res) ->)
+          API.Images.create doc, (err, res) ->
+            if err
+              Images.stealthRemove({id: doc.id})
+            else
+              Images.stealthUpdate(doc._id, {$set: res.data})
       changed: (newDoc, oldDoc) ->
         API.Images.update newDoc, (err, res) ->
           if err

@@ -1,10 +1,15 @@
 "use strict";
 
+import { CONSTANTS } from 'Constants';
+
 import { classNames } from 'app-deps';
+import { ShowFor } from 'ShowFor';
 import { CampaignsSelector } from 'client/scripts/components/tweets/campaign-selector';
 import { SuggestedResponses } from 'client/scripts/components/tweets/suggested-responses';
 
 let {string, number, object, array, func, oneOfType} = React.PropTypes;
+
+let {BO,IP} = CONSTANTS;
 
 
 export let ConversationsList = React.createClass({
@@ -21,7 +26,7 @@ export let ConversationsList = React.createClass({
       <ul className="convos clearfix">
         {this.data.conversations.map((conversation) => {
           return (
-            <Conversation key={conversation.id} conversation={conversation} responses={this.data.responses} />
+            <Conversation key={conversation.id} conversation_id={conversation.id} responses={this.data.responses} />
           )
         })}
       </ul>
@@ -35,15 +40,23 @@ let Conversation = React.createClass({
   mixins: [ReactMeteorData],
 
   propTypes: {
-    conversation: object.isRequired,
+    conversation_id: number.isRequired,
     responses: array
   },
 
   getMeteorData() {
+    let conversation = Conversations.findOne({id: this.props.conversation_id}),
+        keyphrases = Keyphrases.find({id: {$in: conversation.keyphrase_ids}}).fetch(),
+        campaign_ids = keyphrases.map((kp) => { return kp.campaign_id;}),
+        campaigns = Campaigns.find({id: {$in: campaign_ids}, status: 'active'}, {sort: {default: 1}}).fetch(),
+        selected_images = Images.find({campaign_id: this.state.reply_campaign_id, selected: true}).fetch();
     return {
       business: Session.get('business'),
-      keyphrases: Keyphrases.find({id: {$in: this.props.conversation.keyphrase_ids}}).fetch(),
-      keywordHighlightOn: Session.get('keyword-highlight-on')
+      conversation: conversation,
+      keyphrases: keyphrases,
+      campaigns: campaigns,
+      keywordHighlightOn: Session.get('keyword-highlight-on'),
+      selectedImages: selected_images
     };
   },
 
@@ -51,17 +64,22 @@ let Conversation = React.createClass({
     return {
       reply_length: 0,
       reply_message: "",
-      reply_campaign_id: this.props.conversation.reply_campaign_id
+      reply_campaign_id: null
     };
   },
 
   componentWillMount() {
-    this.max_reply_length = (115 - this.props.conversation.lbc_tweet.author_screen_name.length);
+    this.max_reply_length = (115 - this.data.conversation.lbc_tweet.author_screen_name.length);
+  },
+
+  componentDidMount() {
+    let reply_campaign_id = this.data.conversation.reply_campaign_id || _.get(this.data.campaigns,'0.id') || "none";
+    this.setReplyCampaignId(reply_campaign_id);
   },
 
   messageHighlighted() {
     let phrases = _.pluck(this.data.keyphrases, 'phrase'),
-        message = this.props.conversation.lbc_tweet.message;
+        message = this.data.conversation.lbc_tweet.message;
 
     phrases.forEach((phrase) => {
       let singular = _.singularize(phrase),
@@ -81,24 +99,20 @@ let Conversation = React.createClass({
   },
 
   timeFromNow() {
-    let time = moment(this.props.conversation.posted_at);
+    let time = moment(this.data.conversation.posted_at);
     return time? time.fromNow(true) : "";
   },
 
   location() {
-    return this.props.conversation.location || "N/A";
+    return this.data.conversation.location || "N/A";
   },
 
   remainingChars() {
-    return this.max_reply_length - (this.state.reply_message.length || 0) - (this.selectedImages().length? 26 : 0) + ((this.props.conversation.reply_campaign_id == "none")? 23 : 0);
+    return this.max_reply_length - (this.state.reply_message.length || 0) - (this.data.selectedImages.length? 26 : 0) + ((this.data.conversation.reply_campaign_id == "none")? 23 : 0);
   },
 
   invalidReplyLength() {
     return (this.remainingChars() < 0) || (this.state.reply_length == 0);
-  },
-
-  selectedImages() {
-    return [];
   },
 
   handleToggleReply(e) {
@@ -117,13 +131,18 @@ let Conversation = React.createClass({
     }
   },
 
+  setReplyCampaignId(value) {
+    this.setState({reply_campaign_id: value});
+    Conversations.stealthUpdate({id: this.data.conversation.id}, {$set: {reply_campaign_id: value}});
+  },
+
   handleReplyMessageChange(e) {
     this.setState({reply_message: e.target.value});
   },
 
   handleCampaignChange(e) {
-    let value = e.target.value;
-    this.setState({reply_campaign_id: parseInt(value) || value});
+    let value = parseInt(e.target.value) || e.target.value;
+    this.setReplyCampaignId(value);
   },
 
   handleSuggestedResponseClick(responses, e) {
@@ -133,17 +152,22 @@ let Conversation = React.createClass({
 
   handleRetweet(e) {
     e.stopPropagation();
-    Conversations.update({id: this.props.conversation.id}, {$set: {retweet: true}});
+    Conversations.update({id: this.data.conversation.id}, {$set: {retweet: true}});
   },
 
   handleFavorite(e) {
     e.stopPropagation()
-    Conversations.update({id: this.props.conversation.id}, {$set: {favorite_tweet: true}});
+    Conversations.update({id: this.data.conversation.id}, {$set: {favorite_tweet: true}});
+  },
+
+  handleEditPhotosClick(e) {
+    // Set activeConversation so image gallery knows which images to load
+    Session.set('activeConversation', this.data.conversation);
   },
 
   render() {
     
-    let conversation = this.props.conversation,
+    let conversation = this.data.conversation,
         lbc_tweet = conversation.lbc_tweet,
         reply_tweet = conversation.reply_tweet,
         red_text = this.remainingChars() < 0;
@@ -188,10 +212,12 @@ let Conversation = React.createClass({
           <CampaignsSelector
             conversation_id={conversation.id}
             reply_campaign_id={this.state.reply_campaign_id}
-            keyphrase_ids={conversation.keyphrase_ids}
+            campaigns={this.data.campaigns}
             onChange={this.handleCampaignChange} 
           />
-          <SuggestedResponses responses={this.props.responses} onCategoryClick={this.handleSuggestedResponseClick} />
+          <ShowFor type={BO}>
+            <SuggestedResponses responses={this.props.responses} onCategoryClick={this.handleSuggestedResponseClick} />
+          </ShowFor>
           <div className="reply-subsection nomargin">
             <div className="reply-avatar">
               <img className="img img-rounded" width="32" src={this.data.business.twitter_avatar_url} />
@@ -205,21 +231,24 @@ let Conversation = React.createClass({
                   value={this.state.reply_message}
                   onChange={this.handleReplyMessageChange}>
               </textarea>
-              <label className="reply-link">{this.data.business.public_url}</label>
+              {/* Only show campaign link when a campaign is selected */}
+              {this.state.reply_campaign_id === "none" ? null : (
+                <label className="reply-link">{this.data.business.public_url}</label>
+              )}
             </div>
             <div className="row">
-              <div className="col-md-12">
-                <div className="images clearfix" data-count="0">
-                </div>
-              </div>
+              <ReplyImages images={this.data.selectedImages} />
               <div className="col-md-12">
                 <div className="reply-tools clearfix">
-                  <div className="pull-left">
-                    <a className="btn-flat clearfix" data-toggle="modal" href="#gallery-modal">
-                      <span className="glyphicon glyphicon-camera pull-left"></span>
-                      <span className="pull-left">Edit photos</span>
-                    </a>
-                  </div>
+                  {/*Only show Edit photos button when campaign is selected */}
+                  {this.state.reply_campaign_id === "none"? null: (
+                    <div className="pull-left">
+                      <a className="btn-flat clearfix" data-toggle="modal" href="#gallery-modal" onClick={this.handleEditPhotosClick}>
+                        <span className="glyphicon glyphicon-camera pull-left"></span>
+                        <span className="pull-left">Edit photos</span>
+                      </a>
+                    </div>
+                  )}
                   <div className="pull-right">
                     <span className={classNames('count','top10','pull-left',{'red-text': red_text})}>{this.remainingChars()}</span>
                     <button className="btn-send-reply btn btn-large btn-primary border-bottom ladda-button pull-right" disabled={this.invalidReplyLength()}>
@@ -235,5 +264,32 @@ let Conversation = React.createClass({
         <a className="trigger-wisepops stealth" href="#wisepops"></a>
       </li>
     )
+  }
+});
+
+let ReplyImages = React.createClass({
+  propTypes: {
+    images: array
+  },
+
+  render() {
+    let images = this.props.images;
+    if (images.length) {
+      return (
+        <div className="col-md-12">
+          <div className="images clearfix" data-count={images.length}>
+            {images.map((image) => {
+              return (
+                <div className="image-wrapper" key={image.id}>
+                  <image src={image.url} />
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )
+    } else {
+      return null
+    }
   }
 });

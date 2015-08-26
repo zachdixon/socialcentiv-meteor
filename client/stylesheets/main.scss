@@ -1253,7 +1253,7 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
 .on-off-switch-inner:before {
     content: "ON";
     padding-left: 10px;
-    background-color: #4C93DD; color: #FFFFFF;
+    background-color: #0191cc; color: #FFFFFF;
 }
 .on-off-switch-inner:after {
     content: "OFF";
@@ -2879,6 +2879,7 @@ in the app.*/
     display: inline-block;
     margin: 5px;
     position: relative;
+    float:left;
 
     &:hover {
       .delete-image {
@@ -2918,6 +2919,11 @@ in the app.*/
       &:hover {
         box-shadow: 0 1px 3px #999;
       }
+    }
+    .campaign-image{
+      height: 100px;
+      width: 100px;
+      background-size:cover;
     }
   }
   .upload-image-wrapper {
@@ -3961,7 +3967,7 @@ div.header{
   }
   .reply-subsection {
     position: relative;
-    padding: 0 10px 10px 50px;
+    padding: 10px 10px 10px 50px;
   }
 
   .reply-text-wrapper {
@@ -4097,7 +4103,6 @@ div.header{
   }
   .reply-avatar {
     position: absolute;
-    top: 0;
     left: 10px;
     width: 32px;
     text-align: center;

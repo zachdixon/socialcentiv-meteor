@@ -4,28 +4,12 @@ let {number, string, array, func, oneOfType} = React.PropTypes;
 
 export let CampaignsSelector = React.createClass({
   displayName: "CampaignsSelector",
-  mixins: [ReactMeteorData],
 
   propTypes: {
     conversation_id: number.isRequired,
     reply_campaign_id: oneOfType([number, string]),
-    keyphrase_ids: array.isRequired,
+    campaigns: array.isRequired,
     onChange: func.isRequired
-  },
-
-  getMeteorData() {
-    let keyphrases = Keyphrases.find({id: {$in: this.props.keyphrase_ids}}).fetch(),
-        campaign_ids = keyphrases.map((kp) => { return kp.campaign_id;}),
-        campaigns = Campaigns.find({id: {$in: campaign_ids}, status: 'active'}, {sort: {default: 1}}).fetch();
-
-    return {
-      campaigns: campaigns
-    }
-  },
-
-  getReplyCampaignId() {
-    let campaigns = this.data.campaigns
-    return this.props.reply_campaign_id || _.get(campaigns, '0.id') || "none";
   },
 
   render() {
@@ -38,7 +22,7 @@ export let CampaignsSelector = React.createClass({
         </h4>
         <div className="radio-buttons">
           {
-            this.data.campaigns.map((campaign) => {
+            this.props.campaigns.map((campaign) => {
               let c_id = campaign.id;
               return (
                 <div key={`campaign-radios-${c_id}`}>
@@ -47,7 +31,7 @@ export let CampaignsSelector = React.createClass({
                     id={`campaign-radio-${conv_id}-${c_id}`}
                     name={`convo-radios-${conv_id}`}
                     value={c_id}
-                    checked={this.getReplyCampaignId() == c_id}
+                    checked={this.props.reply_campaign_id == c_id}
                     onChange={this.props.onChange}
                   />
                   <label htmlFor={`campaign-radio-${conv_id}-${c_id}`}>{campaign.name}</label>
@@ -60,7 +44,7 @@ export let CampaignsSelector = React.createClass({
             id={`campaign-radio-none-${conv_id}`}
             name={`convo-radios-${conv_id}`}
             value="none"
-            checked={this.getReplyCampaignId() == "none"}
+            checked={this.props.reply_campaign_id == "none"}
             onChange={this.props.onChange}
           />
           <label htmlFor={`campaign-radio-none-${conv_id}`}>None</label>

@@ -44,8 +44,7 @@ if(Meteor.isClient) {
             methods: [
               {
                 name: "getAll",
-                type: "get",
-                required_params: ["user_id"]
+                type: "get"
               },
               {
                 name: "getSingle",
@@ -240,8 +239,8 @@ if(Meteor.isClient) {
         };
       }else if(options.auth_type.toLowerCase() == "token") {
         headers = {
-          "X-User-Email": Cookie.get('currentUserEmail'),
-          "X-User-Token": Cookie.get('currentUserAuth'),
+          "X-User-Email": (Cookie.get('advancedUserEmail') || Cookie.get('currentUserEmail')),
+          "X-User-Token": (Cookie.get('advancedUserAuth') || Cookie.get('currentUserAuth')),
           "Accept": "application/vnd.socialcentiv.v2"
         };
       }
@@ -263,7 +262,9 @@ if(Meteor.isClient) {
           check(cb, Function);
 
           var url = APIConfig.config.defaults.base_url + resource.url,
-              params = {};
+              params = {},
+              email,
+              auth;
           // Replace url params with values
           // i.e. looks for :id inside url /businesses/:id,
           // then replaces it with the value from options
@@ -287,8 +288,8 @@ if(Meteor.isClient) {
             {
               responseType: "JSON",
               headers: {
-                "X-User-Email": Cookie.get('currentUserEmail'),
-                "X-User-Token": Cookie.get('currentUserAuth'),
+                "X-User-Email": Cookie.get('currentUserEmail') || Cookie.get('advancedUserEmail'),
+                "X-User-Token": Cookie.get('currentUserAuth') || Cookie.get('advancedUserAuth'),
                 "Accept": "application/vnd.socialcentiv.v2"
               },
               // FIXME - update params to use only requiredParams from config

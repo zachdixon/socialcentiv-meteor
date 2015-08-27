@@ -169,8 +169,8 @@ let MainUtilityNav = React.createClass({
 
   handleLogout(e) {
     // Clear cookies
-    Cookie.remove('currentUserEmail', {path: '/', domain: App.DOMAIN});
-    Cookie.remove('currentUserAuth', {path: '/', domain: App.DOMAIN});
+    App.clearCurrentUserCookies();
+    App.clearAdvancedUserCookies();
     // Clear session variables
     Object.keys(Session.keys).forEach((key) => {
       return Session.set(key, undefined);

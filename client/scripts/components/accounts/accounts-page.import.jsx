@@ -20,7 +20,7 @@ export let AccountsPage = React.createClass({
     }
     return {
       user: Session.get('currentUser'),
-      accounts: Businesses.find(selectors, modifiers).fetch()
+      businesses: Businesses.find(selectors, modifiers).fetch()
     }
   },
 
@@ -64,8 +64,8 @@ export let AccountsPage = React.createClass({
       {id: 1, field: "account_type", label: "Account Type", sortable: true},
       {id: 2, field: "name", label: "Name", sortable: true},
       {id: 3, field: "email", label: "Email", sortable: true},
-      {id: 4, field: "monthly_replies", label: "Monthly Replies", sortable: true},
-      {id: 5, field: "daily_replies", label: "Daily Replies", sortable: true},
+      // {id: 4, field: "monthly_replies", label: "Monthly Replies", sortable: true},
+      // {id: 5, field: "daily_replies", label: "Daily Replies", sortable: true},
       {id: 6, label: "Access Account", sortable: false}
     ];
     return (
@@ -107,9 +107,10 @@ export let AccountsPage = React.createClass({
                 </tr>
               </thead>
               <tbody>
-                {this.data.accounts.map((account) => {
+                {this.data.businesses.map((business) => {
+                  let account = Accounts.findOne({id: business.business_owner_id});
                   return (
-                    <AccountRow key={account.id} account={account} />
+                    <BusinessRow key={business._id} account={account} business={business}/>
                   )
                 })}
               </tbody>
@@ -121,22 +122,31 @@ export let AccountsPage = React.createClass({
   }
 });
 
-let AccountRow = React.createClass({
+let BusinessRow = React.createClass({
   propTypes: {
-    account: React.PropTypes.object
+    account: React.PropTypes.object,
+    business: React.PropTypes.object
+  },
+
+  handleAccessAccountClick(e) {
+    e.preventDefault();
+    App.setCurrentUserCookies(this.props.account.email, this.props.account.authentication_token);
+    Session.set('business_id', this.props.account.id);
+    FlowRouter.go(`/managed/accounts/${this.props.business.id}/tweets`);
   },
 
   render() {
-    let account = this.props.account;
+    let account = this.props.account,
+        business = this.props.business;
     return (
       <tr>
-        <td className="account-type">{_.startCase(account.account_type)}</td>
-        <td className="account-name">{account.name}</td>
+        <td className="account-type">{_.startCase(business.account_type)}</td>
+        <td className="account-name">{business.name}</td>
         <td className="account-email">{account.email}</td>
-        <td className="account-monthly-replies">{account.monthly_replies}</td>
-        <td className="account-daily-replies">{account.daily_replies}</td>
+        {/*<td className="account-monthly-replies">{account.monthly_replies}</td>*/}
+        {/*<td className="account-daily-replies">{account.daily_replies}</td>*/}
         <td className="account-access">
-          <Link to={'/managed/accounts/' + account.id + '/tweets'}>Access Account</Link>
+          <a href="#" onClick={this.handleAccessAccountClick}>Access Account</a>
         </td>
       </tr>
     )

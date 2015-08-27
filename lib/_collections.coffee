@@ -19,15 +19,22 @@ App.Collections =
   images          : Images
   reports         : Reports
 
+Mongo.Collection.prototype.stealthInsertMultipleWith = (docs, foreign_key, foreign_key_value) ->
+  check(docs, Array)
 
-Mongo.Collection.prototype.replaceWith = (docs, foreign_key, foreign_key_value) ->
+  this.observer?.stop()
+  docs.forEach (doc) =>
+    if foreign_key
+      doc[foreign_key] = foreign_key_value
+    this.insert doc
+  this.startObserving()
+
+Mongo.Collection.prototype.replaceWith = (docs) ->
   check(docs, Array)
 
   this.observer?.stop()
   this.remove({})
   docs.forEach (doc) =>
-    if foreign_key
-      doc[foreign_key] = foreign_key_value
     this.insert doc
   this.startObserving()
 

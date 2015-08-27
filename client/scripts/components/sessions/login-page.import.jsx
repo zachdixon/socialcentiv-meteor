@@ -2,6 +2,8 @@
 
 import { CONSTANTS } from 'Constants';
 
+let {BO, IP} = CONSTANTS;
+
 export let LoginPage = React.createClass({
   displayName: "LoginPage",
   login(e) {
@@ -17,9 +19,12 @@ export let LoginPage = React.createClass({
           // show errors
         } else {
           let user = res.data;
-          Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN});
-          Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN});
-          user.type = CONSTANTS.IP; // FIXME - remove me once server returns
+          if (user.type === BO) {
+            App.setCurrentUserCookies(user.email, user.authentication_token);
+          } else {
+            App.setAdvancedUserCookies(user.email, user.authentication_token);
+          }
+          // user.type = CONSTANTS.IP; // FIXME - remove me once server returns
           Session.set('currentUser', user);
           if(user.type === CONSTANTS.BO) {
             FlowRouter.go('tweets');

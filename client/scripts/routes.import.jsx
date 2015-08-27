@@ -33,6 +33,10 @@ basic.route('/', {
 
 managedAccounts.route('/', {
   name: 'managedAccounts',
+  triggersEnter: [() => {
+      App.clearCurrentUserCookies();
+    }
+  ],
   action: (params, queryParams) => {
     ReactLayout.render(LayoutManager, {
       layout: MainLayout,
@@ -41,10 +45,10 @@ managedAccounts.route('/', {
   }
 });
 
-// FIXME - load correct business based on id
 managedAccounts.route('/:business_id/tweets', {
   name: 'accountTweets',
   action: (params, queryParams) => {
+    // Needed for refreshing page or navigating directly to this route
     Session.set('business_id', parseInt(params.business_id));
     ReactLayout.render(LayoutManager, {
       layout: MainLayout,

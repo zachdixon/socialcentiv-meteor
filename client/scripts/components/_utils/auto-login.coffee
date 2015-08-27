@@ -9,8 +9,9 @@ AutoLogin = ->
       else
         FlowRouter.go('managedAccounts')
   else
-    email = Cookie.get('currentUserEmail')
-    auth = Cookie.get('currentUserAuth')
+    # Check for advanced user cookies first, if they exist we want to use them
+    email = Cookie.get('advancedUserEmail') or Cookie.get('currentUserEmail')
+    auth = Cookie.get('advancedUserAuth') or Cookie.get('currentUserAuth')
     # If cookies exists, login
     if email and auth
       callback = (err, res) =>
@@ -19,9 +20,13 @@ AutoLogin = ->
           # show errors
         else
           user = res.data
-          Cookie.set('currentUserEmail', user.email, {path: "/", domain: App.DOMAIN})
-          Cookie.set('currentUserAuth', user.authentication_token, {path: "/", domain: App.DOMAIN})
           user.type = "InteractiveProducer"
+
+          if user.type is "BusinessOwner"
+            App.setCurrentUserCookies(user.email, user.authentication_token)
+          else
+            App.setAdvancedUserCookies(user.email, user.authentication_token)
+
           Session.set('currentUser', user)
       API.sessions.login({auth_type: "token"}, callback.bind(@))
     else

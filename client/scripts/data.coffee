@@ -13,6 +13,25 @@ Meteor.startup ->
   ADMIN = "Admin"
 
   Tracker.autorun ->
+    # Get list of users/accounts (Reply Pro/Enterprise) for current advanced user
+    user = Session.get('currentUser')
+    if user? and user.type isnt BO
+      API.Users.getAll {}, (err,res) ->
+        unless err
+          Accounts.replaceWith(res.data)
+
+  Tracker.autorun ->
+    # Get businesses for IP
+    user = Session.get('currentUser')
+    if user? and Session.get('currentUser').type isnt BO
+      # $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (res) ->
+      #   if res.length
+      #     Businesses.replaceWith(res)
+      API.Businesses.getAll {}, (err,res) ->
+        unless err
+          Businesses.replaceWith(res.data)
+
+  Tracker.autorun ->
     # Get Business for BusinessOwner
     user = Session.get('currentUser')
     if user? and user.type is BO
@@ -44,13 +63,14 @@ Meteor.startup ->
           Campaigns.replaceWith(res.data)
           res.data.forEach (doc) ->
             campaign_id = doc.id
+            console.log doc.id
             # --------------------------------------
             # Get Country Targets for all campaigns
             API.CountryTargets.getAll
               campaign_id: campaign_id
             , (err, res) ->
               unless err
-                CountryTargets.replaceWith(res.data, "campaign_id", campaign_id)
+                CountryTargets.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
                 # --------------------------------------
                 # Get Radius Targets for all Country Targets
                 res.data.forEach (doc) ->
@@ -59,29 +79,23 @@ Meteor.startup ->
                     country_target_id: country_target_id
                   , (err, res) ->
                     unless err
-                      RadiusTargets.replaceWith(res.data, "country_target_id", country_target_id)
+                      RadiusTargets.stealthInsertMultipleWith(res.data, "country_target_id", country_target_id)
             # --------------------------------------
             # Get Keyphrases for all campaigns
             API.Keyphrases.getAll
               campaign_id: campaign_id
             , (err, res) ->
               unless err
-                Keyphrases.replaceWith(res.data, "campaign_id", campaign_id)
+                console.dir res.data
+                console.log "campaign_id: #{campaign_id}"
+                Keyphrases.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
             # --------------------------------------
             # Get Images for all campaigns
             API.Images.getAll
               campaign_id: campaign_id
             , (err, res) ->
               unless err
-                Images.replaceWith(res.data, "campaign_id", campaign_id)
-
-  Tracker.autorun ->
-    # Get accounts
-    if Session.get('currentUser')?
-      if Session.get('currentUser').type isnt "BusinessOwner"
-        $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (res) ->
-          if res.length
-            Businesses.replaceWith(res)
+                Images.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
 
   Tracker.autorun ->
     # Get Suggested Responses

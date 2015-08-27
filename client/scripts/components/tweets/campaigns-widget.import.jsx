@@ -22,7 +22,7 @@ export let CampaignsWidget = React.createClass({
         {this.data.campaigns?
           this.data.campaigns.map((campaign) => {
             return (
-              <Campaign key={campaign.id} campaign={campaign} />
+              <Campaign key={campaign._id} campaign={campaign} />
             )
           })
           : (

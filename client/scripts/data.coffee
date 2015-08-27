@@ -63,7 +63,6 @@ Meteor.startup ->
           Campaigns.replaceWith(res.data)
           res.data.forEach (doc) ->
             campaign_id = doc.id
-            console.log doc.id
             # --------------------------------------
             # Get Country Targets for all campaigns
             API.CountryTargets.getAll
@@ -86,8 +85,6 @@ Meteor.startup ->
               campaign_id: campaign_id
             , (err, res) ->
               unless err
-                console.dir res.data
-                console.log "campaign_id: #{campaign_id}"
                 Keyphrases.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
             # --------------------------------------
             # Get Images for all campaigns

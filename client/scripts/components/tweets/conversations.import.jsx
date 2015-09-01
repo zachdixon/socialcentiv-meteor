@@ -62,7 +62,6 @@ let Conversation = React.createClass({
 
   getInitialState() {
     return {
-      reply_length: 0,
       reply_message: "",
       reply_campaign_id: null
     };
@@ -99,12 +98,12 @@ let Conversation = React.createClass({
   },
 
   timeFromNow() {
-    let time = moment(this.data.conversation.posted_at);
+    let time = moment(this.data.conversation.lbc_tweet.posted_at);
     return time? time.fromNow(true) : "";
   },
 
   location() {
-    return this.data.conversation.location || "N/A";
+    return this.data.conversation.lbc_tweet.location || "N/A";
   },
 
   remainingChars() {
@@ -112,7 +111,7 @@ let Conversation = React.createClass({
   },
 
   invalidReplyLength() {
-    return (this.remainingChars() < 0) || (this.state.reply_length == 0);
+    return (this.remainingChars() < 0) || (this.state.reply_message.length == 0);
   },
 
   handleToggleReply(e) {
@@ -156,13 +155,65 @@ let Conversation = React.createClass({
   },
 
   handleFavorite(e) {
-    e.stopPropagation()
+    e.stopPropagation();
     Conversations.update({id: this.data.conversation.id}, {$set: {favorite_tweet: true}});
   },
 
   handleEditPhotosClick(e) {
     // Set activeConversation so image gallery knows which images to load
     Session.set('activeConversation', this.data.conversation);
+  },
+
+  handleDelete(e) {
+    e.stopPropagation();
+    $("body").css("overflow", "");
+    let _this = this;
+
+    $(this.getDOMNode()).slideUp(500, function() {
+      Conversations.remove(_this.data.conversation._id, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          Businesses.update(Session.get('business')._id, {$inc: -1});
+        }
+      });
+    });
+
+
+    // setTimeout(function() {
+    //   return _this.conversation.destroy(function(err) {
+    //     let currentAccount, error_message, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+    //     if (err) {
+    //       error_message = err.request != null ? (_ref = $.parseJSON((_ref1 = err.request) != null ? _ref1.response : void 0).errors) != null ? (_ref2 = _ref[0].lbc_tweet) != null ? _ref2[0] : void 0 : void 0 : void 0;
+    //       if (error_message !== void 0 && error_message === 'has already been taken') {
+    //         $(_this.node).remove();
+    //         currentAccount = Session.get('currentAccount').transaction();
+    //         return currentAccount.set('replyable_conversations', currentAccount.get('replyable_conversations') - 1);
+    //       } else {
+    //         $(_this.node).slideDown();
+    //         return Messenger().error({
+    //           id: 'deleteTweetError',
+    //           message: ((_ref3 = $.parseJSON(((_ref4 = err.request) != null ? _ref4.response : void 0) || '[]').errors) != null ? (_ref5 = _ref3[0].base) != null ? _ref5[0] : void 0 : void 0) || "There was a problem deleting that tweet",
+    //           hideAfter: 4
+    //         });
+    //       }
+    //     } else {
+    //       currentAccount = Session.get('currentAccount');
+    //       currentAccount.set('replyable_conversations', Session.get('currentAccount').replyable_conversations - 1);
+    //       return currentAccount.save();
+    //     }
+    //   });
+    // }, 500);
+
+  },
+
+  handleReply(e) {
+    Conversations.update(this.data.conversation._id, {$set: { status: "replied_to" }}, (err, numDocs) => {
+      if (err) {
+        debugger
+      }
+    });
+
   },
 
   render() {
@@ -184,8 +235,8 @@ let Conversation = React.createClass({
               <a className="comment-user-handle" target="_blank" href={`https://twitter.com/${lbc_tweet.author_screen_name}`}>
                 <span className="username">{`@${lbc_tweet.author_screen_name}`}</span>
               </a>
-              <span className="timeFromNow" onClick={this.handleToggleReply}>{lbc_tweet.timeFromNow}</span>
-              <span className="hide-if-mobile" onClick={this.handleToggleReply} style={{display:'inline-block'}}>ago</span>
+              <span className="timeFromNow" onClick={this.handleToggleReply}>{this.timeFromNow()}</span>
+              <span className="hide-if-mobile" onClick={this.handleToggleReply}>ago</span>
               <span className="hide-if-mobile location" onClick={this.handleToggleReply} title={this.location()}>{this.location()}</span>
               </div>
             <p className="tweet-msg" onClick={this.handleToggleReply} dangerouslySetInnerHTML={{__html: this.messageHighlighted()}}></p>
@@ -195,15 +246,24 @@ let Conversation = React.createClass({
                   <span className="icon-reply icon"></span>
                   <span className="sc-tooltip-content">Reply</span>
                 </button>
-                <button className={classNames("retweet","plain","sc-tooltip",{active: conversation.retweet})} onClick={this.handleRetweet} disabled={conversation.retweet}>
+                <button className={classNames("retweet","plain","sc-tooltip",{active: conversation.retweet})}
+                        onClick={this.handleRetweet}
+                        disabled={conversation.retweet}>
                   <span className="iconmoon icon-retweet icon ignore-toggle" onClick={this.handleRetweet}></span>
                   <span className="sc-tooltip-content">Retweet</span>
                 </button>
-                <button className={classNames("fav","plain","sc-tooltip",{active: conversation.favorite_tweet})} onClick={this.handleFavorite} disabled={conversation.favorite_tweet}>
+                <button className={classNames("fav","plain","sc-tooltip",{active: conversation.favorite_tweet})}
+                        onClick={this.handleFavorite}
+                        disabled={conversation.favorite_tweet}>
                   <span className="iconmoon icon-star icon ignore-toggle"></span>
                   <span className="sc-tooltip-content">Favorite</span>
                 </button>
-                <button className="delete plain sc-tooltip" data-original-title="Delete this conversation"><span className="icon-trash icon"></span><span className="sc-tooltip-content">Delete</span></button>
+                <button className="delete plain sc-tooltip"
+                        data-original-title="Delete this conversation"
+                        onClick={this.handleDelete}>
+                  <span className="icon-trash icon"></span>
+                  <span className="sc-tooltip-content">Delete</span>
+                </button>
               </div>
             </div>
           </div>
@@ -215,9 +275,9 @@ let Conversation = React.createClass({
             campaigns={this.data.campaigns}
             onChange={this.handleCampaignChange} 
           />
-          <ShowFor type={BO}>
+          {/*<ShowFor type={BO}>
             <SuggestedResponses responses={this.props.responses} onCategoryClick={this.handleSuggestedResponseClick} />
-          </ShowFor>
+          </ShowFor>*/ /* FIXME - implement new suggested responses */} 
           <div className="reply-subsection nomargin">
             <div className="reply-avatar">
               <img className="img img-rounded" width="32" src={this.data.business.twitter_avatar_url} />
@@ -251,7 +311,9 @@ let Conversation = React.createClass({
                   )}
                   <div className="pull-right">
                     <span className={classNames('count','top10','pull-left',{'red-text': red_text})}>{this.remainingChars()}</span>
-                    <button className="btn-send-reply btn btn-large btn-primary border-bottom ladda-button pull-right" disabled={this.invalidReplyLength()}>
+                    <button className="btn-send-reply btn btn-large btn-primary border-bottom ladda-button pull-right"
+                            disabled={this.invalidReplyLength()}
+                            onClick={this.handleReply}>
                       <span className="glyphicon glyphicon-send"></span>
                       Reply
                     </button>

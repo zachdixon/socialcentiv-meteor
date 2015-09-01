@@ -31,3 +31,4 @@ meteorhacks:npm
 cosmos:browserify
 
 npm-container
+reactive-dict

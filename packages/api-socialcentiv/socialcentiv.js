@@ -74,6 +74,12 @@ if(Meteor.isClient) {
                 url: "/:id",
                 type: "get",
                 url_params: ["id"]
+              },
+              {
+                name: "update",
+                url: "/:id",
+                type: "put",
+                url_params: ["id"]
               }
             ]
           },
@@ -258,7 +264,7 @@ if(Meteor.isClient) {
       resource.methods.forEach(function(method){
         API[resource.name] = API[resource.name] || {};
         API[resource.name][method.name] = function(options, cb) {
-          check(options, Object);
+          check(options, Match.OneOf(Object, String));
           check(cb, Function);
 
           var url = APIConfig.config.defaults.base_url + resource.url,
@@ -273,9 +279,10 @@ if(Meteor.isClient) {
             method.url_params.forEach(function(param) {
               var regex = new RegExp("\:" + param, "ig");
               url = url.replace(regex, options[param])
-              delete options[param];
+              // delete options[param];
             });
           }
+          url += ".json";
           // Move required params to params object so we don't clutter url query with data
           if (!!method.required_params) {
             method.required_params.forEach(function(param) {
@@ -292,8 +299,7 @@ if(Meteor.isClient) {
                 "X-User-Token": Cookie.get('currentUserAuth') || Cookie.get('advancedUserAuth'),
                 "Accept": "application/vnd.socialcentiv.v2"
               },
-              // FIXME - update params to use only requiredParams from config
-              // i.e. params = {business_id: 3}
+              // params = {business_id: 3}
               // options = {business_id: 3, accountinfo...}
               params: params,
               data: options

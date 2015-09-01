@@ -95,6 +95,26 @@ Meteor.startup ->
                 Images.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
 
   Tracker.autorun ->
+    # Get Conversations
+    dict = App.Dicts.Conversations
+    business = Session.get('business')
+    num_per_page = dict.get('numPerPage')
+    order_by = dict.get('orderBy')
+    keyphrases = Keyphrases.find().fetch()
+
+    if (business? and num_per_page? and order_by? and keyphrases?)
+      API.Conversations.getAll
+        business_id: business.id
+        num_per_page: num_per_page
+        status: 'awaiting_reply'
+        order_by: order_by
+        keyphrase_ids: keyphrases.map((kp) -> unless kp.hidden then kp.id).join(',')
+      , (err, res) ->
+        if (res and not err)
+          # Stop observer, remove all current records, insert new records, start observer
+          Conversations.replaceWith(res.data)
+
+  Tracker.autorun ->
     # Get Suggested Responses
     user = Session.get('currentUser')
     if user? and user.type is "BusinessOwner"

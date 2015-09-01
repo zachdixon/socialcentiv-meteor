@@ -4,6 +4,7 @@
   Layouts: {}
   Components: {}
   Utils: {}
+  Dicts: {}
 if Meteor.isClient
   App.DOMAIN = location.hostname.replace(/http:\/\/.+?\./, '').replace(/^[^.]+\./g, "")
 
@@ -22,3 +23,6 @@ if Meteor.isClient
   App.clearAdvancedUserCookies = () ->
     Cookie.remove('advancedUserEmail', {path: "/", domain: App.DOMAIN})
     Cookie.remove('advancedUserAuth', {path: "/", domain: App.DOMAIN})
+
+Meteor.startup ->
+  App.Dicts.Conversations = new ReactiveDict()

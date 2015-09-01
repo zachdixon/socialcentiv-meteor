@@ -1,8 +1,8 @@
 AutoLogin = ->
   user = Session.get('currentUser')
   if user
-    user.type = "InteractiveProducer"
-    Session.set('currentUser', user) # FIXME - remove once server returns type
+    # user.type = "InteractiveProducer"
+    # Session.set('currentUser', user) # FIXME - remove once server returns type
     if FlowRouter.getRouteName() is 'login'
       if user.type is "BusinessOwner"
         FlowRouter.go('tweets')
@@ -20,7 +20,7 @@ AutoLogin = ->
           # show errors
         else
           user = res.data
-          user.type = "InteractiveProducer"
+          # user.type = "InteractiveProducer"
 
           if user.type is "BusinessOwner"
             App.setCurrentUserCookies(user.email, user.authentication_token)

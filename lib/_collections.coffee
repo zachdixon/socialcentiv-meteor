@@ -19,14 +19,14 @@ App.Collections =
   images          : Images
   reports         : Reports
 
-Mongo.Collection.prototype.stealthInsertMultipleWith = (docs, foreign_key, foreign_key_value) ->
+Mongo.Collection.prototype.stealthBatchInsert = (docs, foreign_key, foreign_key_value) ->
   check(docs, Array)
 
   this.observer?.stop()
   docs.forEach (doc) =>
     if foreign_key
       doc[foreign_key] = foreign_key_value
-    this.insert doc
+  this.batchInsert docs
   this.startObserving()
 
 Mongo.Collection.prototype.replaceWith = (docs) ->
@@ -34,8 +34,14 @@ Mongo.Collection.prototype.replaceWith = (docs) ->
 
   this.observer?.stop()
   this.remove({})
-  docs.forEach (doc) =>
-    this.insert doc
+  this.batchInsert docs
+  this.startObserving()
+
+Mongo.Collection.prototype.stealthInsert = (doc) ->
+  check(doc, Object)
+
+  this.observer?.stop()
+  this.insert doc
   this.startObserving()
 
 Mongo.Collection.prototype.stealthUpdate = (selectors, modifiers) ->
@@ -52,3 +58,15 @@ Mongo.Collection.prototype.stealthRemove = (selectors) ->
   this.observer?.stop()
   this.remove(selectors)
   this.startObserving()
+
+Mongo.Collection.prototype.observeChangedCallback = (newDoc, oldDoc) ->
+  changes = _.transform oldDoc, (result, n, key) ->
+    result[key] = n  unless _.isEqual(n, newDoc[key])
+  newKeys = _.difference(_.keys(newDoc), _.keys(oldDoc))
+  newValues = _.pick(newDoc, newKeys)
+  changes = _.extend(changes, newValues)
+  changes.id = newDoc.id
+  API[_.capitalize(this._name)].update changes, (err, res) =>
+    if err
+      delete oldDoc._id
+      this.stealthUpdate(newDoc._id, {$set: oldDoc})

@@ -268,7 +268,7 @@ if(Meteor.isClient) {
           check(cb, Function);
 
           var url = APIConfig.config.defaults.base_url + resource.url,
-              params = {},
+              params,
               email,
               auth;
           // Replace url params with values
@@ -279,12 +279,12 @@ if(Meteor.isClient) {
             method.url_params.forEach(function(param) {
               var regex = new RegExp("\:" + param, "ig");
               url = url.replace(regex, options[param])
-              // delete options[param];
+              delete options[param];
             });
           }
-          url += ".json";
           // Move required params to params object so we don't clutter url query with data
           if (!!method.required_params) {
+            params = {};
             method.required_params.forEach(function(param) {
               params[param] = options[param];
               delete options[param];
@@ -301,7 +301,8 @@ if(Meteor.isClient) {
               },
               // params = {business_id: 3}
               // options = {business_id: 3, accountinfo...}
-              params: params,
+              params: params || null,
+              // query: $.param(options)
               data: options
             },
             function(err, res) {

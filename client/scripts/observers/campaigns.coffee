@@ -5,10 +5,7 @@ Meteor.startup ->
     console.log 'campaigns start observing'
     Campaigns.observer = Campaigns.find().observe
       # added: (doc) ->
-      changed: (newDoc, oldDoc) ->
-        API.Campaigns.update newDoc, (err, res) ->
-          if err
-            Campaigns.update(oldDoc._id, {$set: oldDoc})
+      changed: Campaigns.observeChangedCallback.bind(Campaigns)
       removed: (oldDoc) ->
         API.Campaigns.delete {id: oldDoc.id}, (err, res) ->
           if err

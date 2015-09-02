@@ -6,10 +6,7 @@ Meteor.startup ->
       added: (doc) ->
         unless init
           API.CountryTargets.create(doc, (err, res) ->)
-      changed: (newDoc, oldDoc) ->
-        API.CountryTargets.update newDoc, (err, res) ->
-          if err
-            CountryTargets.update(oldDoc._id, {$set: oldDoc})
+      changed: CountryTargets.observeChangedCallback.bind(CountryTargets)
       removed: (oldDoc) ->
         API.CountryTargets.delete({id: oldDoc.id}, (err, res) ->
           if err

@@ -50,7 +50,7 @@ let CenterColumn = React.createClass({
     dict.setDefault('orderBy', 'newest');
     dict.setDefault('numPerPage', 10);
     return {
-      business: Session.get('business'),
+      business: Businesses.findOne(Session.get('business')._id),
       keyphrases: Keyphrases.find().fetch(),
       orderBy: dict.get('orderBy'),
       numPerPage: dict.get('numPerPage')
@@ -176,7 +176,7 @@ let LoadMoreButton = React.createClass({
     }
   },
   handleClick(e) {
-    
+
   },
   render() {
     if(this.data.conversations.length) {

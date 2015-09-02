@@ -1,9 +1,6 @@
 # Wait for collection to be available
 Meteor.startup ->
   Accounts.startObserving = ->
-    Accounts.observer = Accounts.find().observe
+    Accounts.observers = Accounts.find().observe
       # added: (doc) ->
-      changed: (newDoc, oldDoc) ->
-        API.Accounts.update newDoc, (err, res) ->
-          if err
-            Accounts.update(oldDoc._id, {$set: oldDoc})
+      changed: Accounts.observeChangedCallback.bind(Accounts)

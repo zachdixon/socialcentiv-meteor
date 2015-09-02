@@ -45,13 +45,14 @@ let Conversation = React.createClass({
   },
 
   getMeteorData() {
-    let conversation = Conversations.findOne({id: this.props.conversation_id}),
+    let business = Businesses.findOne(Session.get('business')._id),
+        conversation = Conversations.findOne({id: this.props.conversation_id}),
         keyphrases = Keyphrases.find({id: {$in: conversation.keyphrase_ids}}).fetch(),
         campaign_ids = keyphrases.map((kp) => { return kp.campaign_id;}),
         campaigns = Campaigns.find({id: {$in: campaign_ids}, status: 'active'}, {sort: {default: 1}}).fetch(),
         selected_images = Images.find({campaign_id: this.state.reply_campaign_id, selected: true}).fetch();
     return {
-      business: Session.get('business'),
+      business: business,
       conversation: conversation,
       keyphrases: keyphrases,
       campaigns: campaigns,
@@ -174,7 +175,7 @@ let Conversation = React.createClass({
         if (err) {
           console.log(err);
         } else {
-          Businesses.update(Session.get('business')._id, {$inc: -1});
+          Businesses.update(_this.data.business._id, {$inc: {replyable_conversations: -1}});
         }
       });
     });

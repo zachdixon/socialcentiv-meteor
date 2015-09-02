@@ -6,7 +6,7 @@ Meteor.startup ->
       added: (doc) ->
         unless init
           API.keyphrases.create(doc, (err, res) ->)
-      changed: (newDoc, oldDoc) ->
+      changed: Keyphrases.observeChangedCallback.bind(Keyphrases)
       removed: (oldDoc) ->
         API.keyphrases.delete({id: oldDoc.id}, (err, res) ->
           if err

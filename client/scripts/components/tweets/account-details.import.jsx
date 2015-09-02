@@ -7,7 +7,7 @@ export let AccountDetails = React.createClass({
 
   getMeteorData() {
     return {
-      business: Session.get('business')
+      business: Businesses.findOne(Session.get('business')._id)
     }
   },
 

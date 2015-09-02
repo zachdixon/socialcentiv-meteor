@@ -1,12 +1,11 @@
 # Wait for collection to be available
 Meteor.startup ->
+  console.log 'campaigns startup'
   Campaigns.startObserving = ->
+    console.log 'campaigns start observing'
     Campaigns.observer = Campaigns.find().observe
       # added: (doc) ->
-      changed: (newDoc, oldDoc) ->
-        API.Campaigns.update newDoc, (err, res) ->
-          if err
-            Campaigns.update(oldDoc._id, {$set: oldDoc})
+      changed: Campaigns.observeChangedCallback.bind(Campaigns)
       removed: (oldDoc) ->
         API.Campaigns.delete {id: oldDoc.id}, (err, res) ->
           if err
@@ -15,8 +14,8 @@ Meteor.startup ->
             # throw Messenger() error
             Campaigns.insert(oldDoc)
 
-  Tracker.autorun ->
-    if Session.get('business')
-      Campaigns.startObserving()
-    else
-      Campaigns.observer?.stop()
+  # Tracker.autorun ->
+  #   if Session.get('business')
+  #     Campaigns.startObserving()
+  #   else
+  #     Campaigns.observer?.stop()

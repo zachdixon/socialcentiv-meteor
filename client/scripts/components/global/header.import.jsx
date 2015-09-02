@@ -153,7 +153,7 @@ let MainUtilityNav = React.createClass({
   getMeteorData() {
     return {
       user: Session.get('currentUser'),
-      business: Session.get('business')
+      business: Businesses.findOne(Session.get('business')._id)
     }
   },
 

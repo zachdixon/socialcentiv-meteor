@@ -6,6 +6,11 @@
 # We then call `replaceWith()` on the corresponding collection to take care of
 #   stopping/starting the observers, and replacing the data in those collections with the new data
 
+# TODO
+# - Make one .batchInsert call when all requests are done using $.when/$.then
+#   i.e. if there are 4 campaigns, we'll make 4 requests each to get all the keyphrases/country_targets/radius_targets/images
+#   we want to make 1 batchInsert for each of those resources
+
 Meteor.startup ->
   BO = "BusinessOwner"
   IP = "InteractiveProducer"
@@ -39,7 +44,8 @@ Meteor.startup ->
         user_id: user.id
       , (err, res) ->
         unless err
-          Session.set('business', res.data[0])
+          Businesses.replaceWith(res.data)
+          Session.set('business', Businesses.findOne())
 
   Tracker.autorun ->
     # Get Business for IPs
@@ -50,7 +56,8 @@ Meteor.startup ->
         id: business_id
       , (err, res) ->
         unless err
-          Session.set('business', res.data)
+          Businesses.stealthInsert(res.data)
+          Session.set('business', Businesses.findOne({id: res.data.id}))
 
   Tracker.autorun ->
     # Get Campaigns
@@ -69,7 +76,7 @@ Meteor.startup ->
               campaign_id: campaign_id
             , (err, res) ->
               unless err
-                CountryTargets.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
+                CountryTargets.stealthBatchInsert(res.data, "campaign_id", campaign_id)
                 # --------------------------------------
                 # Get Radius Targets for all Country Targets
                 res.data.forEach (doc) ->
@@ -78,21 +85,41 @@ Meteor.startup ->
                     country_target_id: country_target_id
                   , (err, res) ->
                     unless err
-                      RadiusTargets.stealthInsertMultipleWith(res.data, "country_target_id", country_target_id)
+                      RadiusTargets.stealthBatchInsert(res.data, "country_target_id", country_target_id)
             # --------------------------------------
             # Get Keyphrases for all campaigns
             API.Keyphrases.getAll
               campaign_id: campaign_id
             , (err, res) ->
               unless err
-                Keyphrases.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
+                Keyphrases.stealthBatchInsert(res.data, "campaign_id", campaign_id)
             # --------------------------------------
             # Get Images for all campaigns
             API.Images.getAll
               campaign_id: campaign_id
             , (err, res) ->
               unless err
-                Images.stealthInsertMultipleWith(res.data, "campaign_id", campaign_id)
+                Images.stealthBatchInsert(res.data, "campaign_id", campaign_id)
+
+  Tracker.autorun ->
+    # Get Conversations
+    dict = App.Dicts.Conversations
+    business = Session.get('business')
+    num_per_page = dict.get('numPerPage')
+    order_by = dict.get('orderBy')
+    keyphrases = Keyphrases.find().fetch()
+
+    if (business? and num_per_page? and order_by? and keyphrases?)
+      API.Conversations.getAll
+        business_id: business.id
+        num_per_page: num_per_page
+        status: 'awaiting_reply'
+        order_by: order_by
+        keyphrase_ids: keyphrases.map((kp) -> unless kp.hidden then kp.id).join(',')
+      , (err, res) ->
+        if (res and not err)
+          # Stop observer, remove all current records, insert new records, start observer
+          Conversations.replaceWith(res.data)
 
   Tracker.autorun ->
     # Get Suggested Responses

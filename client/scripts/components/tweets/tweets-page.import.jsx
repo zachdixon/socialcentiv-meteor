@@ -46,22 +46,15 @@ let CenterColumn = React.createClass({
   mixins: [ReactMeteorData],
 
   getMeteorData() {
+    let dict = App.Dicts.Conversations;
+    dict.setDefault('orderBy', 'newest');
+    dict.setDefault('numPerPage', 10);
     return {
-      business: Session.get('business'),
-      keyphrases: Keyphrases.find().fetch()
+      business: Businesses.findOne(Session.get('business')._id),
+      keyphrases: Keyphrases.find().fetch(),
+      orderBy: dict.get('orderBy'),
+      numPerPage: dict.get('numPerPage')
     }
-  },
-
-  getInitialState() {
-    return {
-      conversationCount: 0,
-      orderBy: "newest",
-      numPerPage: 10
-    }
-  },
-
-  componentDidMount() {
-    this.getConversations()
   },
 
   getTotalConversations() {
@@ -70,33 +63,15 @@ let CenterColumn = React.createClass({
     return count || 0;
   },
 
-  getConversations() {
-    if (this.data.business && this.data.keyphrases.length) {
-      API.Conversations.getAll({
-        business_id: this.data.business.id,
-        num_per_page: this.state.numPerPage,
-        status: 'awaiting_reply',
-        order_by: this.state.orderBy,
-        keyphrase_ids: this.data.keyphrases.map(function(kp) {if(!kp.hidden) { return kp.id}}).join(','),
-      }, (err, res) => {
-        if (res && !err) {
-          // Stop observer, remove all current records, insert new records, start observer
-          Conversations.replaceWith(res.data);
-        }
-      });
-    }
-  },
-
   handleOrderByClick(e) {
-    this.setState({orderBy: e.target.value});
+    App.Dicts.Conversations.set('orderBy', e.target.value);
   },
 
   handleNumPerPageClick(e) {
-    this.setState({numPerPage: parseInt(e.target.value)});
+    App.Dicts.Conversations.set('numPerPage', parseInt(e.target.value));
   },
 
   render() {
-    this.getConversations();
     return (
       <div className="comments" id="center-col">
         <div className="col-xs-12">
@@ -110,13 +85,13 @@ let CenterColumn = React.createClass({
                 <div className="sort-by">
                   <span>Sort By:</span>
                   <button
-                    className={classNames("convo-sort-button", "newest", {"active": this.state.orderBy == 'newest'})}
+                    className={classNames("convo-sort-button", "newest", {"active": this.data.orderBy == 'newest'})}
                     value="newest"
                     onClick={this.handleOrderByClick}>
                     NEWEST
                   </button>
                   <button
-                    className={classNames("convo-sort-button", "oldest", {"active": this.state.orderBy == 'oldest'})}
+                    className={classNames("convo-sort-button", "oldest", {"active": this.data.orderBy == 'oldest'})}
                     value="oldest"
                     onClick={this.handleOrderByClick}>
                     OLDEST
@@ -125,19 +100,19 @@ let CenterColumn = React.createClass({
                 <div className="per-page">
                   <span>Per Page:</span>
                   <button
-                    className={classNames("few-count", {"active": this.state.numPerPage == 5})}
+                    className={classNames("few-count", {"active": this.data.numPerPage == 5})}
                     value="5"
                     onClick={this.handleNumPerPageClick}>
                     5
                   </button>
                   <button
-                    className={classNames("few-count", {"active": this.state.numPerPage == 10})}
+                    className={classNames("few-count", {"active": this.data.numPerPage == 10})}
                     value="10"
                     onClick={this.handleNumPerPageClick}>
                     10
                   </button>
                   <button
-                    className={classNames("more-count", {"active": this.state.numPerPage == 20})}
+                    className={classNames("more-count", {"active": this.data.numPerPage == 20})}
                     value="20"
                     onClick={this.handleNumPerPageClick}>
                     20
@@ -200,11 +175,16 @@ let LoadMoreButton = React.createClass({
       conversations: Conversations.find().fetch()
     }
   },
+  handleClick(e) {
+
+  },
   render() {
     if(this.data.conversations.length) {
       return (
         <div className="row">
-          <div className="load-page col-md-12 col-xs-12">DELETE TWEETS &amp; LOAD MORE</div>
+          <div className="load-page col-md-12 col-xs-12" onClick={this.handleClick}>
+            DELETE TWEETS &amp; LOAD MORE
+          </div>
         </div>
       )
     } else {

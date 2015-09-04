@@ -152,8 +152,7 @@ let MainUtilityNav = React.createClass({
 
   getMeteorData() {
     return {
-      user: Session.get('currentUser'),
-      business: Businesses.findOne(Session.get('business')._id)
+      user: Session.get('currentUser')
     }
   },
 
@@ -189,18 +188,7 @@ let MainUtilityNav = React.createClass({
     return (
       <li className="main-nav-item pull-right dropdown-nav">
         <ShowFor type={BO}>
-          <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
-            {(() => {
-              if(this.data.business && this.data.business.status == "active") {
-                return (
-                  <span className="account-logo-wrapper">
-                    <img className="account-logo" src={this.data.business.twitter_avatar_url}/>
-                  </span>
-                );
-              }
-            })()}
-            <span className="label">{this.data.business? this.data.business.name : ""}</span>
-          </Link>
+          <BOUtilityNavLink />
         </ShowFor>
         <ShowFor type={[IP,AM,ADMIN]}>
           <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"paddingLeft": "15px !important"}}>
@@ -225,6 +213,31 @@ let MainUtilityNav = React.createClass({
           </li>
         </ul>
       </li>
+    )
+  }
+});
+
+let BOUtilityNavLink = React.createClass({
+  mixins: [ReactMeteorData],
+  getMeteorData() {
+    return {
+      business: Businesses.findOne(Session.get('business')._id)
+    }
+  },
+  render() {
+    return (
+      <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
+        {(() => {
+          if(this.data.business && this.data.business.status == "active") {
+            return (
+              <span className="account-logo-wrapper">
+                <img className="account-logo" src={this.data.business.twitter_avatar_url}/>
+              </span>
+            );
+          }
+        })()}
+        <span className="label">{this.data.business? this.data.business.name : ""}</span>
+      </Link>
     )
   }
 });

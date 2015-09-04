@@ -46,11 +46,12 @@ let CenterColumn = React.createClass({
   mixins: [ReactMeteorData],
 
   getMeteorData() {
-    let dict = App.Dicts.Conversations;
+    let dict = App.Dicts.Conversations,
+        business_id = Session.get('business')? Session.get('business')._id : null;
     dict.setDefault('orderBy', 'newest');
     dict.setDefault('numPerPage', 10);
     return {
-      business: Businesses.findOne(Session.get('business')._id),
+      business: Businesses.findOne(business_id),
       keyphrases: Keyphrases.find().fetch(),
       orderBy: dict.get('orderBy'),
       numPerPage: dict.get('numPerPage')

@@ -7,9 +7,9 @@ Meteor.startup ->
         unless init
           API.Images.create doc, (err, res) ->
             if err
-              Images.stealthRemove({id: doc.id})
+              Images._remove({id: doc.id})
             else
-              Images.stealthUpdate(doc._id, {$set: res.data})
+              Images._update(doc._id, {$set: res.data})
       changed: Images.observeChangedCallback.bind(Images)
       removed: (oldDoc) ->
         API.Images.delete({id: oldDoc.id}, (err, res) ->

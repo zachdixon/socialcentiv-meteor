@@ -14,12 +14,12 @@ AutoLogin = ->
     auth = Cookie.get('advancedUserAuth') or Cookie.get('currentUserAuth')
     # If cookies exists, login
     if email and auth
-      callback = (err, res) =>
-        if err
+      API.sessions.login {auth_type: "token"},
+        error: (xhr, textStatus, error) =>
           FlowRouter.go('login')
           # show errors
-        else
-          user = res.data
+        success: (data, responseText, xhr) =>
+          user = data
           # user.type = "InteractiveProducer"
 
           if user.type is "BusinessOwner"
@@ -28,7 +28,6 @@ AutoLogin = ->
             App.setAdvancedUserCookies(user.email, user.authentication_token)
 
           Session.set('currentUser', user)
-      API.sessions.login({auth_type: "token"}, callback.bind(@))
     else
       FlowRouter.go 'login'
 

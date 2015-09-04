@@ -26,7 +26,7 @@ export let ConversationsList = React.createClass({
       <ul className="convos clearfix">
         {this.data.conversations.map((conversation) => {
           return (
-            <Conversation key={conversation.id} conversation_id={conversation.id} responses={this.data.responses} />
+            <Conversation key={conversation._id} conversation_id={conversation.id} responses={this.data.responses} />
           )
         })}
       </ul>
@@ -133,7 +133,7 @@ let Conversation = React.createClass({
 
   setReplyCampaignId(value) {
     this.setState({reply_campaign_id: value});
-    Conversations.stealthUpdate({id: this.data.conversation.id}, {$set: {reply_campaign_id: value}});
+    Conversations._update({id: this.data.conversation.id}, {$set: {reply_campaign_id: value}});
   },
 
   handleReplyMessageChange(e) {
@@ -174,6 +174,7 @@ let Conversation = React.createClass({
       Conversations.remove(_this.data.conversation._id, (err) => {
         if (err) {
           console.log(err);
+          $(this.getDOMNode()).slideDown(500);
         } else {
           Businesses.update(_this.data.business._id, {$inc: {replyable_conversations: -1}});
         }
@@ -219,9 +220,8 @@ let Conversation = React.createClass({
 
   render() {
     
-    let conversation = this.data.conversation,
-        lbc_tweet = conversation.lbc_tweet,
-        reply_tweet = conversation.reply_tweet,
+    let {b, conversation} = this.data,
+        {lbc_tweet, reply_tweet} = conversation,
         red_text = this.remainingChars() < 0;
 
     return (
@@ -281,7 +281,7 @@ let Conversation = React.createClass({
           </ShowFor>*/ /* FIXME - implement new suggested responses */} 
           <div className="reply-subsection nomargin">
             <div className="reply-avatar">
-              <img className="img img-rounded" width="32" src={this.data.business.twitter_avatar_url} />
+              <img className="img img-rounded" width="32" src={b? b.twitter_avatar_url : void 0} />
             </div>
             <div className="reply-text-wrapper">
               <label className="reply-username">{`@${lbc_tweet.author_screen_name}`}</label>
@@ -294,7 +294,7 @@ let Conversation = React.createClass({
               </textarea>
               {/* Only show campaign link when a campaign is selected */}
               {this.state.reply_campaign_id === "none" ? null : (
-                <label className="reply-link">{this.data.business.public_url}</label>
+                <label className="reply-link">{b? b.public_url : void 0}</label>
               )}
             </div>
             <div className="row">

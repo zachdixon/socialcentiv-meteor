@@ -1094,6 +1094,11 @@ hr{
 
 
 }
+.campaign-toggle {
+  .campaign-info {
+    display: none;
+  }
+}
 .refresh-tweets{
   @include clearfix;
   background-color: #F3F4F6;

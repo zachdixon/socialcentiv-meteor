@@ -19,45 +19,49 @@ App.Collections =
   images          : Images
   reports         : Reports
 
-Mongo.Collection.prototype.stealthBatchInsert = (docs, foreign_key, foreign_key_value) ->
+Mongo.Collection.prototype.stealthBatchInsert = (docs, options) ->
   check(docs, Array)
 
   this.observer?.stop()
-  docs.forEach (doc) =>
-    if foreign_key
-      doc[foreign_key] = foreign_key_value
+  if options?.foreign_key
+    docs.forEach (doc) =>
+      doc[options.foreign_key] = options.foreign_key_value
+  if options?.replace
+    this.remove({})
   this.batchInsert docs
   this.startObserving()
 
 Mongo.Collection.prototype.replaceWith = (docs) ->
   check(docs, Array)
 
-  this.observer?.stop()
+  this.obsever?.stop()
   this.remove({})
   this.batchInsert docs
-  this.startObserving()
 
-Mongo.Collection.prototype.stealthInsert = (doc) ->
+Mongo.Collection.prototype._insert = Mongo.Collection.prototype.insert
+Mongo.Collection.prototype.insert = (doc) ->
   check(doc, Object)
 
-  this.observer?.stop()
-  this.insert doc
   this.startObserving()
+  this.insert doc
+  this.observer?.stop()
 
-Mongo.Collection.prototype.stealthUpdate = (selectors, modifiers) ->
+Mongo.Collection.prototype._update = Mongo.Collection.prototype.update
+Mongo.Collection.prototype.update = (selectors, modifiers, options, callback) ->
   check(selectors, Match.OneOf(Object, String))
   check(modifiers, Object)
 
-  this.observer?.stop()
-  this.update(selectors, modifiers)
   this.startObserving()
+  this._update(selectors, modifiers, options if options, callback if callback)
+  this.observer?.stop()
 
-Mongo.Collection.prototype.stealthRemove = (selectors) ->
+Mongo.Collection.prototype._remove = Mongo.Collection.prototype.remove
+Mongo.Collection.prototype.remove = (selectors) ->
   check(selectors, Match.OneOf(Object, String))
 
-  this.observer?.stop()
-  this.remove(selectors)
   this.startObserving()
+  this._remove(selectors)
+  this.observer?.stop()
 
 Mongo.Collection.prototype.observeChangedCallback = (newDoc, oldDoc) ->
   changes = _.transform oldDoc, (result, n, key) ->
@@ -66,7 +70,7 @@ Mongo.Collection.prototype.observeChangedCallback = (newDoc, oldDoc) ->
   newValues = _.pick(newDoc, newKeys)
   changes = _.extend(changes, newValues)
   changes.id = newDoc.id
-  API[_.capitalize(this._name)].update changes, (err, res) =>
-    if err
+  API[_.capitalize(this._name)].update changes,
+    error: (xhr, textStatus, error) =>
       delete oldDoc._id
       this.stealthUpdate(newDoc._id, {$set: oldDoc})

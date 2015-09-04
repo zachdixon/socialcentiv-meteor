@@ -20,9 +20,9 @@ export let CampaignsWidget = React.createClass({
           </div>
         </div>
         {this.data.campaigns?
-          this.data.campaigns.map((campaign) => {
+          this.data.campaigns.map((campaign, index, campaigns) => {
             return (
-              <Campaign key={campaign._id} campaign={campaign} />
+              <Campaign key={campaign._id} campaign={campaign} open={index === 0}/>
             )
           })
           : (
@@ -41,7 +41,8 @@ export let CampaignsWidget = React.createClass({
 let Campaign = React.createClass({
   mixins: [ReactMeteorData],
   propTypes: {
-    campaign: React.PropTypes.object.isRequired
+    campaign: React.PropTypes.object.isRequired,
+    open: React.PropTypes.bool
   },
 
   getMeteorData() {
@@ -56,6 +57,12 @@ let Campaign = React.createClass({
     };
   },
 
+  componentDidMount() {
+    if (this.props.open) {
+      this.handleToggle();
+    }
+  },
+
   handleToggle(e) {
     let $toggle = $(React.findDOMNode(this.refs.toggle));
     $toggle.slideToggle()
@@ -63,10 +70,10 @@ let Campaign = React.createClass({
   },
 
   handleToggleAllTweets(e) {
-    Campaigns.stealthUpdate({id: this.props.campaign.id}, {$set: {hidden: !this.props.campaign.hidden}});
+    Campaigns._update({id: this.props.campaign.id}, {$set: {hidden: !this.props.campaign.hidden}});
     // Automatically reloads conversations from updating keyphrases {hidden: true} cursor
     this.data.keyphrases.forEach((keyphrase) => {
-      Keyphrases.stealthUpdate({id: keyphrase.id}, {$set: {hidden: !keyphrase.hidden}});
+      Keyphrases._update({id: keyphrase.id}, {$set: {hidden: !keyphrase.hidden}});
     });
   },
 
@@ -155,7 +162,7 @@ let CampaignKeyphraseItem = React.createClass({
   },
 
   handleToggleTweets(e) {
-    Keyphrases.stealthUpdate({id: this.props.keyphrase.id}, {$set: {hidden: !this.props.keyphrase.hidden}});
+    Keyphrases._update({id: this.props.keyphrase.id}, {$set: {hidden: !this.props.keyphrase.hidden}});
   },
 
   render() {

@@ -107,7 +107,7 @@ if(Meteor.isClient) {
               {
                 name: "delete",
                 url: "/:id",
-                type: "del",
+                type: "delete",
                 url_params: ["id"]
               }
             ]
@@ -145,7 +145,7 @@ if(Meteor.isClient) {
               {
                 name: "delete",
                 url: "/:id",
-                type: "del",
+                type: "delete",
                 url_params: ["id"]
               }
             ]
@@ -173,7 +173,7 @@ if(Meteor.isClient) {
               {
                 name: "delete",
                 url: "/:id",
-                type: "del",
+                type: "delete",
                 url_params: ["id"]
               }
             ]
@@ -195,7 +195,7 @@ if(Meteor.isClient) {
               {
                 name: "delete",
                 url: "/:id",
-                type: "del",
+                type: "delete",
                 url_params: ["id"]
               }
             ]
@@ -223,7 +223,7 @@ if(Meteor.isClient) {
               {
                 name: "delete",
                 url: "/:id",
-                type: "del",
+                type: "delete",
                 url_params: ["id"]
               }
             ]
@@ -233,9 +233,12 @@ if(Meteor.isClient) {
     };
 
     API.sessions = API.sessions || {};
-    API.sessions.login = function(options, cb) {
+    API.sessions.login = function(options, callbacks) {
       check(options, Object);
-      check(cb, Function);
+      check(callbacks, Object);
+      if (!callbacks) {
+        callbacks = {};
+      }
       route_config = APIConfig.config.misc.login;
       url = APIConfig.config.defaults.base_url + route_config.url;
       if(options.auth_type.toLowerCase() == "basic") {
@@ -250,22 +253,27 @@ if(Meteor.isClient) {
           "Accept": "application/vnd.socialcentiv.v2"
         };
       }
-      var response = Meteor.http.get(
-        url,
-        {
-          headers: headers
-        },
-        cb
-      );
+      var response = $.ajax(url, {
+        method: "GET",
+        headers: headers,
+        dataType: "json",
+        success: callbacks.success,
+        error: callbacks.error,
+        complete: callbacks.complete
+      });
+      return response;
     };
 
     // Create methods for all APIConfig.config.resources
     APIConfig.config.resources.forEach(function(resource){
       resource.methods.forEach(function(method){
         API[resource.name] = API[resource.name] || {};
-        API[resource.name][method.name] = function(options, cb) {
+        API[resource.name][method.name] = function(options, callbacks) {
+          if (!callbacks) {
+            callbacks = {};
+          }
           check(options, Match.OneOf(Object, String));
-          check(cb, Function);
+          check(callbacks, Object);
 
           var url = APIConfig.config.defaults.base_url + resource.url,
               params,
@@ -283,32 +291,46 @@ if(Meteor.isClient) {
             });
           }
           // Move required params to params object so we don't clutter url query with data
-          if (!!method.required_params) {
-            params = {};
-            method.required_params.forEach(function(param) {
-              params[param] = options[param];
-              delete options[param];
-            });
-          }
-          var response = Meteor.http[method.type.toLowerCase()](
-            url,
-            {
-              responseType: "JSON",
-              headers: {
-                "X-User-Email": Cookie.get('currentUserEmail') || Cookie.get('advancedUserEmail'),
-                "X-User-Token": Cookie.get('currentUserAuth') || Cookie.get('advancedUserAuth'),
-                "Accept": "application/vnd.socialcentiv.v2"
-              },
-              // params = {business_id: 3}
-              // options = {business_id: 3, accountinfo...}
-              params: params || null,
-              // query: $.param(options)
-              data: options
+          // if (!!method.required_params) {
+          //   params = {};
+          //   method.required_params.forEach(function(param) {
+          //     params[param] = options[param];
+          //     delete options[param];
+          //   });
+          // }
+          // var response = HTTP.call(
+          //   method.type,
+          //   url,
+          //   {
+          //     responseType: "JSON",
+          //     headers: {
+          //       "X-User-Email": Cookie.get('currentUserEmail') || Cookie.get('advancedUserEmail'),
+          //       "X-User-Token": Cookie.get('currentUserAuth') || Cookie.get('advancedUserAuth'),
+          //       "Accept": "application/vnd.socialcentiv.v2"
+          //     },
+          //     // params = {business_id: 3}
+          //     // options = {business_id: 3, accountinfo...}
+          //     params: params || null,
+          //     // query: $.param(options)
+          //     data: options
+          //   },
+          //   function(err, res) {
+          //     cb(err,res);
+          //   }
+          // );
+          var response = $.ajax(url, {
+            method: method.type,
+            headers: {
+              "X-User-Email": (Cookie.get('currentUserEmail') || Cookie.get('advancedUserEmail')),
+              "X-User-Token": (Cookie.get('currentUserAuth') || Cookie.get('advancedUserAuth')),
+              "Accept":"application/vnd.socialcentiv.v2"
             },
-            function(err, res) {
-              cb(err,res);
-            }
-          );
+            data: options,
+            success: callbacks.success,
+            error: callbacks.error,
+            complete: callbacks.complete
+          });
+          return response;
         };
       });
     });

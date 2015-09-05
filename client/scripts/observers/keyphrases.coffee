@@ -5,11 +5,11 @@ Meteor.startup ->
     Keyphrases.observer = Keyphrases.find().observe
       added: (doc) ->
         unless init
-          API.keyphrases.create(doc, (err, res) ->)
+          API.Keyphrases.create(doc, (err, res) ->)
       changed: Keyphrases.observeChangedCallback.bind(Keyphrases)
       removed: (oldDoc) ->
-        API.keyphrases.delete({id: oldDoc.id}, (err, res) ->
-          if err
-            Keyphrases.insert(oldDoc)
-          )
+        API.Keyphrases.delete {id: oldDoc.id},
+          error: (err, res) ->
+            Keyphrases._insert(oldDoc)
     init = false
+    this.stopObserving()

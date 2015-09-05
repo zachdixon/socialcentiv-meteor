@@ -12,8 +12,7 @@ Meteor.startup ->
               Images._update(doc._id, {$set: res.data})
       changed: Images.observeChangedCallback.bind(Images)
       removed: (oldDoc) ->
-        API.Images.delete({id: oldDoc.id}, (err, res) ->
-          if err
-            Images.insert(oldDoc)
-          )
+        API.Images.delete {id: oldDoc.id},
+          error: (err, res) ->
+            Images._insert(oldDoc)
     init = false

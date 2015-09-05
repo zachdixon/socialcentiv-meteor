@@ -5,11 +5,10 @@ Meteor.startup ->
     CountryTargets.observer = CountryTargets.find().observe
       added: (doc) ->
         unless init
-          API.CountryTargets.create(doc, (err, res) ->)
+          API.CountryTargets.create doc
       changed: CountryTargets.observeChangedCallback.bind(CountryTargets)
       removed: (oldDoc) ->
-        API.CountryTargets.delete({id: oldDoc.id}, (err, res) ->
-          if err
-            CountryTargets.insert(oldDoc)
-          )
+        API.CountryTargets.delete {id: oldDoc.id},
+          error: (err, res) ->
+            CountryTargets._insert oldDoc
     init = false

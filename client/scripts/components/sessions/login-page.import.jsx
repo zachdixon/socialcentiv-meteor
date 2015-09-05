@@ -14,23 +14,22 @@ export let LoginPage = React.createClass({
     if (email && password) {
       let str = email + ":" + password,
           auth_string = btoa(unescape(encodeURIComponent(str)));
-      API.sessions.login({auth_type: "basic", auth_string: auth_string}, (err, res) => {
-        if (err) {
-          // show errors
-        } else {
-          let user = res.data;
-          if (user.type === BO) {
-            App.setCurrentUserCookies(user.email, user.authentication_token);
-          } else {
-            App.setAdvancedUserCookies(user.email, user.authentication_token);
-          }
-          // user.type = CONSTANTS.IP; // FIXME - remove me once server returns
-          Session.set('currentUser', user);
-          if(user.type === CONSTANTS.BO) {
-            FlowRouter.go('tweets');
-          } else {
-            FlowRouter.go('managedAccounts');
-          }
+      API.sessions.login({auth_type: "basic", auth_string: auth_string},
+        {
+          success: (data, statusText) => {
+            let user = data;
+            if (user.type === BO) {
+              App.setCurrentUserCookies(user.email, user.authentication_token);
+            } else {
+              App.setAdvancedUserCookies(user.email, user.authentication_token);
+            }
+            // user.type = CONSTANTS.IP; // FIXME - remove me once server returns
+            Session.set('currentUser', user);
+            if(user.type === CONSTANTS.BO) {
+              FlowRouter.go('tweets');
+            } else {
+              FlowRouter.go('managedAccounts');
+            }
         }
       });
     }

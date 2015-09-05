@@ -146,7 +146,7 @@ Meteor.startup ->
         ,
           success: (data, responseText, xhr) ->
             # Stop observer, remove all current records, insert new records, start observer
-            Conversations.batchInsert(data)
+            Conversations.replaceWith(data)
       else
         # Remove all local conversations in case all keyphrases are hidden
         Conversations.replaceWith([])
@@ -160,7 +160,7 @@ Meteor.startup ->
           order = ["invite", "agree", "celebrate", "support", "sympathize"]
           sortedResults = []
           for sortedCategory in order
-            for category in res
+            for category in data
               if sortedCategory is category.category.toLowerCase()
                 sortedResults.push category
           Session.set('suggestedResponses', sortedResults)

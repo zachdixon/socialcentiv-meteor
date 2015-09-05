@@ -175,12 +175,11 @@ let MainUtilityNav = React.createClass({
       return Session.set(key, undefined);
     });
 
-    // Clearing currentUser should stop observers, but just in case
     // Clear local collections
     Object.keys(App.Collections).forEach((k) => {
       var o = App.Collections;
-      o[k].observer? o[k].observer.stop() : null;
-      return o[k].remove({});
+      o[k].stopObserving();
+      return o[k]._remove({});
     });
   },
 
@@ -188,7 +187,7 @@ let MainUtilityNav = React.createClass({
     return (
       <li className="main-nav-item pull-right dropdown-nav">
         <ShowFor type={BO}>
-          <BOUtilityNavLink />
+          <BOUtilityNavLink toggle={this.toggle}/>
         </ShowFor>
         <ShowFor type={[IP,AM,ADMIN]}>
           <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"paddingLeft": "15px !important"}}>
@@ -221,22 +220,26 @@ let BOUtilityNavLink = React.createClass({
   mixins: [ReactMeteorData],
   getMeteorData() {
     return {
-      business: Businesses.findOne(Session.get('business')._id)
+      business: Businesses.findOne(Session.get('business')? Session.get('business')._id : void 0)
     }
   },
+  propTypes: {
+    toggle: React.PropTypes.func
+  },
   render() {
+    let b = this.data.business;
     return (
-      <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle}>
+      <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.props.toggle}>
         {(() => {
-          if(this.data.business && this.data.business.status == "active") {
+          if(b && b.status == "active") {
             return (
               <span className="account-logo-wrapper">
-                <img className="account-logo" src={this.data.business.twitter_avatar_url}/>
+                <img className="account-logo" src={b.twitter_avatar_url}/>
               </span>
             );
           }
         })()}
-        <span className="label">{this.data.business? this.data.business.name : ""}</span>
+        <span className="label">{b? b.name : ""}</span>
       </Link>
     )
   }

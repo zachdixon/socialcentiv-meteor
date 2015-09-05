@@ -8,8 +8,7 @@ Meteor.startup ->
           API.RadiusTargets.create(doc, (err, res) ->)
       changed: RadiusTargets.observeChangedCallback.bind(RadiusTargets)
       removed: (oldDoc) ->
-        API.RadiusTargets.delete({id: oldDoc.id}, (err, res) ->
-          if err
-            RadiusTargets.insert(oldDoc)
-          )
+        API.RadiusTargets.delete {id: oldDoc.id},
+          error: (err, res) ->
+            RadiusTargets._insert(oldDoc)
     init = false

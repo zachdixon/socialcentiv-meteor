@@ -19,23 +19,22 @@ App.Collections =
   images          : Images
   reports         : Reports
 
-Mongo.Collection.prototype.stealthBatchInsert = (docs, options) ->
-  check(docs, Array)
+# Mongo.Collection.prototype.stealthBatchInsert = (docs, options) ->
+#   check(docs, Array)
 
-  this.observer?.stop()
-  if options?.foreign_key
-    docs.forEach (doc) =>
-      doc[options.foreign_key] = options.foreign_key_value
-  if options?.replace
-    this.remove({})
-  this.batchInsert docs
-  this.startObserving()
+#   this.observer?.stop()
+#   if options?.foreign_key
+#     docs.forEach (doc) =>
+#       doc[options.foreign_key] = options.foreign_key_value
+#   if options?.replace
+#     this.remove({})
+#   this.batchInsert docs
+#   this.startObserving()
 
 Mongo.Collection.prototype.replaceWith = (docs) ->
   check(docs, Array)
 
-  this.obsever?.stop()
-  this.remove({})
+  this._remove({})
   this.batchInsert docs
 
 Mongo.Collection.prototype._insert = Mongo.Collection.prototype.insert
@@ -43,8 +42,8 @@ Mongo.Collection.prototype.insert = (doc) ->
   check(doc, Object)
 
   this.startObserving()
-  this.insert doc
-  this.observer?.stop()
+  this._insert doc
+  this.stopObserving()
 
 Mongo.Collection.prototype._update = Mongo.Collection.prototype.update
 Mongo.Collection.prototype.update = (selectors, modifiers, options, callback) ->
@@ -53,7 +52,16 @@ Mongo.Collection.prototype.update = (selectors, modifiers, options, callback) ->
 
   this.startObserving()
   this._update(selectors, modifiers, options if options, callback if callback)
-  this.observer?.stop()
+  this.stopObserving()
+
+Mongo.Collection.prototype._upsert = Mongo.Collection.prototype.upsert
+Mongo.Collection.prototype.upsert = (selectors, modifiers, options, callback) ->
+  check(selectors, Match.OneOf(Object, String))
+  check(modifiers, Object)
+
+  this.startObserving()
+  this._upsert(selectors, modifiers, options if options, callback if callback)
+  this.stopObserving()
 
 Mongo.Collection.prototype._remove = Mongo.Collection.prototype.remove
 Mongo.Collection.prototype.remove = (selectors) ->
@@ -61,7 +69,7 @@ Mongo.Collection.prototype.remove = (selectors) ->
 
   this.startObserving()
   this._remove(selectors)
-  this.observer?.stop()
+  this.stopObserving()
 
 Mongo.Collection.prototype.observeChangedCallback = (newDoc, oldDoc) ->
   changes = _.transform oldDoc, (result, n, key) ->
@@ -74,3 +82,7 @@ Mongo.Collection.prototype.observeChangedCallback = (newDoc, oldDoc) ->
     error: (xhr, textStatus, error) =>
       delete oldDoc._id
       this.stealthUpdate(newDoc._id, {$set: oldDoc})
+
+Mongo.Collection.prototype.stopObserving = ->
+  this.observer?.stop()
+  delete this.observer

@@ -1,18 +1,9 @@
 # This file takes care of retrieving most of the data from the API
-# Exceptions include: Conversations (TweetsPage)
 # Each call is placed in a Tracker.autorun that automically reruns when its dependencies change
 # The dependencies/reactive vars are usually the id needed for the api call
 #   i.e. Session.get('currentUser') and its 'id' are needed to get the business(es)
 # We then call `replaceWith()` on the corresponding collection to take care of
-#   stopping/starting the observers, and replacing the data in those collections with the new data
-
-# TODO
-# - Make one .batchInsert call when all requests are done using $.when/$.then
-#   i.e. if there are 4 campaigns, we'll make 4 requests each to get all the keyphrases/country_targets/radius_targets/images
-#   we want to make 1 batchInsert for each of those resources
-# loop through campaigns,
-# push results with campaign_id added in to arrays of resources (images,keyphrases, etc)
-# 
+#   stopping/starting the observers, and replacing the data in those collections with the new data 
 
 Meteor.startup ->
   BO = "BusinessOwner"
@@ -135,21 +126,7 @@ Meteor.startup ->
     order_by = dict.get('orderBy')
     keyphrases = Keyphrases.find().fetch()
 
-    if (business? and num_per_page? and order_by?)
-      if keyphrases?.length
-        API.Conversations.getAll
-          business_id: business.id
-          num_per_page: num_per_page
-          status: 'awaiting_reply'
-          order_by: order_by
-          keyphrase_ids: keyphrases.map((kp) -> unless kp.hidden then kp.id).join(',')
-        ,
-          success: (data, responseText, xhr) ->
-            # Stop observer, remove all current records, insert new records, start observer
-            Conversations.replaceWith(data)
-      else
-        # Remove all local conversations in case all keyphrases are hidden
-        Conversations.replaceWith([])
+    Conversations.loadMore()
 
   Tracker.autorun ->
     # Get Suggested Responses

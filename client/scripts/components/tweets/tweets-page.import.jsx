@@ -172,12 +172,25 @@ let RightColumn = React.createClass({
 let LoadMoreButton = React.createClass({
   mixins: [ReactMeteorData],
   getMeteorData() {
+    let business_id = Session.get('business')? Session.get('business')._id : null;
     return {
+      business: Businesses.findOne(business_id),
       conversations: Conversations.find().fetch()
     }
   },
   handleClick(e) {
-
+    Conversations.remove({}, (err, numDocs) => {
+      if (err) {
+        console.log(err);
+      } else {
+        Businesses.update(this.data.business._id, {
+          $inc: {
+            replyable_conversations: (numDocs * -1)
+          }
+        });
+        Conversations.loadMore()
+      }
+    });
   },
   render() {
     if(this.data.conversations.length) {

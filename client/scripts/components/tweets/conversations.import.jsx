@@ -26,7 +26,11 @@ export let ConversationsList = React.createClass({
       <ul className="convos clearfix">
         {this.data.conversations.map((conversation) => {
           return (
-            <Conversation key={conversation._id} conversation_id={conversation.id} responses={this.data.responses} />
+            <Conversation 
+              key={conversation._id}
+              conversation_id={conversation.id}
+              responses={this.data.responses}
+            />
           )
         })}
       </ul>
@@ -133,7 +137,7 @@ let Conversation = React.createClass({
 
   setReplyCampaignId(value) {
     this.setState({reply_campaign_id: value});
-    Conversations._update({id: this.data.conversation.id}, {$set: {reply_campaign_id: value}});
+    // Conversations._update({id: this.data.conversation.id}, {$set: {reply_campaign_id: value}});
   },
 
   handleReplyMessageChange(e) {
@@ -210,7 +214,35 @@ let Conversation = React.createClass({
   },
 
   handleReply(e) {
-    Conversations.update(this.data.conversation._id, {$set: { status: "replied_to" }}, (err, numDocs) => {
+    let _id = this.data.conversation._id,
+        business_id = this.data.business._id,
+        $comment = $(this.getDOMNode());
+    Conversations.update(_id, {$set: {
+      status: "replied_to",
+      reply_campaign_id: this.state.reply_campaign_id,
+      message: this.state.reply_message,
+      callbacks: {
+        error: function(xhr, textStatus, error) {
+          let errors, notFound, phrase, response, _ref;
+          response = $.parseJSON(err.request.response);
+          errors = response != null ? response.errors : void 0;
+          phrase = errors != null ? (_ref = errors[0].base) != null ? _ref[0] : void 0 : void 0;
+          notFound = (phrase != null ? phrase.toLowerCase().indexOf("notfound") : void 0) > -1;
+
+          if (notFound) {
+            Conversations._remove(_id);
+          }
+        },
+        success: function(data, statusText) {
+          var _this = this;
+
+          $comment.fadeOut(500, function() {
+            Conversations._remove(_id);
+            Businesses.update(business_id, {$inc: {'replyable_conversations': -1}});
+          });
+        }
+      }
+    }}, (err, numDocs) => {
       if (err) {
         debugger
       }
@@ -220,7 +252,7 @@ let Conversation = React.createClass({
 
   render() {
     
-    let {b, conversation} = this.data,
+    let {business, conversation} = this.data,
         {lbc_tweet, reply_tweet} = conversation,
         red_text = this.remainingChars() < 0;
 
@@ -281,7 +313,7 @@ let Conversation = React.createClass({
           </ShowFor>*/ /* FIXME - implement new suggested responses */} 
           <div className="reply-subsection nomargin">
             <div className="reply-avatar">
-              <img className="img img-rounded" width="32" src={b? b.twitter_avatar_url : void 0} />
+              <img className="img img-rounded" width="32" src={business? business.twitter_avatar_url : void 0} />
             </div>
             <div className="reply-text-wrapper">
               <label className="reply-username">{`@${lbc_tweet.author_screen_name}`}</label>
@@ -294,7 +326,7 @@ let Conversation = React.createClass({
               </textarea>
               {/* Only show campaign link when a campaign is selected */}
               {this.state.reply_campaign_id === "none" ? null : (
-                <label className="reply-link">{b? b.public_url : void 0}</label>
+                <label className="reply-link">{business? business.public_url : void 0}</label>
               )}
             </div>
             <div className="row">

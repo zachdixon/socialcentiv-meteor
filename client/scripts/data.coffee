@@ -125,7 +125,8 @@ Meteor.startup ->
     num_per_page = dict.get('numPerPage')
     order_by = dict.get('orderBy')
     keyphrases = Keyphrases.find().fetch()
-
+    convos = Conversations.find()
+    
     Conversations.loadMore()
 
   Tracker.autorun ->

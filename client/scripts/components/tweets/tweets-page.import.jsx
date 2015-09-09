@@ -47,11 +47,11 @@ let CenterColumn = React.createClass({
 
   getMeteorData() {
     let dict = App.Dicts.Conversations,
-        business_id = Session.get('business')? Session.get('business')._id : null;
+        business_id = Session.get('business')? Session.get('business').id : null;
     dict.setDefault('orderBy', 'newest');
     dict.setDefault('numPerPage', 10);
     return {
-      business: Businesses.findOne(business_id),
+      business: Businesses.findOne({id: business_id}),
       keyphrases: Keyphrases.find().fetch(),
       orderBy: dict.get('orderBy'),
       numPerPage: dict.get('numPerPage')
@@ -172,9 +172,9 @@ let RightColumn = React.createClass({
 let LoadMoreButton = React.createClass({
   mixins: [ReactMeteorData],
   getMeteorData() {
-    let business_id = Session.get('business')? Session.get('business')._id : null;
+    let business_id = Session.get('business')? Session.get('business').id : null;
     return {
-      business: Businesses.findOne(business_id),
+      business: Businesses.findOne({id: business_id}),
       conversations: Conversations.find().fetch()
     }
   },

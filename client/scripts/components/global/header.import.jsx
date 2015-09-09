@@ -220,7 +220,7 @@ let BOUtilityNavLink = React.createClass({
   mixins: [ReactMeteorData],
   getMeteorData() {
     return {
-      business: Businesses.findOne(Session.get('business')? Session.get('business')._id : void 0)
+      business: Businesses.findOne({id: Session.get('business')? Session.get('business').id : void 0})
     }
   },
   propTypes: {

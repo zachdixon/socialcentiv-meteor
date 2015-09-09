@@ -126,6 +126,7 @@ Meteor.startup ->
     order_by = dict.get('orderBy')
     keyphrases = Keyphrases.find().fetch()
     convos = Conversations.find()
+    loadMoreConvos = Session.get('loadMoreConvos')
     
     Conversations.loadMore()
 

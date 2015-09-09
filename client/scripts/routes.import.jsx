@@ -51,7 +51,7 @@ managedAccounts.route('/:business_id/tweets', {
     // Needed for refreshing page or navigating directly to this route
     Session.set('business_id', parseInt(params.business_id));
     // Reset loadMoreConvos to call initially
-    Session.set('loadMoreConvos', true)
+    Session.set('loadMoreConvos', true);
     ReactLayout.render(LayoutManager, {
       layout: MainLayout,
       content: <TweetsPage />

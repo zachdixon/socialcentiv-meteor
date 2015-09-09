@@ -6,9 +6,9 @@ export let AccountDetails = React.createClass({
   mixins: [ReactMeteorData],
 
   getMeteorData() {
-    let business_id = Session.get('business')? Session.get('business')._id : null;
+    let business_id = Session.get('business')? Session.get('business').id : null;
     return {
-      business: Businesses.findOne(business_id)
+      business: Businesses.findOne({id: business_id})
     }
   },
 

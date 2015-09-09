@@ -131,7 +131,7 @@ let BusinessRow = React.createClass({
   handleAccessAccountClick(e) {
     e.preventDefault();
     App.setCurrentUserCookies(this.props.account.email, this.props.account.authentication_token);
-    Session.set('business_id', this.props.account.id);
+    Session.set('business_id', this.props.business.id);
     FlowRouter.go(`/managed/accounts/${this.props.business.id}/tweets`);
   },
 

@@ -38,7 +38,7 @@ Meteor.startup ->
         user_id: user.id
       ,
         success: (data, responseText, xhr) ->
-          Businesses.replaceWith(data)
+          Businesses._update({id: data.id}, {$set: data[0]}, {upsert: true})
           Session.set('business', Businesses.findOne())
 
   Tracker.autorun ->

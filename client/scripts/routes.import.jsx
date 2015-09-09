@@ -48,12 +48,12 @@ managedAccounts.route('/', {
 managedAccounts.route('/:business_id/tweets', {
   name: 'accountTweets',
   triggersEnter: [function(context,redirect) {
-    // Needed for refreshing page or navigating directly to this route
-    Session.set('business_id', parseInt(params.business_id));
     // Reset loadMoreConvos to call initially
     Session.set('loadMoreConvos', true);
   }],
   action: (params, queryParams) => {
+    // Needed for refreshing page or navigating directly to this route
+    Session.set('business_id', parseInt(params.business_id));
     ReactLayout.render(LayoutManager, {
       layout: MainLayout,
       content: <TweetsPage />

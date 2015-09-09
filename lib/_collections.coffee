@@ -19,29 +19,36 @@ App.Collections =
   images          : Images
   reports         : Reports
 
-Conversations.loadMore = ->
-  # Get Conversations
-  dict = App.Dicts.Conversations
-  business = Session.get('business')
-  num_per_page = dict.get('numPerPage')
-  order_by = dict.get('orderBy')
-  keyphrases = Keyphrases.find().fetch()
+if Meteor.isClient
+  Session.setDefault('loadMoreConvos', true)
+  Conversations.loadMore = ->
+    # Get Conversations
+    dict = App.Dicts.Conversations
+    business = Session.get('business')
+    num_per_page = dict.get('numPerPage')
+    order_by = dict.get('orderBy')
+    keyphrases = Keyphrases.find().fetch()
+    convos = Conversations.find()
+    loadMoreConvos = Session.get('loadMoreConvos')
 
-  if (business? and num_per_page? and order_by?)
-    if keyphrases?.length
-      API.Conversations.getAll
-        business_id: business.id
-        num_per_page: num_per_page
-        status: 'awaiting_reply'
-        order_by: order_by
-        keyphrase_ids: keyphrases.map((kp) -> unless kp.hidden then kp.id).join(',')
-      ,
-        success: (data, responseText, xhr) ->
-          # Stop observer, remove all current records, insert new records, start observer
-          Conversations.replaceWith(data)
-    else
-      # Remove all local conversations in case all keyphrases are hidden
-      Conversations.replaceWith([])
+    if (business? and num_per_page? and order_by?)
+      if keyphrases?.length
+        if convos.count() is 0 and loadMoreConvos
+          API.Conversations.getAll
+            business_id: business.id
+            num_per_page: num_per_page
+            status: 'awaiting_reply'
+            order_by: order_by
+            keyphrase_ids: keyphrases.map((kp) -> unless kp.hidden then kp.id).join(',')
+          ,
+            success: (data, responseText, xhr) ->
+              if data.length is 0
+                Session.set('loadMoreConvos', false)
+              # Stop observer, remove all current records, insert new records, start observer
+              Conversations.replaceWith(data)
+      else
+        # Remove all local conversations in case all keyphrases are hidden
+        Conversations._remove({})
 
 Mongo.Collection.prototype.batchInsertWith = (docs, options) ->
   check(docs, Array)

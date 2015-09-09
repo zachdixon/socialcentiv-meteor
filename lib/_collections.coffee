@@ -30,10 +30,13 @@ if Meteor.isClient
     keyphrases = Keyphrases.find().fetch()
     convos = Conversations.find()
     loadMoreConvos = Session.get('loadMoreConvos')
+    console.log('loading')
+    debugger
 
     if (business? and num_per_page? and order_by?)
       if keyphrases?.length
         if convos.count() is 0 and loadMoreConvos
+          console.log('made it')
           API.Conversations.getAll
             business_id: business.id
             num_per_page: num_per_page

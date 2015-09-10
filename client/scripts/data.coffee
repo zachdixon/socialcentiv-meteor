@@ -21,6 +21,8 @@ Meteor.startup ->
 
   Tracker.autorun ->
     # Get businesses for IP
+    # FIXME - when IP is on a business, and code is hotpushed, it refreshes and 
+    # correctly loads that business, but when you go to the accounts page, it doesn't load the other businesses
     user = Session.get('currentUser')
     if user? and Session.get('currentUser').type isnt BO
       # $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (res) ->
@@ -112,11 +114,15 @@ Meteor.startup ->
                 data.forEach (doc) ->
                   doc.campaign_id = campaign_id
                   images.push(doc)
-          
+          all_requests = country_target_requests
+                          .concat(radius_target_requests)
+                          .concat(keyphrase_requests)
+                          .concat(image_requests)
           $.when.apply($, country_target_requests).then () -> CountryTargets.replaceWith(country_targets)
           $.when.apply($, radius_target_requests).then () -> RadiusTargets.replaceWith(radius_targets)
           $.when.apply($, keyphrase_requests).then () -> Keyphrases.replaceWith(keyphrases)
           $.when.apply($, image_requests).then () -> Images.replaceWith(images)
+          $.when.apply($, all_requests).then () -> Session.set('loadMoreConvos', true)
 
   Tracker.autorun ->
     # Get Conversations

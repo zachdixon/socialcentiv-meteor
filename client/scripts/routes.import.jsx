@@ -42,18 +42,11 @@ managedAccounts.route('/', {
       layout: MainLayout,
       content: <AccountsPage />
     });
-  },
-  triggersExit: [() => {
-    Conversations._remove({});
-  }]
+  }
 });
 
 managedAccounts.route('/:business_id/tweets', {
   name: 'accountTweets',
-  triggersEnter: [function(context,redirect) {
-    // Reset loadMoreConvos to call initially
-    Session.set('loadMoreConvos', true);
-  }],
   action: (params, queryParams) => {
     // Needed for refreshing page or navigating directly to this route
     Session.set('business_id', parseInt(params.business_id));

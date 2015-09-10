@@ -42,7 +42,10 @@ managedAccounts.route('/', {
       layout: MainLayout,
       content: <AccountsPage />
     });
-  }
+  },
+  triggersExit: [() => {
+    Conversations._remove({});
+  }]
 });
 
 managedAccounts.route('/:business_id/tweets', {

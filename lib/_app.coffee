@@ -24,5 +24,17 @@ if Meteor.isClient
     Cookie.remove('advancedUserEmail', {path: "/", domain: App.DOMAIN})
     Cookie.remove('advancedUserAuth', {path: "/", domain: App.DOMAIN})
 
+  App.clearSession = () ->
+    # Clear session variables
+    Object.keys(Session.keys).forEach (key) ->
+      Session.set(key, undefined)
+
+  App.clearData = ->
+    # Clear local collections
+    Object.keys(App.Collections).forEach (k) ->
+      o = App.Collections
+      o[k].stopObserving()
+      o[k]._remove({})
+
 Meteor.startup ->
   App.Dicts.Conversations = new ReactiveDict()

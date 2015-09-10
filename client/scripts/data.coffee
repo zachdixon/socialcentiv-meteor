@@ -124,17 +124,7 @@ Meteor.startup ->
           $.when.apply($, image_requests).then () -> Images.replaceWith(images)
           $.when.apply($, all_requests).then () -> Session.set('loadMoreConvos', true)
 
-  Tracker.autorun ->
-    # Get Conversations
-    dict = App.Dicts.Conversations
-    business = Session.get('business')
-    num_per_page = dict.get('numPerPage')
-    order_by = dict.get('orderBy')
-    keyphrases = Keyphrases.find().fetch()
-    convos = Conversations.find()
-    loadMoreConvos = Session.get('loadMoreConvos')
-    
-    Conversations.loadMore()
+  Tracker.autorun Conversations.loadMore
 
   Tracker.autorun ->
     # Get Suggested Responses

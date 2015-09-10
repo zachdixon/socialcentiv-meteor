@@ -44,7 +44,6 @@ managedAccounts.route('/', {
     });
   }
 });
-
 managedAccounts.route('/:business_id/tweets', {
   name: 'accountTweets',
   action: (params, queryParams) => {

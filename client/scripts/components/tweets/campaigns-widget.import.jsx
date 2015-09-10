@@ -80,7 +80,7 @@ let Campaign = React.createClass({
   render() {
     let campaign = this.props.campaign;
     return (
-      <div className="campaign-toggle keyphrase" data-addclass-hidden-phrase="hidden">
+      <div className={classNames('campaign-toggle', 'keyphrase', {'hidden-phrase': campaign.hidden})}>
         <div className="campaign-details keyword-details" onClick={this.handleToggle}>
           <span className="chevron glyphicon glyphicon-chevron-down" data-addclass-glyphicon-chevron-up="open" data-removeclass-glyphicon-chevron-down="open"></span>
           <span className="phrase" title={campaign.name || "No name"}>{campaign.name || "No name"}</span>
@@ -162,7 +162,14 @@ let CampaignKeyphraseItem = React.createClass({
   },
 
   handleToggleTweets(e) {
-    Keyphrases._update({id: this.props.keyphrase.id}, {$set: {hidden: !this.props.keyphrase.hidden}});
+    let hidden = !this.props.keyphrase.hidden;
+    Keyphrases._update({id: this.props.keyphrase.id}, {$set: {hidden: hidden}});
+    // Hide campaign if all of its keyphrases are, else unhide
+    if (Keyphrases.find({campaign_id: this.props.keyphrase.campaign_id, hidden: {$not: true}}).count() === 0) {
+      Campaigns._update({id: this.props.keyphrase.campaign_id}, {$set: {hidden: true}});
+    } else {
+      Campaigns._update({id: this.props.keyphrase.campaign_id}, {$set: {hidden: false}});
+    }
   },
 
   render() {

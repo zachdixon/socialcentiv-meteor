@@ -19,6 +19,9 @@ export let AccountsPage = React.createClass({
       modifiers = _.assign(modifiers, {sort: _.pairs(this.state.sortBy)});
     }
     return {
+      // FIXME - undefined account when hotpush
+      // Possible fix is to load Accounts.find() here to reactively refresh,
+      // and find the account from there, check if exists to avoid error
       user: Session.get('currentUser'),
       businesses: Businesses.find(selectors, modifiers).fetch()
     }

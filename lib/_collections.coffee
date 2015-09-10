@@ -27,10 +27,10 @@ if Meteor.isClient
     business = Session.get('business')
     num_per_page = dict.get('numPerPage')
     order_by = dict.get('orderBy')
-    keyphrases = Keyphrases.find().fetch()
+    keyphrases = Keyphrases.find({hidden: {$not: true}}).fetch().filter (x) ->
+      Campaigns.findOne({id: x.campaign_id}).status is "active"
     convos = Conversations.find()
     loadMoreConvos = Session.get('loadMoreConvos')
-
     if (business? and num_per_page? and order_by?)
       if keyphrases?.length
         if convos.count() is 0 and loadMoreConvos
@@ -39,7 +39,7 @@ if Meteor.isClient
             num_per_page: num_per_page
             status: 'awaiting_reply'
             order_by: order_by
-            keyphrase_ids: keyphrases.map((kp) -> unless kp.hidden then kp.id).join(',')
+            keyphrase_ids: keyphrases.map((kp) -> kp.id).join(',')
           ,
             success: (data, responseText, xhr) ->
               if data.length is 0

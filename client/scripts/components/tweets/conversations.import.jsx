@@ -21,6 +21,11 @@ export let ConversationsList = React.createClass({
       responses: Session.get('suggestedResponses') || []
     };
   },
+
+  componentWillMount() {
+    Conversations.loadMore();
+  },
+  
   render() {
     return (
       <ul className="convos clearfix">

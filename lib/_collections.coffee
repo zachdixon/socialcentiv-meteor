@@ -29,23 +29,20 @@ if Meteor.isClient
     order_by = dict.get('orderBy')
     keyphrases = Keyphrases.find({hidden: {$not: true}}).fetch().filter (x) ->
       Campaigns.findOne({id: x.campaign_id}).status is "active"
-    convos = Conversations.find()
-    loadMoreConvos = Session.get('loadMoreConvos')
     if (business? and num_per_page? and order_by?)
       if keyphrases?.length
-        if convos.count() is 0 and loadMoreConvos
-          API.Conversations.getAll
-            business_id: business.id
-            num_per_page: num_per_page
-            status: 'awaiting_reply'
-            order_by: order_by
-            keyphrase_ids: keyphrases.map((kp) -> kp.id).join(',')
-          ,
-            success: (data, responseText, xhr) ->
-              if data.length is 0
-                Session.set('loadMoreConvos', false)
-              # Stop observer, remove all current records, insert new records, start observer
-              Conversations.replaceWith(data)
+        API.Conversations.getAll
+          business_id: business.id
+          num_per_page: num_per_page
+          status: 'awaiting_reply'
+          order_by: order_by
+          keyphrase_ids: keyphrases.map((kp) -> kp.id).join(',')
+        ,
+          success: (data, responseText, xhr) ->
+            if data.length is 0
+              Session.set('loadMoreConvos', false)
+            # Stop observer, remove all current records, insert new records, start observer
+            Conversations.replaceWith(data)
       else
         # Remove all local conversations in case all keyphrases are hidden
         Conversations._remove({})

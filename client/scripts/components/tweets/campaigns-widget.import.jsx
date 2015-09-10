@@ -75,6 +75,7 @@ let Campaign = React.createClass({
     this.data.keyphrases.forEach((keyphrase) => {
       Keyphrases._update({id: keyphrase.id}, {$set: {hidden: !keyphrase.hidden}});
     });
+    Conversations.loadMore();
   },
 
   render() {
@@ -170,6 +171,7 @@ let CampaignKeyphraseItem = React.createClass({
     } else {
       Campaigns._update({id: this.props.keyphrase.campaign_id}, {$set: {hidden: false}});
     }
+    Conversations.loadMore();
   },
 
   render() {

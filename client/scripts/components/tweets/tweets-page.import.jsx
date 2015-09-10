@@ -66,10 +66,12 @@ let CenterColumn = React.createClass({
 
   handleOrderByClick(e) {
     App.Dicts.Conversations.set('orderBy', e.target.value);
+    Conversations.loadMore();
   },
 
   handleNumPerPageClick(e) {
     App.Dicts.Conversations.set('numPerPage', parseInt(e.target.value));
+    Conversations.loadMore();
   },
 
   render() {

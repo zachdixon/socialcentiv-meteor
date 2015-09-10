@@ -122,9 +122,7 @@ Meteor.startup ->
           $.when.apply($, radius_target_requests).then () -> RadiusTargets.replaceWith(radius_targets)
           $.when.apply($, keyphrase_requests).then () -> Keyphrases.replaceWith(keyphrases)
           $.when.apply($, image_requests).then () -> Images.replaceWith(images)
-          $.when.apply($, all_requests).then () -> Session.set('loadMoreConvos', true)
-
-  Tracker.autorun Conversations.loadMore
+          $.when.apply($, all_requests).then () -> Conversations.loadMore()
 
   Tracker.autorun ->
     # Get Suggested Responses

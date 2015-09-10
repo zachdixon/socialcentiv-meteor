@@ -170,17 +170,8 @@ let MainUtilityNav = React.createClass({
     // Clear cookies
     App.clearCurrentUserCookies();
     App.clearAdvancedUserCookies();
-    // Clear session variables
-    Object.keys(Session.keys).forEach((key) => {
-      return Session.set(key, undefined);
-    });
-
-    // Clear local collections
-    Object.keys(App.Collections).forEach((k) => {
-      var o = App.Collections;
-      o[k].stopObserving();
-      return o[k]._remove({});
-    });
+    App.clearSession();
+    App.clearData();
   },
 
   render() {

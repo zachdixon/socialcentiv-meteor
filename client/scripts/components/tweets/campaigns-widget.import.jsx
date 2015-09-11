@@ -78,6 +78,14 @@ let Campaign = React.createClass({
     Conversations.loadMore();
   },
 
+  handleRefreshTweets(e) {
+    API.Campaigns.refresh({id: this.props.campaign.id}, {
+      success: function() {
+        Conversations.loadMore();
+      }
+    });
+  },
+
   render() {
     let campaign = this.props.campaign;
     return (
@@ -89,7 +97,7 @@ let Campaign = React.createClass({
         </div>
         <div className="campaign-info" ref="toggle">
           <div className="refresh-tweets">
-            <button className="col-md-12 btn-success ladda-button" data-event-click="getFreshTweets | withArguments id" data-style="zoom-in">
+            <button className="col-md-12 btn-success ladda-button" data-style="zoom-in" onClick={this.handleRefreshTweets}>
               <span className="ladda-label">
                 <span className="glyphicon glyphicon-refresh"></span>
                 <span>Get fresh tweets</span>

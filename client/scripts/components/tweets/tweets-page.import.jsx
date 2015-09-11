@@ -190,11 +190,6 @@ let LoadMoreButton = React.createClass({
             replyable_conversations: (numDocs * -1)
           }
         });
-        // FIXME - need to call loadMore after all api delete calls have finished
-        // Maybe move this to the Tracker.autorun in data.coffee
-        // track Conversations.find(), if none, call API.
-        // Remember to cancel calls when call returns no results to prevent infinite loop
-        Conversations.loadMore()
       }
     });
   },

@@ -3,11 +3,11 @@
 import { ImageUploader } from 'client/scripts/components/images/image-uploader';
 
 export let CampaignImages = React.createClass({
+  displayName: "CampaignImages",
   mixins: [ReactMeteorData],
 
   getMeteorData() {
-    let activeConversation = Session.get('activeConversation'),
-        campaign_id = (activeConversation? activeConversation.reply_campaign_id : null),
+    let campaign_id = Session.get('activeConversationCampaignId'),
         availableImages = Images.find({campaign_id: campaign_id, selected: false},{$sort: {updated_at: "0"}}).fetch(),
         selectedImages = Images.find({campaign_id: campaign_id, selected: true}).fetch()
     return {
@@ -27,6 +27,7 @@ export let CampaignImages = React.createClass({
 });
 
 let SelectedImages = React.createClass({
+  displayName: "SelectedImages",
   propTypes: {
     images: React.PropTypes.array.isRequired
   },
@@ -65,6 +66,7 @@ let SelectedImages = React.createClass({
 });
 
 let AvailableImages = React.createClass({
+  displayName: "AvailableImages",
   propTypes: {
     campaignId: React.PropTypes.number,
     images: React.PropTypes.array.isRequired
@@ -89,6 +91,7 @@ let AvailableImages = React.createClass({
 })
 
 let CampaignImage = React.createClass({
+  displayName: "CampaignImage",
   mixins: [ReactMeteorData],
   propTypes: {
     imageId: React.PropTypes.string.isRequired,

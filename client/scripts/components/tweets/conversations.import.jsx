@@ -225,18 +225,20 @@ let Conversation = React.createClass({
     Conversations.update(_id, {$set: {
       status: "replied_to",
       reply_campaign_id: this.state.reply_campaign_id,
-      message: this.state.reply_message,
+      reply_message: this.state.reply_message,
       callbacks: {
         error: function(xhr, textStatus, error) {
-          let errors, notFound, phrase, response, _ref;
-          response = $.parseJSON(err.request.response);
-          errors = response != null ? response.errors : void 0;
-          phrase = errors != null ? (_ref = errors[0].base) != null ? _ref[0] : void 0 : void 0;
-          notFound = (phrase != null ? phrase.toLowerCase().indexOf("notfound") : void 0) > -1;
+          // FIXME - figure out error format
+          // let errors, notFound, phrase, response, _ref;
+          // response = $.parseJSON(err.request.response);
+          // errors = response != null ? response.errors : void 0;
+          // phrase = errors != null ? (_ref = errors[0].base) != null ? _ref[0] : void 0 : void 0;
+          // notFound = (phrase != null ? phrase.toLowerCase().indexOf("notfound") : void 0) > -1;
 
-          if (notFound) {
-            Conversations._remove(_id);
-          }
+          // if (notFound) {
+          //   Conversations._remove(_id);
+          // }
+          Conversations._remove(_id);
         },
         success: function(data, statusText) {
           var _this = this;

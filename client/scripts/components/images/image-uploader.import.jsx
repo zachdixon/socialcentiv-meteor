@@ -1,6 +1,7 @@
 "use strict";
 
 export let ImageUploader = React.createClass({
+  displayName: "ImageUploader",
   propTypes: {
     campaignId: React.PropTypes.number
   },

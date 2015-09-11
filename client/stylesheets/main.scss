@@ -86,6 +86,12 @@ input[type="file"] {
     padding-bottom: 4px;
   }
 }
+
+.table {
+  th {
+    font-weight: bold !important;
+  }
+}
 @media (max-width: 1229px) {
   .container {
     width: 100%;
@@ -187,6 +193,14 @@ body{
   h3 {
     font-size: 3em;
   }
+}
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 ul {
   list-style: none;
@@ -371,6 +385,11 @@ p{
   background: -ms-linear-gradient(-45deg,  #20446f 0%,#235584 9%,#205676 19%,#216d81 32%,#208382 48%,#208382 50%,#2c8897 73%,#4a79b3 87%,#5561ac 100%); /* IE10+ */
   background: linear-gradient(135deg,  #20446f 0%,#235584 9%,#205676 19%,#216d81 32%,#208382 48%,#208382 50%,#2c8897 73%,#4a79b3 87%,#5561ac 100%); /* W3C */
   // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20446f', endColorstr='#5561ac',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
+}
+
+span.highlight {
+  background-color: rgba(255,255,0,0.4);
+  padding: 3px 5px;
 }
 
 @media (min-width: 768px) {
@@ -566,6 +585,82 @@ hr{
 }
 
 /* ---------------- *\
+|   !Accounts        |
+\* ---------------- */
+
+#accounts-page {
+  padding-top: 30px;
+  .header {
+    margin-bottom: 15px;
+    h1 {
+      margin: 10px 0 0 0;
+    }
+  }
+  .accounts-table {
+    background: #fff;
+    tbody {
+      tr {
+        td:first-of-type {
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+      }
+    }
+    .sortable-header {
+      cursor: pointer;
+    }
+  }
+  .filter-bar {
+    font-size: 11px;
+    font-weight: 700;
+    float: right;
+    p, button {
+      font-size: inherit;
+      font-weight: inherit;
+      float: left;
+      color: inherit;
+      padding: 5px 10px;
+      margin: 0;
+      line-height: 32px;
+      background-color: #fff;
+      border-top: 1px solid #C4D7D8;
+      border-left: 1px solid #C4D7D8;
+      border-bottom: 1px solid #C4D7D8;
+      border-right: none;
+      border-radius: 0;
+      text-transform: uppercase;
+    }
+    p {
+      border-color: transparent;
+      background-color: transparent;
+    }
+    input {
+      width: 185px;
+      margin-right: 10px;
+    }
+    button {
+      transition: 200ms ease-in-out;
+      &:nth-of-type(1) {
+        border-radius: 5px 0 0 5px;
+      }
+      &:last-of-type {
+        border-radius: 0 5px 5px 0;
+        border-right: 1px solid #C4D7D8;
+      }
+      &.active {
+        background-color: #C4D7D8;
+      }
+      &:hover {
+        background-color: #E0F0F0;
+      }
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+/* ---------------- *\
 |   !Conversations    |
 \* ---------------- */
 
@@ -684,6 +779,32 @@ hr{
   }
 
 }
+.highlight-keywords {
+  display: -ms-flexbox; /* IE10 */
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center; /* IE10 */
+  -webkit-align-items: center;
+  align-items: center;
+  > label {
+    -ms-flex: 1; /* IE10 */
+    -webkit-flex: 1;
+    flex: 1;
+    font-size: 12px;
+    font-weight: 700;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 0;
+  }
+  .on-off-switch-label {
+    width: 75px;
+    float: right;
+    margin-bottom: 0;
+  }
+  .on-off-switch-switch {
+    right: 44px;
+  }
+}
 .keyword-helper-text{
     display: inline-block;
   margin-bottom: 10px;
@@ -742,7 +863,7 @@ hr{
 
   .phrase{
     color:#0191cc;
-    width:50%;
+    width:80%;
     text-overflow:ellipsis;
     overflow:hidden;
     white-space:nowrap;
@@ -774,6 +895,13 @@ hr{
       margin-right: 5px;
       color: #0191cc;
     }
+    .glyphicon-eye-close {
+      display: none;
+      line-height: 26px;
+      float: right;
+      color: #C08080;
+      font-size: 14px;
+    }
   }
 
   .keyword-details.less{
@@ -783,7 +911,6 @@ hr{
   .keyword-performance-indicators{
     background:#e3e8ee;
     padding-bottom:6px;
-    border-radius: 0 0px 5px 5px;
     display: none;
     ul.indicators{
 
@@ -803,10 +930,6 @@ hr{
         }
       }
 
-      li:hover{
-        background:#e1e2ed
-      }
-
       li.conversion_rate{
         span.perc {
           opacity:1;
@@ -821,6 +944,113 @@ hr{
     }
   }
   .keyword-performance-indicators.show{
+    display: block !important;
+  }
+
+  .keyword-list {
+    // display: none;
+    border-top: 1px solid #C4D7D8;
+    padding: 6px 0;
+    background-color: #F3F4F6;
+    border-radius: 0 0 5px 5px;
+    > div {
+      padding: 2px 0 5px;
+    }
+    span.sc-tooltip.keyword-info {
+      margin: 0;
+      float: right;
+      color: #666;
+      line-height: 22px;
+      .glyphicon {
+        color: inherit;
+        position: relative;
+        top: 2px;
+        margin: 0;
+      }
+      span.sc-tooltip-content {
+        top: -36px;
+        color: #fff;
+        margin: 0;
+
+        // top: -58px;
+        // white-space: normal;
+        // width: 150px;
+      }       
+    }
+    span {
+      color: #666;
+      margin: 0 10px;
+    }
+    ul {
+      max-height: 252px;
+      overflow-y: auto;
+    }
+    li {
+      padding: 2px 10px;
+      font-weight: 500;
+      cursor: pointer;
+      &:first-of-type {
+        padding-top: 0;
+      }
+      span {
+        color: #666;
+      }
+      .keyword-icon {
+        float: right;
+        margin-right: 0;
+        display: none;
+      }      
+      .glyphicon {
+        display: none;
+        font-size: 17px;
+        margin: 0;
+        padding: 0;
+        line-height: 20px;
+        float: right;
+        width: 19px;
+        text-align: center;
+      }
+      .text {
+        line-height: 17px;
+        margin-left: 20px;
+        margin-right: 0;
+      }
+      &:hover {
+        background-color: #e3e8ee;
+        .keyword-icon {
+          display: block;
+        }
+      }
+      &.enabled {
+        &:hover {
+          .glyphicon-eye-open {
+            display: block;
+          }
+          .glyphicon-eye-close {
+            display: none;        
+          }
+        }
+      }       
+      &.disabled {
+        &:hover {
+          .glyphicon-eye-open {
+            display: none;         
+          }
+          .glyphicon-eye-close {
+            display: block;        
+          }
+        }
+        .glyphicon {
+          color: #C08080;
+        }
+        .text {
+          color: #C08080;
+          text-decoration: line-through;
+        }          
+      }
+    }
+  }
+  .keyword-list.show {
     display: block !important;
   }
 
@@ -851,10 +1081,9 @@ hr{
   
   .keyword-details{
     background: lighten(#d0d7e0,9%);
-  }
-
-  .keyword-performance-indicators{
-    opacity:0.6;
+    .glyphicon-eye-close {
+      display: block;
+    }
   }
 
   .hide-tweets{
@@ -864,6 +1093,25 @@ hr{
   }
 
 
+}
+.campaign-toggle {
+  .campaign-info {
+    display: none;
+  }
+}
+.refresh-tweets{
+  @include clearfix;
+  background-color: #F3F4F6;
+  padding: 5px 15px;
+  button{
+    border-radius: 4px;
+    border-style: none;
+    padding: 5px;
+  }
+
+  span{
+    margin-right: 4px;
+  }
 }
 .main-nav-item .ss-bullseye {
   margin-bottom: -5px;
@@ -1010,7 +1258,7 @@ ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.mess
 .on-off-switch-inner:before {
     content: "ON";
     padding-left: 10px;
-    background-color: #4C93DD; color: #FFFFFF;
+    background-color: #0191cc; color: #FFFFFF;
 }
 .on-off-switch-inner:after {
     content: "OFF";
@@ -2636,6 +2884,7 @@ in the app.*/
     display: inline-block;
     margin: 5px;
     position: relative;
+    float:left;
 
     &:hover {
       .delete-image {
@@ -2675,6 +2924,11 @@ in the app.*/
       &:hover {
         box-shadow: 0 1px 3px #999;
       }
+    }
+    .campaign-image{
+      height: 100px;
+      width: 100px;
+      background-size:cover;
     }
   }
   .upload-image-wrapper {
@@ -3056,9 +3310,7 @@ button.country {
   text-transform: uppercase;
   position: relative;
   .sub-nav-toggle {
-    padding-left: 50px !important;
-    padding-top:28px;
-    padding-bottom: 28px;
+    padding: 30px 10px 30px 50px !important;
   }
   .sub-nav {
     position: absolute;
@@ -3150,6 +3402,37 @@ button.country {
   z-index: 100000;
   &:hover {
     color: $peter_river;
+  }
+}
+
+.secondary-nav-wrapper {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+.secondary-nav{
+  
+  padding: 0 15px;
+
+  li {
+    display: inline-block;
+    position:relative;
+    z-index: 999;
+  }
+  a {
+    display: block;
+    color: #999;
+    font-weight: 100;
+    padding: 18px 15px;
+    text-transform: uppercase;
+    font-size: 13px;
+    text-decoration: none;
+    height: 50px;
+    border-bottom: 0 solid #0191cc;
+    transition: all 250ms;
+    &.active, &:hover, &:active, &:focus {
+      color: #0191cc;
+      border-bottom-width: 4px;
+    }
   }
 }
 
@@ -3366,39 +3649,9 @@ button.country {
   border: 1px solid #0082B7;
   border-bottom-color: #fff;
 }
-.comments-nav {
-  .nav-item {
-    margin: 0;
-    float: left;
-  }
-  .nav-item-link {
-    cursor: pointer;
-    display: block;
-    padding: 10px;
-    text-align: center;
-    border-bottom: 0px solid #fff;
-    box-sizing: border-box;
-    transition: all 250ms ease-in-out;
-    height: 53px;
-    opacity: 0.7;
-    color: #fff;
-
-
-    &:hover, &:active, &:focus, &.active {
-      text-decoration: none;
-      border-bottom-width: 4px;
-      opacity: 1;
-    }
-  }
-  .text {
-    display: block;
-    text-transform: uppercase;
-    font-size: 12px;
-  }
-  .count {
-    font-size: 20px;
-    line-height: 12px;
-  }
+.tweet-count .count {
+  font-size: 30px;
+  line-height: 30px;
 }
 .comments {
   position: relative;
@@ -3417,7 +3670,6 @@ button.country {
     padding-left: 10px;
     padding-right: 10px;
     border: 1px solid #c3d2e2;
-    border-top: none;
     border-radius: 0;
   }
 }
@@ -3720,7 +3972,7 @@ div.header{
   }
   .reply-subsection {
     position: relative;
-    padding: 0 10px 10px 50px;
+    padding: 10px 10px 10px 50px;
   }
 
   .reply-text-wrapper {
@@ -3856,7 +4108,6 @@ div.header{
   }
   .reply-avatar {
     position: absolute;
-    top: 0;
     left: 10px;
     width: 32px;
     text-align: center;
@@ -4113,11 +4364,10 @@ div.header{
     margin-bottom:10px;
   }
   .header{
+    border-left: 5px solid #0191cc;
+    padding-left: 5px;
     font-weight:bold;
-    margin-bottom:10px;
-    height:40px;
     font-size:13px;
-    text-transform: uppercase;
     color:#444;
   }
   p{

@@ -1,0 +1,317 @@
+
+mode:                   application #valid modes are devops or application.
+default_environment:    staging #the initial environment all commands are run in without an env setting flag
+default_repository:     my-socialcentiv-com-meteor
+ruby_version:           ruby-2.1.2
+deploy_user:            deploy
+cheftacular_chef_user:  hiplogiq
+chef_server_url:        https://chef.socialcentiv.net
+ssl_verify:             false
+wrapper_cookbooks:      HiplogiqDeploy #comma delim string of wrapper cookbooks to do clean_cookbooks on
+strict_version_checks:  true  # when true, the gem will check rubygems once per day to see if theres a new version and prevent execution until this new version is bundled
+auditing:               true  # when true, the gem will collect and send auditing data about all commands that are passed to the gem that will hit your chef server
+base_file_path:         /var/www/vhosts #the base file path the repos are stored on for each server
+default_swap_location:  /mnt/1GB.swap #default location of the swapfile build on all systems (used for cft restart_swap)
+backup_directory:       /mnt/postgresqlbackups/backups #This is only used for the backup stateless command, can be left blank if other backup plans are being used
+backup_filesystem:      backup_gem #valid entries are backup_gem | raw
+backup_server:          first_production_slave #tells the backup command what server to fetch the backup data from. The string first_production_slave is parsed into a TLD / local ip
+chef_version:           11
+data_bag_key_file:      data_bag_key #name of the data bag key file in the ~/.chef folder for workstations
+server_pass_length:     20
+default_flavor_name:    1 GB Performance #When booting servers, this flavor name is used if a flavor is not set in some way
+preferred_cloud:        rackspace    #preferred cloud to interact with
+preferred_cloud_region: dfw          #preferred cloud region to interact with (please check your cloud provider for specific regions)
+preferred_cloud_os:     ubuntu       #can be centos|coreos|debian|fedora|redhat|ubuntu|vyatta . Bear in mind not all OSes have supported bootstraps at the moment
+preferred_cloud_image:  Ubuntu 14.04 LTS (Trusty Tahr) (PV) #preferred cloud image to install, can use custom built images here as well. The string is matched to a valid image but specific is better
+virtualization_mode:    PV #on rackspace cloud, set your default virtualization mode to this (only PV or PVHVM are supported)
+git_based_deploys:      true
+route_dns_changes_via:  rackspace
+node_name_separator:    '_' #on rackspace, can be anything except a space, on most other hosting sites, it must be a valid url character
+pre_install_packages:   'git-core shorewall'  # space delimited list of packages to install during a  node's initial setup process
+
+#chef-repo
+keep_chef_repo_cheftacular_yml_up_to_date: true
+location_of_chef_repo_cheftacular_yml:     /files/default #this should be the location of the cheftacular.yml file in your wrapper cookbooks(s). NOTE: The file should be in the same place in all cases
+replace_keys_in_chef_repo: #keys that should be changed when the cheftacular.yml is created in the chef-repo (its a good idea to turn off strict version checks)
+  keep_chef_repo_cheftacular_yml_up_to_date: false
+  strict_version_checks: false
+
+slack:
+  default_channel: '#our-infrastructure' # Useful if the default channel on the webhook is NOT where you want to send notifications to (like failed deploys)
+  webhook:         https://hooks.slack.com/services/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
+
+#RVM
+install_rvm_on_boot:    true #true|false If true, this will cause RVM to be installed for the deploy_user on boot, this makes managing RVM via cookbook impossible.
+rvm_gpg_key:            409B6B1796C275462A1703113804BB82D39DC0E3
+
+#Cloudflare routing occurs in addition to your route_dns_changes_via: key
+cloudflare:
+  api_key:     74826d2adc96cb99ac42198aa0e7dad89167e
+  user_email:  dev@socialcentiv.com
+  default_ttl: 300
+
+cloud_authentication:
+  rackspace:
+    api_key:  1a78034966c138bd232afa936ac230ed
+    email:    dev@hiplogiq.com
+    username: hiplogiq
+  #digitalocean:
+  #  api_key:   
+  #  client_id: 
+  #dnsimple:
+  #  email:
+  #  password:
+  #  token:
+
+#the first comma in the list of log_locs is what is tailable, the others are only loggable
+role_maps: #role maps for log tailing
+  sensu_server_role:    
+    role_name:    sensu_server
+    log_location: /var/log/sensu/sensu-server.log
+  graphite_server_role: 
+    role_name:    graphite_server
+    log_location: /var/log/carbon-cache/current
+  worker_server_role:
+    role_name:    worker
+    log_location: /var/log/syslog #commas will pull logs from multiple locations. |current_repo_location| acts as an alias for a roles default repo location
+
+repositories:
+  apiscentiv: #this row is reserved for nicknames, preferably nicknames that eliminate any hyphens in the repo_name
+    repo_name:                 api-socialcentiv-com
+    database:                  postgresql
+    application_database_user: socialcompass
+    stack:                     ruby_on_rails
+    db_primary_host_role:      db_primary
+    #custom_database_name:      api-socialcentiv-com #this key only needs to exist if your database is named differently from REPONAME_ENV
+    restore_backup_file_name:  PostgreSQL-api.sql   #the file that the backup is usually stored in for the backup directory
+    not_a_migration_message:   config/local.yml file detected. Its environment variables will be merged on top of those from config/application.yml.
+    #backup_server:             first_production_slave #this key only needs to be set if the backup server (for this database) is different than the global_backup_server
+    has_split_branches:        true
+  myscentiv:
+    repo_name:                        my-socialcentiv-com
+    database:                         none
+    stack:                            ruby_on_rails
+    has_split_branches:               true
+    route_wildcard_requests_for_tld:  true   #this triggers special behaviors for server creation (cloud_bootstrap). If a server is a load balancer for this repo, server creation will route wildcard requests to it
+  soccompass:
+    repo_name: sc_agency
+    database:  postgresql
+    stack:     ruby_on_rails
+  socsift:
+    repo_name: social_sift_app
+    database:  postgresql
+    stack:     ruby_on_rails
+  pg_data:
+    repo_name: pg_data
+    database:  postgresql
+    stack:     ruby_on_rails
+  magellan:
+    repo_name:                 magellan_app
+    database:                  postgresql
+    application_database_user: socialcompass
+    db_primary_host_role:      db_primary
+    stack:                     ruby_on_rails
+    restore_backup_file_name:  PostgreSQL-magellan_app.sql
+    not_a_migration_message:   config/local.yml file detected. Its environment variables will be merged on top of those from config/application.yml.
+    has_split_branches:        true
+  uxangular:
+    repo_name: SC_Angular
+    database:  none
+    stack:     nodejs
+  wpscentiv:
+    repo_name: socialcentiv-com
+    database:  mysql
+    stack:     wordpress
+    specific_chef_passwords: #special keys that you want auto-generated for their repo by for the ENV chef_passwords bag, the value for them is their length
+      mysql_root_pass:
+      mysql_wwwscent_pass:
+  mobilescentiv:
+    repo_name:          mobile-socialcentiv-com
+    database:           none
+    stack:              lamp
+    has_split_branches: true
+  myscentiv_meteor:
+    repo_name:          my-socialcentiv-com-meteor
+    database:           none
+    stack:              nodejs
+    has_split_branches: true
+  all:
+    repo_name: all
+    database:  none #we dont want to run migrations on an all deploy
+    stack:     all
+
+#if you are assigning environments with run lists *in addition to* chef environments, use this. Nodes should have 0-1 of these run list envs, no more.
+# Also used for the update_split_branches command, a branch like split_staging is parsed into split-staging.
+# List your split_environments, what environment theyre under, and their role name here
+# The key should be the role name and the value should be the ENVIRONMENT this key corresponds to (for RAILS_ENV and the like)
+run_list_environments:
+  staging:
+    split_staging: splitstaging
+  production:
+    split_a:       splita
+    split_b:       splitb
+    split_c:       splitc
+    split_d:       splitd
+
+#YAML array of the types of databases stored on your database primary
+db_primary_backup_database_stacks: 
+  - postgresql
+
+#nodes to initialize when cft devstaging command is run. All keys are optional but not assigning a flavor to a node will default it to the default_flavor_name key
+#flavor:     the flavor the node will be booted with
+#descriptor: optional string to be parsed into the nodes config. Can be used to pair with load balancers, etc
+#dns_config: by default, nodes are assigned NODE_NAME.ENV_TLD for their DNS, this can be overridden here. Both NODE_NAME and ENV_TLD are interpolated if used
+env_boot_nodes:
+  staging_nodes:
+    apisc01:     
+      flavor:     4 GB Performance
+      descriptor: lb:api-socialcentiv-com
+    apisclb:     
+      dns_config: api.ENV_TLD
+      descriptor: api-socialcentiv-com
+    workapisc01: 
+    wwwscent:
+    jobs01:        
+    mysc01:      
+      flavor:     2 GB Performance
+      descriptor: lb:my-socialcentiv-com
+    mysclb:      
+      dns_config: my.ENV_TLD
+      descriptor: my-socialcentiv-com
+    mobilesc:
+      flavor:     2 GB Performance
+      descriptor: lb:mobile-socialcentiv-com
+    mobilesclb:
+      dns_config: mobile.ENV_TLD
+      descriptor: mobile-socialcentiv-com
+    magellan:    
+      descriptor: lb:magellan_app
+    #magellanlb:  
+    #  dns_config: magellan.ENV_TLD
+    #  descriptor: magellan_app
+    dbmaster:    
+      flavor:     8 GB Performance
+      dns_config: db.ENV_TLD
+  #DEVSTAGING
+  devstaging_nodes:
+    apisc01d:     
+      flavor:     4 GB Performance
+      descriptor: lb:api-socialcentiv-com
+    apisclbd:     
+      dns_config: api.ENV_TLD
+      descriptor: api-socialcentiv-com
+    workapisc01d: 
+    wwwscentd:
+    jobsd:        
+    mysc01d:      
+      flavor:     2 GB Performance
+      descriptor: lb:my-socialcentiv-com
+    mysclbd:      
+      dns_config: my.ENV_TLD
+      descriptor: my-socialcentiv-com
+    magelland:    
+      descriptor: lb:magellan_app
+    magellanlbd:  
+      dns_config: magellan.ENV_TLD
+      descriptor: magellan_app
+    dbmasterd:    
+      flavor:     8 GB Performance
+      dns_config: db.ENV_TLD
+  #PRODUCTION
+  production_nodes:
+    apisc01p:     
+      flavor:     8 GB Performance
+      descriptor: lb:api-socialcentiv-com
+    apisc02p:     
+      flavor:     8 GB Performance
+      descriptor: lb:api-socialcentiv-com
+    apisclbp:     
+      dns_config: api.ENV_TLD
+      descriptor: api-socialcentiv-com
+    workapisc01p:
+    workapisc02p:
+    workapisc03p:
+    wwwscentnew:
+    jobsp:        
+    mysc01p:      
+      flavor:     2 GB Performance
+      descriptor: lb:my-socialcentiv-com
+    mysc02p:      
+      flavor:     2 GB Performance
+      descriptor: lb:my-socialcentiv-com
+    mysc03p:      
+      flavor:     2 GB Performance
+      descriptor: lb:my-socialcentiv-com
+    mysclbp:      
+      dns_config: my.ENV_TLD
+      descriptor: my-socialcentiv-com
+    mobilescp:
+      flavor:     2 GB Performance
+      descriptor: lb:mobile-socialcentiv-com
+    mobilesclbp:
+      dns_config: mobile.ENV_TLD
+      descriptor: mobile-socialcentiv-com
+    magellanp:    
+      descriptor: lb:magellan_app
+    #magellanlb:  
+    #  dns_config: magellan.ENV_TLD
+    #  descriptor: magellan_app
+    dbmasterp:    
+      flavor:     15 GB Performance
+      dns_config: db.ENV_TLD
+    dbslave01p:    
+      flavor:     15 GB Performance
+
+#Extra data used for nodes when the cft scale up command is run. Digits in the node are parsed out and the nodes name (without digits) must match 100% to trigger the custom data
+scaling_nodes:
+  apiscp:
+    flavor:     8 GB Performance
+    descriptor: lb:api-socialcentiv-com
+  myscp:
+    flavor:     2 GB Performance
+    descriptor: lb:my-socialcentiv-com
+  mobilescp:
+    flavor:     2 GB Performance
+    descriptor: lb:mobile-socialcentiv-com
+
+#used in the test_env command, these are nodes that spun up for split-testing environments. They connect to their primary environments database. IE a splitstaging node may connect to a staging database
+#NOTE! splitenv data bag data is contained in whatever env houses the splitenv!
+split_env_nodes:
+  apiscSPLITENV01:
+    flavor:      4 GB Performance
+    descriptor:  lb:api-socialcentiv-com
+  apiscSPLITENVlb:
+    dns_config:  api.ENV_TLD
+    descriptor:  api-socialcentiv-com
+  workapiscSPLITENV01:
+  myscSPLITENV01:
+    flavor:      2 GB Performance
+    descriptor:  lb:my-socialcentiv-com
+  myscSPLITENVlb:
+    dns_config:  my.ENV_TLD
+    descriptor:  my-socialcentiv-com
+
+global_chef_passwords: #passwords you want auto-generated for a chef_env for all repositories
+  pg_pass: 20
+
+#used in the get_haproxy_log command
+haproxy_config:
+  role_name:    haproxy #default role all haproxy servers will have
+  default_port: 22002
+
+location_aliases:
+  backups:      /mnt/postgresbackups/backups/main_backup
+  backupmaster: /mnt/backupmaster/backups/main_backup
+  varlog:       /var/log
+  sensu:        /etc/sensu
+  api_root:     /var/www/vhosts/api-socialcentiv-com/current
+
+chef_server:
+  interactable:  true   #this key can be used to easily disable access to the chef-server command
+  ssh_user:      deploy  #This is the user who can be ssh'd with onto the chef-server. If root, you can leave sudo_password blank.
+  sudo_password: cheftacular #sudo password for accessing the chef-server-ctl command for the chef-server command
+
+role_toggling:
+  deactivated_role_suffix: '_deactivate' #for the cft role_toggle command, the suffix for your deactivated roles
+  strict_roles:            true           #for the cft role_toggle command, if roles should be able to be set for a node that did not have the role (at all) before
+  skip_confirm:            false          # skips confirming for role toggle command

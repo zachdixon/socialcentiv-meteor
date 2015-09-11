@@ -80,6 +80,12 @@ if(Meteor.isClient) {
                 url: "/:id",
                 type: "put",
                 url_params: ["id"]
+              },
+              {
+                name: "refresh",
+                type: "get",
+                url: "/:id/refresh_tweets",
+                url_params: ["id"]
               }
             ]
           },

@@ -171,7 +171,7 @@ let Conversation = React.createClass({
 
   handleEditPhotosClick(e) {
     // Set activeConversation so image gallery knows which images to load
-    Session.set('activeConversation', this.data.conversation);
+    Session.set('activeConversationCampaignId', this.state.reply_campaign_id);
   },
 
   handleDelete(e) {

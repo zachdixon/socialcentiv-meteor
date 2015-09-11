@@ -24,7 +24,7 @@ Meteor.startup ->
     # FIXME - when IP is on a business, and code is hotpushed, it refreshes and 
     # correctly loads that business, but when you go to the accounts page, it doesn't load the other businesses
     user = Session.get('currentUser')
-    if user? and Session.get('currentUser').type isnt BO
+    if user? and user.type isnt BO
       # $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (res) ->
       #   if res.length
       #     Businesses.replaceWith(res)

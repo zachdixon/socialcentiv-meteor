@@ -86,9 +86,26 @@ let Conversation = React.createClass({
     this.setReplyCampaignId(reply_campaign_id);
   },
 
+  messageWithLinks() {
+    let message = this.data.conversation.lbc_tweet.message,
+        urlRegex;
+
+    urlRegex = /(?:https?:\/\/)?[-a-zA-Z0-9@:%_\+~#!=]{1,256}\.[a-z]{2,3}\b([-a-zA-Z0-9@:%_\+~#?!&\/\/=]*)/g;
+
+    message = message.replace(urlRegex, function(url) {
+      let src = url;
+      if (url.indexOf('http') === -1) {
+        src = 'http://' + src;
+      }
+      return '<a target="_blank" href="' + src + '">' + url + '</a>';
+    });
+
+    return message;
+  },
+
   messageHighlighted() {
     let phrases = _.pluck(this.data.keyphrases, 'phrase'),
-        message = this.data.conversation.lbc_tweet.message;
+        message = this.messageWithLinks();
 
     phrases.forEach((phrase) => {
       let singular = _.singularize(phrase),

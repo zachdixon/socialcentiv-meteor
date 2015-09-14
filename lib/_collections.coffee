@@ -20,14 +20,13 @@ App.Collections =
   reports         : Reports
 
 if Meteor.isClient
-  Session.setDefault('loadMoreConvos', true)
   Conversations.loadMore = ->
     # Get Conversations
     dict = App.Dicts.Conversations
     business = Session.get('business')
     num_per_page = dict.get('numPerPage')
     order_by = dict.get('orderBy')
-    keyphrases = Keyphrases.find({hidden: {$not: true}}).fetch().filter (x) ->
+    keyphrases = Keyphrases.find({action_type: "pump", hidden: {$not: true}}).fetch().filter (x) ->
       Campaigns.findOne({id: x.campaign_id}).status is "active"
     if (business? and num_per_page? and order_by?)
       if keyphrases?.length
@@ -39,8 +38,6 @@ if Meteor.isClient
           keyphrase_ids: keyphrases.map((kp) -> kp.id).join(',')
         ,
           success: (data, responseText, xhr) ->
-            if data.length is 0
-              Session.set('loadMoreConvos', false)
             # Stop observer, remove all current records, insert new records, start observer
             Conversations.replaceWith(data)
       else

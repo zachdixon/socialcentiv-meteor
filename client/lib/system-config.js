@@ -11,6 +11,7 @@ System.config({
     'Permit': System.normalizeSync('client/scripts/components/_utils/permit-utility'),
     // Global
     'Link': System.normalizeSync('client/scripts/components/global/link'),
+    'Input': System.normalizeSync('client/scripts/components/global/input'),
     // Pages
     'LoginPage': System.normalizeSync('client/scripts/components/sessions/login-page'),
     'AccountsPage': System.normalizeSync('client/scripts/components/accounts/accounts-page'),

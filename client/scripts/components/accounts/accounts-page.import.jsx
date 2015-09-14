@@ -2,28 +2,40 @@
 
 import { classNames } from 'app-deps';
 import { Link } from 'Link';
+import { Input } from 'Input';
 
 export let AccountsPage = React.createClass({
   mixins: [ReactMeteorData],
 
   getMeteorData() {
-    let selectors = {},
+    let accounts = Accounts.find().fetch(),
+        businesses,
+        selectors = {},
         modifiers = {};
+
+    Businesses.find().fetch().map((business) => {
+      let account = Accounts.findOne({id: business.business_owner_id});
+      if (account) {
+        Businesses._update(business._id, {$set: {business_owner_email: account.email}});
+      }
+    });
+
     if (this.state.accountTypeFilter !== "all") {
       selectors = _.assign(selectors, {account_type: this.state.accountTypeFilter});
     }
     if (this.state.textFilter) {
-      selectors = _.assign(selectors, {name: (new RegExp(this.state.textFilter, 'ig'))});
+      let textFilterRegexp = (new RegExp(this.state.textFilter, 'ig'));
+      selectors = _.assign(selectors, {$or: [{name: textFilterRegexp},{business_owner_email: textFilterRegexp}]});
     }
     if (this.state.sortBy) {
       modifiers = _.assign(modifiers, {sort: _.pairs(this.state.sortBy)});
     }
+    businesses = Businesses.find(selectors, modifiers).fetch();
+
     return {
-      // FIXME - undefined account when hotpush
-      // Possible fix is to load Accounts.find() here to reactively refresh,
-      // and find the account from there, check if exists to avoid error
       user: Session.get('currentUser'),
-      businesses: Businesses.find(selectors, modifiers).fetch()
+      accounts: accounts,
+      businesses: businesses
     }
   },
 
@@ -79,7 +91,13 @@ export let AccountsPage = React.createClass({
               <h1 className="pull-left">Accounts</h1>
               <div className="filter-bar">
                 <p>Filter By:</p>
-                <input className="pull-left form-control" type="text" onKeyUp={this.handleInputKeyUp} placeholder="Account name..."/>
+                <Input className="form-control"
+                       type="text"
+                       onKeyUp={this.handleInputKeyUp}
+                       placeholder="Name or Email"
+                       cancelable={true}
+                       wrapperClass="pull-left"
+                       onCancel={this.handleInputKeyUp} />
                 <button className={classNames({"active": (this.state.accountTypeFilter === "all")})} onClick={this.handleFilterClick.bind(null, "all")}>All</button>
                 <button className={classNames({"active": (this.state.accountTypeFilter === "enterprise")})} onClick={this.handleFilterClick.bind(null, "enterprise")}>Enterprise</button>
                 <button className={classNames({"active": (this.state.accountTypeFilter === "reply_pro")})} onClick={this.handleFilterClick.bind(null, "reply_pro")}>Reply Pro</button>
@@ -112,9 +130,13 @@ export let AccountsPage = React.createClass({
               <tbody>
                 {this.data.businesses.map((business) => {
                   let account = Accounts.findOne({id: business.business_owner_id});
-                  return (
-                    <BusinessRow key={business._id} account={account} business={business}/>
-                  )
+                  if (account) {
+                    return (
+                      <BusinessRow key={business._id} account={account} business={business}/>
+                    )
+                  } else {
+                    return null;
+                  }
                 })}
               </tbody>
             </table>
@@ -127,8 +149,8 @@ export let AccountsPage = React.createClass({
 
 let BusinessRow = React.createClass({
   propTypes: {
-    account: React.PropTypes.object,
-    business: React.PropTypes.object
+    account: React.PropTypes.object.isRequired,
+    business: React.PropTypes.object.isRequired
   },
 
   handleAccessAccountClick(e) {

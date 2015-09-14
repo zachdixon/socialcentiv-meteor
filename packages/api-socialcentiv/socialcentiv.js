@@ -240,11 +240,12 @@ if(Meteor.isClient) {
 
     API.sessions = API.sessions || {};
     API.sessions.login = function(options, callbacks) {
-      check(options, Object);
-      check(callbacks, Object);
       if (!callbacks) {
         callbacks = {};
       }
+      check(options, Object);
+      check(callbacks, Object);
+      
       route_config = APIConfig.config.misc.login;
       url = APIConfig.config.defaults.base_url + route_config.url;
       if(options.auth_type.toLowerCase() == "basic") {

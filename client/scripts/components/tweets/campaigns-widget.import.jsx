@@ -47,7 +47,7 @@ let Campaign = React.createClass({
 
   getMeteorData() {
     return {
-      keyphrases: Keyphrases.find({campaign_id: this.props.campaign.id}).fetch()
+      keyphrases: Keyphrases.find({campaign_id: this.props.campaign.id, action_type: "pump"}).fetch()
     }
   },
 

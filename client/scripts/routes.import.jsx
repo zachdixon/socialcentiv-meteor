@@ -35,6 +35,9 @@ managedAccounts.route('/', {
   name: 'managedAccounts',
   triggersEnter: [() => {
       App.clearCurrentUserCookies();
+      Session.set('business_id', undefined);
+      Session.set('business', undefined);
+      Conversations._remove({});
     }
   ],
   action: (params, queryParams) => {

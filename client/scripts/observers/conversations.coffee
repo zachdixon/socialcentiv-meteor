@@ -9,7 +9,7 @@ Meteor.startup ->
             # Check error if tweet was already deleted
             # If not, add convo back to collection and
             # throw Messenger() error
-            Conversations._insert(oldDoc)
+            # Conversations._insert(oldDoc)
           complete: ->
             if Conversations.find().count() is 0
               Conversations.loadMore()

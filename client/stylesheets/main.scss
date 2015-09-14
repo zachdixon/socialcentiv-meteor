@@ -638,6 +638,31 @@ hr{
       width: 185px;
       margin-right: 10px;
     }
+    form.cancelable {
+      margin-right: 10px;
+
+      input {
+        &:focus {
+          outline: none;
+        }
+        &:valid {
+          float: left;
+          margin-right: 0;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          border-right: none;
+          height: 44px;
+        }
+
+        &:not(:valid) ~ button {
+          display: none;
+        }
+      }
+      button {
+        float: right;
+
+      }
+    }
     button {
       transition: 200ms ease-in-out;
       &:nth-of-type(1) {

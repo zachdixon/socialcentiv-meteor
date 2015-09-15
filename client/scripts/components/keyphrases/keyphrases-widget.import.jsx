@@ -109,9 +109,7 @@ export let Keyphrase = React.createClass({
 
   handleShowHideTweets(e) {
     e.stopPropagation();
-    Keyphrases.observer.stop();
-    Keyphrases.update(this.props.keyphrase._id, {$set: {hidden: !this.props.keyphrase.hidden}});
-    Keyphrases.startObserving();
+    Keyphrases._update(this.props.keyphrase._id, {$set: {hidden: !this.props.keyphrase.hidden}});
   },
 
   render() {

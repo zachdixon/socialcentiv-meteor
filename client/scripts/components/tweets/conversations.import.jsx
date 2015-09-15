@@ -9,7 +9,7 @@ import { SuggestedResponses } from 'client/scripts/components/tweets/suggested-r
 
 let {string, number, object, array, func, oneOfType} = React.PropTypes;
 
-let {BO,IP} = CONSTANTS;
+let {IP} = CONSTANTS;
 
 
 export let ConversationsList = React.createClass({
@@ -332,9 +332,9 @@ let Conversation = React.createClass({
             campaigns={this.data.campaigns}
             onChange={this.handleCampaignChange} 
           />
-          {/*<ShowFor type={BO}>
+          {/*
             <SuggestedResponses responses={this.props.responses} onCategoryClick={this.handleSuggestedResponseClick} />
-          </ShowFor>*/ /* FIXME - implement new suggested responses */} 
+          */ /* FIXME - implement new suggested responses */} 
           <div className="reply-subsection nomargin">
             <div className="reply-avatar">
               <img className="img img-rounded" width="32" src={business? business.twitter_avatar_url : void 0} />

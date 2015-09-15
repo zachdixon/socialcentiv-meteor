@@ -8,30 +8,26 @@ import { LoginPage } from 'LoginPage';
 import { AccountsPage } from 'AccountsPage';
 import { TweetsPage } from 'TweetsPage';
 
-var main = FlowRouter.group({}),
-    basic = FlowRouter.group({}),
-    managed = FlowRouter.group({
-      prefix: '/managed'
-    }),
-    managedAccounts = managed.group({
+var sessions = FlowRouter.group({}),
+    managed = FlowRouter.group({}),
+    accounts = managed.group({
       prefix: '/accounts'
     });
 
-main.route('/login', {
+FlowRouter.notFound = {
+  action: () => {
+    FlowRouter.go('managedAccounts');
+  }
+};
+
+sessions.route('/login', {
   name: 'login',
   action: (params, queryParams) => {
     ReactLayout.render(LayoutManager, {layout: SessionsLayout, content: <LoginPage />});
   }
 });
 
-basic.route('/', {
-  name: 'tweets',
-  action: (params, queryParams) => {
-    ReactLayout.render(LayoutManager, {layout: MainLayout, content: <TweetsPage />});
-  }
-});
-
-managedAccounts.route('/', {
+accounts.route('/', {
   name: 'managedAccounts',
   triggersEnter: [() => {
       App.clearCurrentUserCookies();
@@ -47,11 +43,11 @@ managedAccounts.route('/', {
     });
   }
 });
-managedAccounts.route('/:business_id/tweets', {
+accounts.route('/:id/tweets', {
   name: 'accountTweets',
   action: (params, queryParams) => {
     // Needed for refreshing page or navigating directly to this route
-    Session.set('business_id', parseInt(params.business_id));
+    Session.set('business_id', parseInt(params.id));
     ReactLayout.render(LayoutManager, {
       layout: MainLayout,
       content: <TweetsPage />

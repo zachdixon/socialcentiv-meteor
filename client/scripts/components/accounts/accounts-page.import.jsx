@@ -157,7 +157,6 @@ let BusinessRow = React.createClass({
     e.preventDefault();
     App.setCurrentUserCookies(this.props.account.email, this.props.account.authentication_token);
     Session.set('business_id', this.props.business.id);
-    FlowRouter.go(`/managed/accounts/${this.props.business.id}/tweets`);
   },
 
   render() {
@@ -171,7 +170,7 @@ let BusinessRow = React.createClass({
         {/*<td className="account-monthly-replies">{account.monthly_replies}</td>*/}
         {/*<td className="account-daily-replies">{account.daily_replies}</td>*/}
         <td className="account-access">
-          <a href="#" onClick={this.handleAccessAccountClick}>Access Account</a>
+          <a href={FlowRouter.path('accountTweets', {id: this.props.business.id})} onClick={this.handleAccessAccountClick}>Access Account</a>
         </td>
       </tr>
     )

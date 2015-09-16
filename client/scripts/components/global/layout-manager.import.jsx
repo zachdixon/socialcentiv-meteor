@@ -20,7 +20,7 @@ export let LayoutManager = React.createClass({
     let user = Session.get('currentUser');
     // Checks permission for current route
     if (user && !permit('routes', FlowRouter.current().route.name)) {
-      FlowRouter.go('managedAccounts');
+      FlowRouter.go('notAuthorized');
     };
 
     return {

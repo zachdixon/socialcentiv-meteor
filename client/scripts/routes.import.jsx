@@ -4,6 +4,7 @@
 
 import { LayoutManager } from 'client/scripts/components/global/layout-manager';
 import { SessionsLayout, MainLayout, AccountsLayout} from 'client/scripts/components/global/layouts';
+import { NotAuthorizedPage } from 'NotAuthorizedPage';
 import { LoginPage } from 'LoginPage';
 import { AccountsPage } from 'AccountsPage';
 import { TweetsPage } from 'TweetsPage';
@@ -19,6 +20,13 @@ FlowRouter.notFound = {
     FlowRouter.go('managedAccounts');
   }
 };
+
+sessions.route('/not_authorized', {
+  name: 'notAuthorized',
+  action: (params, queryParams) => {
+    ReactLayout.render(LayoutManager, {layout: SessionsLayout, content: <NotAuthorizedPage />});
+  }
+});
 
 sessions.route('/login', {
   name: 'login',

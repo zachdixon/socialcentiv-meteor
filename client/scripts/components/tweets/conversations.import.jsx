@@ -243,6 +243,7 @@ let Conversation = React.createClass({
       status: "replied_to",
       reply_campaign_id: this.state.reply_campaign_id,
       reply_message: this.state.reply_message,
+      reply_images: this.data.selectedImages.map((image) => {return image.url;}),
       callbacks: {
         error: function(xhr, textStatus, error) {
           // FIXME - figure out error format

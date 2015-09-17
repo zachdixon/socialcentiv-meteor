@@ -30,6 +30,8 @@ universe:modules
 meteorhacks:npm
 cosmos:browserify
 
-npm-container
 reactive-dict
 mikowals:batch-insert
+
+
+npm-container

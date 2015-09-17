@@ -10,7 +10,7 @@ import { HighlightToggle } from 'client/scripts/components/tweets/highlight-togg
 import { ConversationsList } from 'client/scripts/components/tweets/conversations';
 import { CampaignImagesModal } from 'client/scripts/components/tweets/campaign-images-modal';
 
-let {BO,IP,AM,ADMIN} = CONSTANTS;
+let {IP,AM,ADMIN} = CONSTANTS;
 
 export let TweetsPage = React.createClass({
   displayName: "TweetsPage",
@@ -149,23 +149,6 @@ let RightColumn = React.createClass({
   render() {
     return (
       <div id="right-col">
-        <ShowFor type={BO}>
-          <div className="tips">
-            <p className="label">Tweet Reply Tips</p>
-            <div className="tip">
-              <p className="header">Juice it up</p>
-              <p>Ensure your Tweet is as appealing as possible to help drive a higher conversion rate.</p>
-            </div>
-            <div className="tip">
-              <p className="header">Less characters, more opportunities</p>
-              <p>The 140 character limit is already difficult to work with, but we’re challenging you to aim to use even less. In fact, Tweets with less than 100 characters receive the highest engagement.</p>
-            </div>
-            <div className="tip">
-              <p className="header">Know Your Audience</p>
-              <p>Understanding your target audience is a key factor in determining the success of your social strategy. Therefore, keep your ideal customer in mind when replying to Tweets.</p>
-            </div>
-          </div>
-        </ShowFor>
       </div>
     )
   }

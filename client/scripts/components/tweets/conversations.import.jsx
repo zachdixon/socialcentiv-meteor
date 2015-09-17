@@ -9,7 +9,7 @@ import { SuggestedResponses } from 'client/scripts/components/tweets/suggested-r
 
 let {string, number, object, array, func, oneOfType} = React.PropTypes;
 
-let {BO,IP} = CONSTANTS;
+let {IP} = CONSTANTS;
 
 
 export let ConversationsList = React.createClass({
@@ -54,7 +54,7 @@ let Conversation = React.createClass({
   },
 
   getMeteorData() {
-    let business = Businesses.findOne(Session.get('business')._id),
+    let business = Businesses.findOne({id: Session.get('business').id}),
         conversation = Conversations.findOne({id: this.props.conversation_id}),
         keyphrases = Keyphrases.find({id: {$in: conversation.keyphrase_ids}}).fetch(),
         campaign_ids = keyphrases.map((kp) => { return kp.campaign_id;}),
@@ -332,9 +332,9 @@ let Conversation = React.createClass({
             campaigns={this.data.campaigns}
             onChange={this.handleCampaignChange} 
           />
-          {/*<ShowFor type={BO}>
+          {/*
             <SuggestedResponses responses={this.props.responses} onCategoryClick={this.handleSuggestedResponseClick} />
-          </ShowFor>*/ /* FIXME - implement new suggested responses */} 
+          */ /* FIXME - implement new suggested responses */} 
           <div className="reply-subsection nomargin">
             <div className="reply-avatar">
               <img className="img img-rounded" width="32" src={business? business.twitter_avatar_url : void 0} />

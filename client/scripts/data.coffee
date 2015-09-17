@@ -6,7 +6,6 @@
 #   stopping/starting the observers, and replacing the data in those collections with the new data 
 
 Meteor.startup ->
-  BO = "BusinessOwner"
   IP = "InteractiveProducer"
   AM = "AccountManager"
   ADMIN = "Admin"
@@ -14,7 +13,7 @@ Meteor.startup ->
   Tracker.autorun ->
     # Get list of users/accounts (Reply Pro/Enterprise) for current advanced user
     user = Session.get('currentUser')
-    if user? and user.type isnt BO
+    if user?
       API.Users.getAll {},
         success: (data, responseText, xhr) ->
           Accounts.replaceWith(data)
@@ -24,24 +23,13 @@ Meteor.startup ->
     # FIXME - when IP is on a business, and code is hotpushed, it refreshes and 
     # correctly loads that business, but when you go to the accounts page, it doesn't load the other businesses
     user = Session.get('currentUser')
-    if user? and user.type isnt BO
+    if user?
       # $.get "http://private-c3fb2-socialcentiv1.apiary-mock.com/managed_businesses.json", (res) ->
       #   if res.length
       #     Businesses.replaceWith(res)
       API.Businesses.getAll {},
         success: (data, responseText, xhr) ->
           Businesses.replaceWith(data)
-
-  Tracker.autorun ->
-    # Get Business for BusinessOwner
-    user = Session.get('currentUser')
-    if user? and user.type is BO
-      API.Businesses.getAll
-        user_id: user.id
-      ,
-        success: (data, responseText, xhr) ->
-          Businesses._update({id: data.id}, {$set: data[0]}, {upsert: true})
-          Session.set('business', Businesses.findOne())
 
   Tracker.autorun ->
     # Get Business for IPs
@@ -124,16 +112,18 @@ Meteor.startup ->
           $.when.apply($, image_requests).then () -> Images.replaceWith(images)
           $.when.apply($, all_requests).then () -> Conversations.loadMore()
 
-  Tracker.autorun ->
-    # Get Suggested Responses
-    user = Session.get('currentUser')
-    if user? and user.type is "BusinessOwner"
-      API.SuggestedResponses.getAll {},
-        success: (data, responseText, xhr) ->
-          order = ["invite", "agree", "celebrate", "support", "sympathize"]
-          sortedResults = []
-          for sortedCategory in order
-            for category in data
-              if sortedCategory is category.category.toLowerCase()
-                sortedResults.push category
-          Session.set('suggestedResponses', sortedResults)
+  # SAVE FOR LATER
+  # We may need to use suggested responses for some accounts
+  # Tracker.autorun ->
+  #   # Get Suggested Responses
+  #   user = Session.get('currentUser')
+  #   if user? and user.type is "BusinessOwner"
+  #     API.SuggestedResponses.getAll {},
+  #       success: (data, responseText, xhr) ->
+  #         order = ["invite", "agree", "celebrate", "support", "sympathize"]
+  #         sortedResults = []
+  #         for sortedCategory in order
+  #           for category in data
+  #             if sortedCategory is category.category.toLowerCase()
+  #               sortedResults.push category
+  #         Session.set('suggestedResponses', sortedResults)

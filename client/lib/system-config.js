@@ -13,6 +13,7 @@ System.config({
     'Link': System.normalizeSync('client/scripts/components/global/link'),
     'Input': System.normalizeSync('client/scripts/components/global/input'),
     // Pages
+    'NotAuthorizedPage': System.normalizeSync('client/scripts/components/global/not-authorized-page'),
     'LoginPage': System.normalizeSync('client/scripts/components/sessions/login-page'),
     'AccountsPage': System.normalizeSync('client/scripts/components/accounts/accounts-page'),
     'TweetsPage': System.normalizeSync('client/scripts/components/tweets/tweets-page')

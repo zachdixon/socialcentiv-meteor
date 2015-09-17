@@ -3,7 +3,7 @@
 import { permit } from 'Permit';
 import { CONSTANTS } from 'Constants';
 
-let {BO,IP,AM,ADMIN} = CONSTANTS;
+let {IP,AM,ADMIN} = CONSTANTS;
 let Types = React.PropTypes;
 
 export let LayoutManager = React.createClass({
@@ -20,11 +20,7 @@ export let LayoutManager = React.createClass({
     let user = Session.get('currentUser');
     // Checks permission for current route
     if (user && !permit('routes', FlowRouter.current().route.name)) {
-      if (user.type === IP) {
-        FlowRouter.go('managedAccounts');
-      } else {
-        FlowRouter.go('tweets');
-      }
+      FlowRouter.go('notAuthorized');
     };
 
     return {

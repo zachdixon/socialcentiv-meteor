@@ -2,17 +2,9 @@
 
 import {CONSTANTS} from 'client/scripts/constants';
 
-let {BO,IP,AM,ADMIN} = CONSTANTS;
+let {IP,AM,ADMIN} = CONSTANTS;
 
 let policies = {};
-policies[BO] = {
-  routes: {
-    "managedAccounts": false,
-    "accountTweets": false,
-    "tweets": true
-  }
-};
-
 policies[IP] = {
   routes: {
     "managedAccounts": true,

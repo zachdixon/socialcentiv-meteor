@@ -14,9 +14,6 @@ export let Header = React.createClass({
   render() {
     return (
       <div>
-        <ShowFor type={BO}>
-          <BOHeader/>
-        </ShowFor>
         <ShowFor type={[IP, AM, ADMIN]}>
           <IPHeader/>
         </ShowFor>
@@ -25,22 +22,8 @@ export let Header = React.createClass({
   }
 });
 
-let BOHeader = React.createClass({
-  render() {
-    let primary_routes = [
-      {id: 1, name: "Tweets", to: "tweets"}
-      // {id: 2, name: "campaigns"}
-      // {id: 3, name: "reports"}
-    ]
-    return (
-      <PrimaryNav routes={primary_routes} />
-    )
-  }
-});
-
 let IPHeader = React.createClass({
   // Figure out a more React way of doing this
-  // Tried passing a prop but the prop stayed the same on re-render
   showSubNav() {
     return !_.includes([
         'managedAccounts'
@@ -48,13 +31,13 @@ let IPHeader = React.createClass({
   },
 
   render() {
-    let business_id = FlowRouter.getParam('business_id');
+    let business_id = FlowRouter.getParam('id');
     let routes = {
           primary: [
             {id: 1, name: "Accounts", to: "managedAccounts"}
           ],
           secondary: [
-            {id: 1, name: "Tweets", to: "accountTweets", params: {business_id: business_id}}
+            {id: 1, name: "Tweets", to: "accountTweets", params: {id: business_id}}
           ]
         };
     return (
@@ -177,24 +160,18 @@ let MainUtilityNav = React.createClass({
   render() {
     return (
       <li className="main-nav-item pull-right dropdown-nav">
-        <ShowFor type={BO}>
-          <BOUtilityNavLink toggle={this.toggle}/>
-        </ShowFor>
-        <ShowFor type={[IP,AM,ADMIN]}>
-          <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"paddingLeft": "15px !important"}}>
-            <span className="main-nav-icon glyphicon glyphicon-user" style={{"marginRight": "15px"}}></span>
-            <span className="label">{this.data.user? this.data.user.name || this.data.user.email : ""}</span>
-          </Link>
-        </ShowFor>
+        <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.toggle} style={{"paddingLeft": "15px !important"}}>
+          <span className="main-nav-icon glyphicon glyphicon-user" style={{"marginRight": "15px"}}></span>
+          <span className="label">{this.data.user? this.data.user.name || this.data.user.email : ""}</span>
+        </Link>
         <ul className="sub-nav" style={{display: this.state.open? 'block' : 'none'}}>
-          <ShowFor type={BO}>
-            <li className="sub-nav-item">
-              <Link className="sub-nav-link" to="/account">
-                <span className="glyphicon glyphicon-user main-nav-icon"></span>
-                <span className="label">My Account</span>
-              </Link>
-            </li>
-          </ShowFor>
+          {/* Implement later for user's account settings */}
+          {/*<li className="sub-nav-item">
+            <Link className="sub-nav-link" to="/account">
+              <span className="glyphicon glyphicon-user main-nav-icon"></span>
+              <span className="label">My Account</span>
+            </Link>
+          </li>*/}
           <li className="sub-nav-item">
             <Link className="sub-nav-link link-logout" to="" onClick={this.handleLogout}>
               <span className="glyphicon glyphicon-log-out main-nav-icon"></span>
@@ -203,35 +180,6 @@ let MainUtilityNav = React.createClass({
           </li>
         </ul>
       </li>
-    )
-  }
-});
-
-let BOUtilityNavLink = React.createClass({
-  mixins: [ReactMeteorData],
-  getMeteorData() {
-    return {
-      business: Businesses.findOne({id: Session.get('business')? Session.get('business').id : void 0})
-    }
-  },
-  propTypes: {
-    toggle: React.PropTypes.func
-  },
-  render() {
-    let b = this.data.business;
-    return (
-      <Link className="main-nav-link sub-nav-toggle" to="" onClick={this.props.toggle}>
-        {(() => {
-          if(b && b.status == "active") {
-            return (
-              <span className="account-logo-wrapper">
-                <img className="account-logo" src={b.twitter_avatar_url}/>
-              </span>
-            );
-          }
-        })()}
-        <span className="label">{b? b.name : ""}</span>
-      </Link>
     )
   }
 });

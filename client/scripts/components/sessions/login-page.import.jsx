@@ -18,18 +18,9 @@ export let LoginPage = React.createClass({
         {
           success: (data, statusText) => {
             let user = data;
-            if (user.type === BO) {
-              App.setCurrentUserCookies(user.email, user.authentication_token);
-            } else {
-              App.setAdvancedUserCookies(user.email, user.authentication_token);
-            }
-            // user.type = CONSTANTS.IP; // FIXME - remove me once server returns
+            App.setAdvancedUserCookies(user.email, user.authentication_token);
             Session.set('currentUser', user);
-            if(user.type === CONSTANTS.BO) {
-              FlowRouter.go('tweets');
-            } else {
-              FlowRouter.go('managedAccounts');
-            }
+            FlowRouter.go('managedAccounts');
         }
       });
     }

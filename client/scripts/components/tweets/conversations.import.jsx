@@ -54,7 +54,7 @@ let Conversation = React.createClass({
   },
 
   getMeteorData() {
-    let business = Businesses.findOne(Session.get('business')._id),
+    let business = Businesses.findOne({id: Session.get('business').id}),
         conversation = Conversations.findOne({id: this.props.conversation_id}),
         keyphrases = Keyphrases.find({id: {$in: conversation.keyphrase_ids}}).fetch(),
         campaign_ids = keyphrases.map((kp) => { return kp.campaign_id;}),
